@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">CarInfo</string>
+    <string name="entries">Entries</string>
+    <string name="fuelUsage">Fuel usage</string>
+    <string name="settings">Settings</string>
+    <string name="quit">Quit</string>
 </resources>
