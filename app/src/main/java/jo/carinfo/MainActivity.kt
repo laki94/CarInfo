@@ -10,7 +10,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        var settings = SharedSettingsClass(this)
+        val settings = SharedSettingsClass(this)
 
         if (settings.isLaunchedForFirstTime()) {
             Log.d("Main", "opened for first time")
