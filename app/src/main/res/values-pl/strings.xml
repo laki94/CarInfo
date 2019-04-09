@@ -4,4 +4,8 @@
     <string name="fuelUsage">Zużycie paliwa</string>
     <string name="settings">Ustawienia</string>
     <string name="quit">Wyjdź</string>
+    <string name="putCarName">Wprowadź nazwę samochodu</string>
+    <string name="save">Zapisz</string>
+    <string name="creatingCar">Tworzenie pojazdu</string>
+    <string name="carsList">Lista pojazdów</string>
 </resources>

@@ -1,8 +1,11 @@
 package jo.carinfo
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import kotlin.system.exitProcess
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,5 +22,10 @@ class MainActivity : AppCompatActivity() {
         }
         else
             Log.d("Main", "not first time")
+    }
+
+    fun onSettingsClick(view : View){
+        val intent = Intent(this, SettingsActivity::class.java)
+        startActivity(intent)
     }
 }

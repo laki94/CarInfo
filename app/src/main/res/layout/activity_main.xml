@@ -12,7 +12,7 @@
             android:layout_height="100dp"
             android:id="@+id/bEntries" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"/>
+            android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent" android:textSize="18sp"/>
     <Button
             android:text="@string/fuelUsage"
             android:layout_width="0dp"
@@ -20,20 +20,14 @@
             android:id="@+id/bFuelUsage" android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@+id/bEntries" app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="8dp"/>
+            android:layout_marginStart="8dp" android:textSize="18sp"/>
     <Button
             android:text="@string/settings"
+            android:onClick="onSettingsClick"
             android:layout_width="0dp"
             android:layout_height="100dp"
             android:id="@+id/bSettings" android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@+id/bFuelUsage" app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="8dp"/>
-    <Button
-            android:text="@string/quit"
-            android:layout_width="0dp"
-            android:layout_height="100dp"
-            android:id="@+id/bQuit" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
-            android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"/>
+            android:layout_marginStart="8dp" android:textSize="18sp"/>
 </android.support.constraint.ConstraintLayout>
