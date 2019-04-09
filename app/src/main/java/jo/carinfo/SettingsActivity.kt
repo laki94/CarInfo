@@ -2,8 +2,12 @@ package jo.carinfo
 
 import android.app.AlertDialog
 import android.content.Context
+import android.graphics.Color
+import android.graphics.ColorSpace
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,46 +15,15 @@ import android.widget.*
 
 class SettingsActivity : AppCompatActivity() {
 
-    class CarsAdapter(private val context: Context,
-                      private val dataSource: ArrayList<Car>) : BaseAdapter()
-    {
-        private val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-
-        override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
-
-            val rowView = inflater.inflate(R.layout.lvcars_item, p2, false)
-            val carName = rowView.findViewById(R.id.lvCarsTv) as TextView
-
-            val simpleCar = getItem(p0) as Car
-            carName.text = simpleCar.mName
-
-            return rowView
-        }
-
-        override fun getItem(p0: Int): Any {
-            return dataSource[p0]
-        }
-
-        override fun getItemId(p0: Int): Long {
-            return p0.toLong()
-        }
-
-        override fun getCount(): Int {
-            return dataSource.count()
-        }
-
-    }
-
     private var carsList = CarsList()
 
-    private var adapter: CarsAdapter? = null
-
+    private var adapter: CarAdapter? = null
 
     private fun addAndRefreshList(aCarName: String){
         if (aCarName.isNotEmpty()){
             carsList.add(Car(aCarName))
 
-            adapter?.notifyDataSetChanged()
+            adapter?.notifyItemChanged(carsList.count() - 1)
         }
     }
 
@@ -69,10 +42,10 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
-        adapter = CarsAdapter(this, carsList)
-        var listview = findViewById<ListView>(R.id.lvCars)
-        listview.adapter = adapter
+        var listView = findViewById<RecyclerView>(R.id.rvCars)
+
+        adapter = CarAdapter(this, carsList)
+        listView.layoutManager = LinearLayoutManager(this)
+        listView.adapter = adapter
     }
-
-
 }

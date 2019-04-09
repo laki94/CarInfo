@@ -18,7 +18,6 @@ class MainActivity : AppCompatActivity() {
         if (settings.isLaunchedForFirstTime()) {
             Log.d("Main", "opened for first time")
             settings.setWasLaunchedForFirstTime()
-
         }
         else
             Log.d("Main", "not first time")
