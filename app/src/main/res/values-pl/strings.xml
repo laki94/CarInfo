@@ -8,4 +8,5 @@
     <string name="save">Zapisz</string>
     <string name="creatingCar">Tworzenie pojazdu</string>
     <string name="carsList">Lista pojazdów</string>
+    <string name="removeCars">Usuń</string>
 </resources>

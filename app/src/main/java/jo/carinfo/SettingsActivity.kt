@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +23,6 @@ class SettingsActivity : AppCompatActivity() {
     private fun addAndRefreshList(aCarName: String){
         if (aCarName.isNotEmpty()){
             carsList.add(Car(aCarName))
-
             adapter?.notifyItemChanged(carsList.count() - 1)
         }
     }
@@ -36,6 +36,31 @@ class SettingsActivity : AppCompatActivity() {
         builder.setView(dialogLayout)
         builder.setPositiveButton(R.string.save) { _, _ -> addAndRefreshList(etCarName.text.toString()) }
         builder.show()
+    }
+
+    override fun onBackPressed() {
+        when (adapter?.isEditing())
+        {
+            true -> { adapter?.stopEditing() }
+            else -> { super.onBackPressed() }
+        }
+    }
+
+    fun onCarRemoveClick(view: View)
+    {
+        val checkedIds = adapter?.getCheckedIds()
+        if (!checkedIds.isNullOrEmpty())
+        {
+            checkedIds.sort()
+            for (id in checkedIds.asReversed())
+            {
+                carsList.removeAt(id)
+            }
+            if (carsList.isEmpty())
+                adapter?.stopEditing()
+            else
+                adapter?.notifyDataSetChanged()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

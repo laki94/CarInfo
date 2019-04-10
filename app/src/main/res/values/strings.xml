@@ -9,4 +9,5 @@
     <string name="save">Save</string>
     <string name="creatingCar">Creating car</string>
     <string name="carsList">Cars list</string>
+    <string name="removeCars">Remove</string>
 </resources>
