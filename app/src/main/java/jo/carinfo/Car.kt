@@ -1,11 +1,14 @@
 package jo.carinfo
 
-class Car(aName: String = "") {
+import java.io.Serializable
+
+class Car(aName: String = ""): Serializable
+{
 
     var mName : String = aName
 }
 
-class CarsList: ArrayList<Car>()
+class CarsList: ArrayList<Car>(),Serializable
 {
 
 }

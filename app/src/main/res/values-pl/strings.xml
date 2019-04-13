@@ -9,4 +9,8 @@
     <string name="creatingCar">Tworzenie pojazdu</string>
     <string name="carsList">Lista pojazdów</string>
     <string name="removeCars">Usuń</string>
+
+    <!-- Error messages -->
+    <string name="couldNotGetCars">Błąd podczas pobierania pojazdów</string>
+    <string name="couldNotSaveCars">Błąd podczas zapisywania pojazdów</string>
 </resources>

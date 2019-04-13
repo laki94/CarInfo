@@ -4,10 +4,13 @@
     <string name="fuelUsage">Fuel usage</string>
     <string name="settings">Settings</string>
     <string name="quit">Quit</string>
-    <string name="title_activity_main2">Main2Activity</string>
     <string name="putCarName">Put a car name</string>
     <string name="save">Save</string>
     <string name="creatingCar">Creating car</string>
     <string name="carsList">Cars list</string>
     <string name="removeCars">Remove</string>
+
+    <!-- Error messages-->
+    <string name="couldNotGetCars">Error while getting vehicles</string>
+    <string name="couldNotSaveCars">Error while saving vehicles</string>
 </resources>

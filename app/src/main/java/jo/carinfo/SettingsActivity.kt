@@ -1,22 +1,18 @@
 package jo.carinfo
 
+import android.app.Activity
 import android.app.AlertDialog
-import android.content.Context
-import android.graphics.Color
-import android.graphics.ColorSpace
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.*
 
 class SettingsActivity : AppCompatActivity() {
 
-    private var carsList = CarsList()
+    private val carsList = CarsList()
 
     private var adapter: CarAdapter? = null
 
@@ -42,7 +38,12 @@ class SettingsActivity : AppCompatActivity() {
         when (adapter?.isEditing())
         {
             true -> { adapter?.stopEditing() }
-            else -> { super.onBackPressed() }
+            else -> {
+                val intent = Intent()
+                intent.putExtra("cars", carsList)
+                setResult(Activity.RESULT_OK, intent)
+                super.onBackPressed()
+            }
         }
     }
 
@@ -56,11 +57,20 @@ class SettingsActivity : AppCompatActivity() {
             {
                 carsList.removeAt(id)
             }
-            if (carsList.isEmpty())
-                adapter?.stopEditing()
-            else
-                adapter?.notifyDataSetChanged()
+
+            when (carsList.isEmpty())
+            {
+                true -> { adapter?.stopEditing() }
+                else -> { adapter?.notifyDataSetChanged() }
+            }
         }
+    }
+
+    fun onSaveSettings(view: View)
+    {
+        val cfgManager = ConfigManager(this)
+        if (!cfgManager.saveCars(carsList))
+            Toast.makeText(this, R.string.couldNotSaveCars, Toast.LENGTH_SHORT).show()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,6 +78,13 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_settings)
 
         var listView = findViewById<RecyclerView>(R.id.rvCars)
+        val extras = intent.extras
+        if (extras != null)
+            if (extras.containsKey("cars"))
+            {
+                for (car in extras.getSerializable("cars") as ArrayList<Car>)
+                    carsList.add(car)
+            }
 
         adapter = CarAdapter(this, carsList)
         listView.layoutManager = LinearLayoutManager(this)

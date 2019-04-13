@@ -8,6 +8,7 @@
         tools:context=".MainActivity">
     <Button
             android:text="@string/entries"
+            android:onClick="onEntriesClick"
             android:layout_width="0dp"
             android:layout_height="100dp"
             android:id="@+id/bEntries" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
