@@ -9,7 +9,10 @@
     <string name="creatingCar">Tworzenie pojazdu</string>
     <string name="carsList">Lista pojazdów</string>
     <string name="removeCars">Usuń</string>
-
+    <string name="doSaveCarsQ">Zapisać pojazdy?</string>
+    <string name="Yes">Tak</string>
+    <string name="No">Nie</string>
+    <string name="Cancel">Anuluj</string>
     <!-- Error messages -->
     <string name="couldNotGetCars">Błąd podczas pobierania pojazdów</string>
     <string name="couldNotSaveCars">Błąd podczas zapisywania pojazdów</string>

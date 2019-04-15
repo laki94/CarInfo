@@ -9,6 +9,10 @@
     <string name="creatingCar">Creating car</string>
     <string name="carsList">Cars list</string>
     <string name="removeCars">Remove</string>
+    <string name="doSaveCarsQ">Save cars?</string>
+    <string name="Yes">Yes</string>
+    <string name="No">No</string>
+    <string name="Cancel">Cancel</string>
 
     <!-- Error messages-->
     <string name="couldNotGetCars">Error while getting vehicles</string>

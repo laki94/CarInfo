@@ -12,14 +12,14 @@ import android.widget.*
 
 class SettingsActivity : AppCompatActivity() {
 
-    private val carsList = CarsList()
-
+    private val originalCarsList = CarsList()
+    private var newCarsList = CarsList()
     private var adapter: CarAdapter? = null
 
     private fun addAndRefreshList(aCarName: String){
         if (aCarName.isNotEmpty()){
-            carsList.add(Car(aCarName))
-            adapter?.notifyItemChanged(carsList.count() - 1)
+            newCarsList.add(Car(aCarName))
+            adapter?.notifyItemChanged(newCarsList.count() - 1)
         }
     }
 
@@ -38,13 +38,51 @@ class SettingsActivity : AppCompatActivity() {
         when (adapter?.isEditing())
         {
             true -> { adapter?.stopEditing() }
-            else -> {
-                val intent = Intent()
-                intent.putExtra("cars", carsList)
-                setResult(Activity.RESULT_OK, intent)
-                super.onBackPressed()
-            }
+            else -> { askForSaveCarsAndQuit() }
         }
+    }
+
+    private fun askForSaveCarsAndQuit()
+    {
+        var doAsk = newCarsList.count() != originalCarsList.count()
+
+        if (!doAsk)
+            for (car in newCarsList)
+            {
+                if (originalCarsList.indexOf(car) == -1)
+                {
+                    doAsk = true
+                    break
+                }
+            }
+
+        if (doAsk) {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle(R.string.doSaveCarsQ)
+            builder.setPositiveButton(R.string.Yes) { _, _ ->
+                saveCars()
+                closeActivity(true)
+            }
+
+            builder.setNegativeButton(R.string.No) { _, _ ->
+                closeActivity(false)
+            }
+
+            builder.setNeutralButton(R.string.Cancel) {_, _ -> }
+            builder.show()
+        }
+        else
+            closeActivity(false)
+    }
+
+    private fun closeActivity(aReturnCars: Boolean)
+    {
+        val intent = Intent()
+        if (aReturnCars) {
+            intent.putExtra("cars", newCarsList)
+        }
+        setResult(Activity.RESULT_OK, intent)
+        finish()
     }
 
     fun onCarRemoveClick(view: View)
@@ -55,10 +93,10 @@ class SettingsActivity : AppCompatActivity() {
             checkedIds.sort()
             for (id in checkedIds.asReversed())
             {
-                carsList.removeAt(id)
+                newCarsList.removeAt(id)
             }
 
-            when (carsList.isEmpty())
+            when (newCarsList.isEmpty())
             {
                 true -> { adapter?.stopEditing() }
                 else -> { adapter?.notifyDataSetChanged() }
@@ -66,10 +104,10 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
-    fun onSaveSettings(view: View)
+    private fun saveCars()
     {
         val cfgManager = ConfigManager(this)
-        if (!cfgManager.saveCars(carsList))
+        if (!cfgManager.saveCars(newCarsList))
             Toast.makeText(this, R.string.couldNotSaveCars, Toast.LENGTH_SHORT).show()
     }
 
@@ -77,16 +115,17 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
-        var listView = findViewById<RecyclerView>(R.id.rvCars)
+        val listView = findViewById<RecyclerView>(R.id.rvCars)
         val extras = intent.extras
         if (extras != null)
             if (extras.containsKey("cars"))
             {
                 for (car in extras.getSerializable("cars") as ArrayList<Car>)
-                    carsList.add(car)
+                    originalCarsList.add(car)
+                newCarsList = originalCarsList.clone() as CarsList
             }
 
-        adapter = CarAdapter(this, carsList)
+        adapter = CarAdapter(this, newCarsList)
         listView.layoutManager = LinearLayoutManager(this)
         listView.adapter = adapter
     }
