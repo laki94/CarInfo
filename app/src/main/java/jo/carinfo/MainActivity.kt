@@ -5,11 +5,8 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.widget.EditText
 import android.widget.RadioGroup
-import kotlin.system.exitProcess
 
 const val SETTINGS_CLICK = 1
 const val FUEL_ENTRY = 2
@@ -59,7 +56,7 @@ class MainActivity : AppCompatActivity() {
         val builder = AlertDialog.Builder(this)
         val inflater = layoutInflater
         builder.setTitle(R.string.entryType)
-        val dialogLayout = inflater.inflate(R.layout.activity_dlg_select_entry_type, null)
+        val dialogLayout = inflater.inflate(R.layout.dlg_select_entry_type, null)
         val rg = dialogLayout.findViewById<RadioGroup>(R.id.rgEntryTypes)
         builder.setView(dialogLayout)
         builder.setPositiveButton(R.string.save) { _, _ -> createNewEntry(getEntryType(rg.checkedRadioButtonId)) }

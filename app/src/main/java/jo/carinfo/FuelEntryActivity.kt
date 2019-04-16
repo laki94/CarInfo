@@ -4,7 +4,6 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.Spinner
-import android.widget.SpinnerAdapter
 
 class FuelEntryActivity : AppCompatActivity() {
 
@@ -21,6 +20,6 @@ class FuelEntryActivity : AppCompatActivity() {
                 for (car in extras.getSerializable("cars") as ArrayList<Car>)
                     namesArr.add(car.mName)
             }
-        sCars.adapter = ArrayAdapter(this, R.layout.activity_simple_name, namesArr)
+        sCars.adapter = ArrayAdapter(this, R.layout.simple_name, namesArr)
     }
 }

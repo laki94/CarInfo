@@ -27,7 +27,7 @@ class SettingsActivity : AppCompatActivity() {
         val builder = AlertDialog.Builder(this)
         val inflater = layoutInflater
         builder.setTitle(R.string.creatingCar)
-        val dialogLayout = inflater.inflate(R.layout.activity_dlg_add_car, null)
+        val dialogLayout = inflater.inflate(R.layout.dlg_add_car, null)
         val etCarName = dialogLayout.findViewById<EditText>(R.id.etCarName)
         builder.setView(dialogLayout)
         builder.setPositiveButton(R.string.save) { _, _ -> addAndRefreshList(etCarName.text.toString()) }
