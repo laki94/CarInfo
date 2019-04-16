@@ -1,14 +1,19 @@
 package jo.carinfo
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.EditText
+import android.widget.RadioGroup
 import kotlin.system.exitProcess
 
 const val SETTINGS_CLICK = 1
+const val FUEL_ENTRY = 2
+const val OIL_ENTRY = 3
 
 class MainActivity : AppCompatActivity() {
 
@@ -20,15 +25,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        val settings = SharedSettingsClass(this)
-
-        if (settings.isLaunchedForFirstTime()) {
-            Log.d("Main", "opened for first time")
-            settings.setWasLaunchedForFirstTime()
-        }
-        else
-            Log.d("Main", "not first time")
 
         mCars = mCore.getAllCars()
     }
@@ -60,6 +56,41 @@ class MainActivity : AppCompatActivity() {
 
     fun onEntriesClick(view: View)
     {
+        val builder = AlertDialog.Builder(this)
+        val inflater = layoutInflater
+        builder.setTitle(R.string.entryType)
+        val dialogLayout = inflater.inflate(R.layout.activity_dlg_select_entry_type, null)
+        val rg = dialogLayout.findViewById<RadioGroup>(R.id.rgEntryTypes)
+        builder.setView(dialogLayout)
+        builder.setPositiveButton(R.string.save) { _, _ -> createNewEntry(getEntryType(rg.checkedRadioButtonId)) }
+        builder.show()
+    }
 
+    private fun getEntryType(aRadioId: Int): EntryType
+    {
+        var type = EntryType.Unknown
+        when (aRadioId)
+        {
+            R.id.rbFuel -> type = EntryType.Fuel
+            R.id.rbOil -> type = EntryType.Oil
+        }
+        return type
+    }
+
+    private fun createNewEntry(aEntryType: EntryType)
+    {
+        when (aEntryType)
+        {
+            EntryType.Fuel -> { createFuelEntry() }
+            EntryType.Oil -> { }
+            else -> { }
+        }
+    }
+
+    private fun createFuelEntry()
+    {
+        val intent = Intent(this, FuelEntryActivity::class.java)
+        intent.putExtra("cars", mCars)
+        startActivityForResult(intent, FUEL_ENTRY)
     }
 }

@@ -13,6 +13,10 @@
     <string name="Yes">Yes</string>
     <string name="No">No</string>
     <string name="Cancel">Cancel</string>
+    <string name="cars">Cars</string>
+    <string name="entryType">Entry type</string>
+    <string name="fuel">Fuel</string>
+    <string name="oil">Oil</string>
 
     <!-- Error messages-->
     <string name="couldNotGetCars">Error while getting vehicles</string>

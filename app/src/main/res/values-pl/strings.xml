@@ -13,6 +13,10 @@
     <string name="Yes">Tak</string>
     <string name="No">Nie</string>
     <string name="Cancel">Anuluj</string>
+    <string name="cars">Pojazdy</string>
+    <string name="entryType">Rodzaj wpisu</string>
+    <string name="fuel">Paliwo</string>
+    <string name="oil">Olej</string>
     <!-- Error messages -->
     <string name="couldNotGetCars">Błąd podczas pobierania pojazdów</string>
     <string name="couldNotSaveCars">Błąd podczas zapisywania pojazdów</string>

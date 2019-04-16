@@ -23,7 +23,7 @@
             android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="8dp" android:textSize="18sp"/>
     <Button
-            android:text="@string/settings"
+            android:text="@string/cars"
             android:onClick="onSettingsClick"
             android:layout_width="0dp"
             android:layout_height="100dp"
