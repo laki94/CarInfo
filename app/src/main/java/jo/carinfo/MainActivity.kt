@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.RadioGroup
 
@@ -47,6 +48,30 @@ class MainActivity : AppCompatActivity() {
                         for (car in extras.getSerializable("cars") as ArrayList<Car>)
                             mCars?.add(car)
                     }
+            }
+        }
+        else if (requestCode == FUEL_ENTRY)
+        {
+            if (resultCode == Activity.RESULT_OK)
+            {
+                val extras = data?.extras
+                if (extras != null)
+                {
+                    var name = ""
+                    var entry: FuelEntry? = null
+
+                    if (extras.containsKey("name"))
+                        name = extras.getSerializable("name") as String
+                    if (extras.containsKey("entry"))
+                        entry = extras.getSerializable("entry") as FuelEntry
+
+                    if ((name.isNotEmpty()) && (entry != null))
+                        if (mCars?.getCarWithName(name) != null) {
+                            mCars?.getCarWithName(name).let { it?.addEntry(entry) }
+                            mCars?.let { mCore.saveCars(it) }
+                        }
+                }
+
             }
         }
     }

@@ -17,6 +17,11 @@ class Core(context: Context) {
         return mAllCars
     }
 
+    fun saveCars(aCarsList: CarsList)
+    {
+        cfgManager.saveCars(aCarsList)
+    }
+
     private fun initializeCars()
     {
         mAllCars = cfgManager.getCars()

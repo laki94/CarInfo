@@ -17,7 +17,15 @@
     <string name="entryType">Rodzaj wpisu</string>
     <string name="fuel">Paliwo</string>
     <string name="oil">Olej</string>
+    <string name="odometer">Drogomierz</string>
+    <string name="mileage">Przebieg</string>
+    <string name="or">LUB</string>
+    <string name="fuelAmount">Ilość paliwa</string>
+    <string name="perLiter">Za litr</string>
     <!-- Error messages -->
     <string name="couldNotGetCars">Błąd podczas pobierania pojazdów</string>
     <string name="couldNotSaveCars">Błąd podczas zapisywania pojazdów</string>
+    <string name="mileageInputError">Podany przebieg jest błędny</string>
+    <string name="fuelAmountInputError">Podana ilość paliwa jest błędna</string>
+    <string name="perLiterInputError">Podana wartość za litr jest błędna</string>
 </resources>
