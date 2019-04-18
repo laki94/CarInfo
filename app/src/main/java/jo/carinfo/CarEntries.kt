@@ -32,13 +32,6 @@ class CarEntries : AppCompatActivity() {
         if (mainCar?.mEntries?.isNullOrEmpty() == false)
             adapter = EntriesAdapter(this, mainCar!!.mEntries)
 
-//        adapter.let { it?.onItemClick = { it ->
-//            val intent = Intent(this, CarEntries::class.java)
-//            intent.putExtra("car", it)
-//            startActivity(intent)
-//        }
-//        }
-
         listView.layoutManager = LinearLayoutManager(this)
         listView.adapter = adapter
     }

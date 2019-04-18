@@ -14,7 +14,6 @@ class SettingsActivity : AppCompatActivity() {
 
     private val originalCarsList = CarsList()
     private var newCarsList = CarsList()
-//    private var adapter: CarAdapter? = null
     private var adapter: CarAdapter? = null
 
     private fun addAndRefreshList(aCarName: String){
