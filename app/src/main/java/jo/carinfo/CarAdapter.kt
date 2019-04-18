@@ -1,6 +1,9 @@
 package jo.carinfo
 
 import android.content.Context
+import android.content.Intent
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
@@ -15,7 +18,7 @@ class CarAdapter(private val context: Context, private val items : CarsList) : R
     private var mEditing = false
     private val mCheckedIds: ArrayList<Int> = arrayListOf()
     private var mOnLongPos = -1
-
+    var onItemClick: ((Car) -> Unit)? = null
 
     fun isEditing(): Boolean
     {
@@ -53,10 +56,6 @@ class CarAdapter(private val context: Context, private val items : CarsList) : R
 
         if (position != mOnLongPos)
             myHolder.cbSelectCar.isChecked = false
-        myHolder.tvCarName.setOnClickListener {
-            if (mEditing)
-                myHolder.cbSelectCar.isChecked = !myHolder.cbSelectCar.isChecked
-        }
 
         myHolder.tvCarName.setOnLongClickListener {
             if (!mEditing)
@@ -70,7 +69,7 @@ class CarAdapter(private val context: Context, private val items : CarsList) : R
             true
         }
 
-        myHolder.cbSelectCar.setOnCheckedChangeListener {compoundButton, isChecked ->
+        myHolder.cbSelectCar.setOnCheckedChangeListener {_, isChecked ->
 
             if (isChecked)
             {
@@ -91,8 +90,17 @@ class CarAdapter(private val context: Context, private val items : CarsList) : R
         return MyViewHolder(LayoutInflater.from(context).inflate(R.layout.lvcars_item, parent, false))
     }
 
-    class MyViewHolder (view: View) : RecyclerView.ViewHolder(view) {
+    inner class MyViewHolder (view: View) : RecyclerView.ViewHolder(view) {
         val tvCarName : TextView = view.tvSimpleCarName
         val cbSelectCar: CheckBox = view.cbSelectCar
+
+        init {
+            tvCarName.setOnClickListener{
+                if (mEditing)
+                    cbSelectCar.isChecked = !cbSelectCar.isChecked
+                else
+                    onItemClick?.invoke(items[adapterPosition])
+            }
+        }
     }
 }

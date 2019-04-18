@@ -1,8 +1,11 @@
 package jo.carinfo
 
+import android.content.Context
 import java.io.Serializable
 import java.util.*
 
-open class Entry(date: Date = Date(0)): Serializable {
+abstract class Entry(date: Date = Date(0)): Serializable {
     var mDate = date
+
+    abstract fun getObjectString(context: Context): String
 }

@@ -9,6 +9,8 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme.NoActionBar">
+        <activity android:name=".CarEntries">
+        </activity>
         <activity android:name=".simple_name">
         </activity>
         <activity android:name=".FuelEntryActivity">

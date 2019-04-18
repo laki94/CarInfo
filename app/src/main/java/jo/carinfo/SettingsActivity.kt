@@ -14,6 +14,7 @@ class SettingsActivity : AppCompatActivity() {
 
     private val originalCarsList = CarsList()
     private var newCarsList = CarsList()
+//    private var adapter: CarAdapter? = null
     private var adapter: CarAdapter? = null
 
     private fun addAndRefreshList(aCarName: String){
@@ -126,6 +127,15 @@ class SettingsActivity : AppCompatActivity() {
             }
 
         adapter = CarAdapter(this, newCarsList)
+
+        adapter.let { it?.onItemClick = { it ->
+                val intent = Intent(this, CarEntries::class.java)
+                intent.putExtra("car", it)
+                startActivity(intent)
+            }
+        }
+
+
         listView.layoutManager = LinearLayoutManager(this)
         listView.adapter = adapter
     }

@@ -22,6 +22,7 @@
     <string name="or">OR</string>
     <string name="fuelAmount">Fuel amount</string>
     <string name="perLiter">Per liter</string>
+    <string name="entriesFor">Entries for</string>
     <!-- Error messages-->
     <string name="couldNotGetCars">Error while getting vehicles</string>
     <string name="couldNotSaveCars">Error while saving vehicles</string>

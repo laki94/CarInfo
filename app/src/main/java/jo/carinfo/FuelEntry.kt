@@ -1,5 +1,6 @@
 package jo.carinfo
 
+import android.content.Context
 import java.util.*
 
 class FuelEntry(date: Date = Date(0), odo: Int = 0, mile: Int = 0, fuelAm: Double = 0.0, perLiter: Double = 0.0): Entry(date) {
@@ -9,7 +10,10 @@ class FuelEntry(date: Date = Date(0), odo: Int = 0, mile: Int = 0, fuelAm: Doubl
     var mFuelAmount = fuelAm
     var mPerLiter = perLiter
 
-//    var odometer: Int
-//        get() = this.mOdometer
-//        set(value) { mOdometer = value }
+    override fun getObjectString(context: Context): String
+    {
+        return String.format("%s: %d\n%s: %d\n%s: %.2f\n%s: %.2f", context.getString(R.string.odometer),
+            mOdometer, context.getString(R.string.mileage), mMileage, context.getString(R.string.fuelAmount), mFuelAmount,
+            context.getString(R.string.perLiter), mPerLiter)
+    }
 }

@@ -22,6 +22,7 @@
     <string name="or">LUB</string>
     <string name="fuelAmount">Ilość paliwa</string>
     <string name="perLiter">Za litr</string>
+    <string name="entriesFor">Wpisy dla</string>
     <!-- Error messages -->
     <string name="couldNotGetCars">Błąd podczas pobierania pojazdów</string>
     <string name="couldNotSaveCars">Błąd podczas zapisywania pojazdów</string>
