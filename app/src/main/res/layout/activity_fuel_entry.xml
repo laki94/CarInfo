@@ -23,7 +23,7 @@
             app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
             android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"/>
     <EditText
-            android:layout_width="150dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="@string/odometer"
             android:ems="10"
@@ -32,19 +32,17 @@
             tools:targetApi="o"
             android:layout_marginStart="8dp"
             app:layout_constraintStart_toStartOf="parent" android:inputType="number"
-            android:layout_marginTop="32dp" app:layout_constraintTop_toBottomOf="@+id/sCarNames"/>
+            android:layout_marginTop="32dp" app:layout_constraintTop_toBottomOf="@+id/sCarNames"
+            android:layout_marginEnd="8dp" app:layout_constraintEnd_toStartOf="@+id/tOr"/>
     <TextView
             android:text="@string/or"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/tOr"
             app:layout_constraintTop_toTopOf="@+id/etOdometer"
             app:layout_constraintBottom_toBottomOf="@+id/etOdometer"
-            app:layout_constraintVertical_bias="0.615" app:layout_constraintStart_toEndOf="@+id/etOdometer"
-            android:layout_marginStart="16dp" app:layout_constraintEnd_toStartOf="@+id/etMileage"
-            android:layout_marginEnd="16dp"/>
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            tools:layout_editor_absoluteX="196dp"/>
     <EditText
-            android:layout_width="173dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="@string/mileage"
             android:ems="10"
@@ -54,7 +52,7 @@
             app:layout_constraintTop_toTopOf="@+id/etOdometer"
             app:layout_constraintBottom_toBottomOf="@+id/etOdometer" app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="8dp"
-            android:inputType="number"/>
+            android:inputType="number" app:layout_constraintStart_toEndOf="@+id/tOr" android:layout_marginStart="8dp"/>
     <EditText
             android:layout_width="0dp"
             android:layout_height="wrap_content"
