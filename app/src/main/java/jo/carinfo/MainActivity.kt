@@ -5,9 +5,11 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.text.method.Touch
 import android.util.Log
 import android.view.View
 import android.widget.RadioGroup
+import android.widget.Toast
 
 const val SETTINGS_CLICK = 1
 const val FUEL_ENTRY = 2
@@ -40,13 +42,17 @@ class MainActivity : AppCompatActivity() {
         {
             if (resultCode == Activity.RESULT_OK)
             {
+                Log.d("Main", "got ok result for settings click")
                 val extras = data?.extras
                 if (extras != null)
                     if (extras.containsKey("cars"))
                     {
                         mCars?.clear()
                         for (car in extras.getSerializable("cars") as ArrayList<Car>)
+                        {
+                            Log.d("Main", String.format("adding car %s to list", car.mName))
                             mCars?.add(car)
+                        }
                     }
             }
         }
@@ -54,6 +60,7 @@ class MainActivity : AppCompatActivity() {
         {
             if (resultCode == Activity.RESULT_OK)
             {
+                Log.d("Main", "got ok result for fuel entry")
                 val extras = data?.extras
                 if (extras != null)
                 {
@@ -61,14 +68,25 @@ class MainActivity : AppCompatActivity() {
                     var entry: FuelEntry? = null
 
                     if (extras.containsKey("name"))
+                    {
                         name = extras.getSerializable("name") as String
+                        Log.d("Main", String.format("got entry for %s", name))
+                    }
                     if (extras.containsKey("entry"))
+                    {
                         entry = extras.getSerializable("entry") as FuelEntry
+                        Log.d("Main", String.format("got entry info %s", entry.getObjectString(this)))
+                    }
 
                     if ((name.isNotEmpty()) && (entry != null))
                         if (mCars?.getCarWithName(name) != null) {
                             mCars?.getCarWithName(name).let { it?.addEntry(entry) }
-                            mCars?.let { mCore.saveCars(it) }
+                            mCars?.let {
+                                if (mCore.saveCars(it))
+                                    Toast.makeText(this, R.string.carsSavedAfterEntry, Toast.LENGTH_SHORT).show()
+                                else
+                                    Toast.makeText(this, R.string.carsNotSavedAfterEntry, Toast.LENGTH_SHORT).show()
+                            }
                         }
                 }
 

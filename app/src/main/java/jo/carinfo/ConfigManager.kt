@@ -46,8 +46,6 @@ class ConfigManager(private var context: Context) {
     }
 
     fun saveCars(aCarsList: CarsList): Boolean {
-        Log.d("CFGMGR", "saving cars")
-
         var fileObj = File(context.filesDir, CARS_FILE)
         try {
             if (!fileObj.parentFile.exists())
@@ -66,6 +64,7 @@ class ConfigManager(private var context: Context) {
                 Log.d("CFGMGR", "cars saved")
             } catch (e: Exception)
             {
+                Log.e("CFGMGR", String.format("cars not saved, %s", e.message))
                 return false
             } finally {
                 o.close()

@@ -23,11 +23,13 @@
     <string name="fuelAmount">Fuel amount</string>
     <string name="perLiter">Per liter</string>
     <string name="entriesFor">Entries for</string>
+    <string name="carsSavedAfterEntry">Entry added successfully</string>
     <!-- Error messages-->
     <string name="couldNotGetCars">Error while getting vehicles</string>
     <string name="couldNotSaveCars">Error while saving vehicles</string>
     <string name="mileageInputError">Mileage is invalid</string>
     <string name="fuelAmountInputError">Fuel amount is invalid</string>
     <string name="perLiterInputError">Per liter value is invalid</string>
+    <string name="carsNotSavedAfterEntry">Could not add entry</string>
 
 </resources>

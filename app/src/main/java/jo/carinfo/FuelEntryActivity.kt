@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.view.View
 import android.widget.*
 import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.text.NumberFormat
 import java.util.*
 
 class FuelEntryActivity : AppCompatActivity() {
@@ -80,11 +82,7 @@ class FuelEntryActivity : AppCompatActivity() {
         var result = 0.0
         when (et.text.toString().toDoubleOrNull() != null)
         {
-            true ->
-            {
-                val df = DecimalFormat("#.##")
-                result = df.format(et.text.toString().toDouble()).toDouble()
-            }
+            true -> result = String.format(Locale.ROOT, "%.2f", et.text.toString().toDouble()).toDouble()
         }
         return result
     }
@@ -95,11 +93,7 @@ class FuelEntryActivity : AppCompatActivity() {
         var result = 0.0
         when (et.text.toString().toDoubleOrNull() != null)
         {
-            true ->
-            {
-                val df = DecimalFormat("#.##")
-                result = df.format(et.text.toString().toDouble()).toDouble()
-            }
+            true -> result = String.format(Locale.ROOT, "%.2f", et.text.toString().toDouble()).toDouble()
         }
         return result
     }

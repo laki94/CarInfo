@@ -23,10 +23,12 @@
     <string name="fuelAmount">Ilość paliwa</string>
     <string name="perLiter">Za litr</string>
     <string name="entriesFor">Wpisy dla</string>
+    <string name="carsSavedAfterEntry">Dodano wpis</string>
     <!-- Error messages -->
     <string name="couldNotGetCars">Błąd podczas pobierania pojazdów</string>
     <string name="couldNotSaveCars">Błąd podczas zapisywania pojazdów</string>
     <string name="mileageInputError">Podany przebieg jest błędny</string>
     <string name="fuelAmountInputError">Podana ilość paliwa jest błędna</string>
     <string name="perLiterInputError">Podana wartość za litr jest błędna</string>
+    <string name="carsNotSavedAfterEntry">Dodanie wpisu nie powiodło się</string>
 </resources>

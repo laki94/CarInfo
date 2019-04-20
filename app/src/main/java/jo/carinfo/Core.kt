@@ -1,6 +1,7 @@
 package jo.carinfo
 
 import android.content.Context
+import android.util.Log
 
 class Core(context: Context) {
 
@@ -17,13 +18,15 @@ class Core(context: Context) {
         return mAllCars
     }
 
-    fun saveCars(aCarsList: CarsList)
+    fun saveCars(aCarsList: CarsList): Boolean
     {
-        cfgManager.saveCars(aCarsList)
+        Log.d("Core", "saving cars to file")
+        return cfgManager.saveCars(aCarsList)
     }
 
     private fun initializeCars()
     {
+        Log.d("Core", "initializing cars")
         mAllCars = cfgManager.getCars()
         mCarsInitialized = true
     }
