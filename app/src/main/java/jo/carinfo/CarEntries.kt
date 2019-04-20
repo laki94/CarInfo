@@ -149,4 +149,8 @@ class CarEntries : AppCompatActivity() {
                 Toast.makeText(this, lastError, Toast.LENGTH_SHORT).show()
         }
     }
+
+    private fun createOilEntry() {
+
+    }
 }

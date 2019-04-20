@@ -27,6 +27,7 @@
     <string name="addEntry">Dodaj wpis</string>
     <string name="Next">Dalej</string>
     <string name="dataChangedWantSave">Zmieniono dane, czy chcesz zapisać?</string>
+    <string name="remindAfter">Przypomnij za (km)</string>
     <!-- Error messages -->
     <string name="couldNotGetCars">Błąd podczas pobierania pojazdów</string>
     <string name="couldNotSaveCars">Błąd podczas zapisywania pojazdów</string>
