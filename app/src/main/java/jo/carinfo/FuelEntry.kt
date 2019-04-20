@@ -16,4 +16,9 @@ class FuelEntry(date: Date = Date(0), odo: Int = 0, mile: Int = 0, fuelAm: Doubl
             mOdometer, context.getString(R.string.mileage), mMileage, context.getString(R.string.fuelAmount), mFuelAmount,
             context.getString(R.string.perLiter), mPerLiter)
     }
+
+    override fun getRawData(): String
+    {
+        return String.format("%d,%d,%.2f,%.2f", mOdometer, mMileage, mFuelAmount, mPerLiter)
+    }
 }

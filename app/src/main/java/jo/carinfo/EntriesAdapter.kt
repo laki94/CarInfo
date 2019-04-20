@@ -22,7 +22,12 @@ class EntriesAdapter(private val context: Context, private val items : EntriesLi
     }
 
     override fun getItemCount(): Int {
-        return items.size
+        var result = 0
+
+        if (!items.isNullOrEmpty())
+            result = items.size
+
+        return result
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {

@@ -24,6 +24,9 @@
     <string name="perLiter">Za litr</string>
     <string name="entriesFor">Wpisy dla</string>
     <string name="carsSavedAfterEntry">Dodano wpis</string>
+    <string name="addEntry">Dodaj wpis</string>
+    <string name="Next">Dalej</string>
+    <string name="dataChangedWantSave">Zmieniono dane, czy chcesz zapisać?</string>
     <!-- Error messages -->
     <string name="couldNotGetCars">Błąd podczas pobierania pojazdów</string>
     <string name="couldNotSaveCars">Błąd podczas zapisywania pojazdów</string>

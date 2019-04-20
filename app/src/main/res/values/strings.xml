@@ -24,6 +24,9 @@
     <string name="perLiter">Per liter</string>
     <string name="entriesFor">Entries for</string>
     <string name="carsSavedAfterEntry">Entry added successfully</string>
+    <string name="addEntry">Add entry</string>
+    <string name="Next">Next</string>
+    <string name="dataChangedWantSave">Data changed, do you want to save?</string>
     <!-- Error messages-->
     <string name="couldNotGetCars">Error while getting vehicles</string>
     <string name="couldNotSaveCars">Error while saving vehicles</string>

@@ -93,44 +93,4 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
-    fun onEntriesClick(view: View)
-    {
-        val builder = AlertDialog.Builder(this)
-        val inflater = layoutInflater
-        builder.setTitle(R.string.entryType)
-        val dialogLayout = inflater.inflate(R.layout.dlg_select_entry_type, null)
-        val rg = dialogLayout.findViewById<RadioGroup>(R.id.rgEntryTypes)
-        builder.setView(dialogLayout)
-        builder.setPositiveButton(R.string.save) { _, _ -> createNewEntry(getEntryType(rg.checkedRadioButtonId)) }
-        builder.show()
-    }
-
-    private fun getEntryType(aRadioId: Int): EntryType
-    {
-        var type = EntryType.Unknown
-        when (aRadioId)
-        {
-            R.id.rbFuel -> type = EntryType.Fuel
-            R.id.rbOil -> type = EntryType.Oil
-        }
-        return type
-    }
-
-    private fun createNewEntry(aEntryType: EntryType)
-    {
-        when (aEntryType)
-        {
-            EntryType.Fuel -> { createFuelEntry() }
-            EntryType.Oil -> { }
-            else -> { }
-        }
-    }
-
-    private fun createFuelEntry()
-    {
-        val intent = Intent(this, FuelEntryActivity::class.java)
-        intent.putExtra("cars", mCars)
-        startActivityForResult(intent, FUEL_ENTRY)
-    }
 }
