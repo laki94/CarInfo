@@ -1,8 +1,8 @@
 package jo.carinfo
 
-class EntriesList: ArrayList<Entry>()
+class FuelEntriesList: ArrayList<FuelEntry>()
 {
-    override fun indexOf(aEntry: Entry): Int
+    override fun indexOf(aEntry: FuelEntry): Int
     {
         for (i in 0 until this.count())
         {

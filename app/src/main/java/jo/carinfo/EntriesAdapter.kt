@@ -1,9 +1,7 @@
 package jo.carinfo
 
 import android.content.Context
-import android.opengl.Visibility
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +9,7 @@ import android.widget.CheckBox
 import android.widget.TextView
 import kotlinx.android.synthetic.main.lvcars_item.view.*
 
-class EntriesAdapter(private val context: Context, private val items : EntriesList) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class EntriesAdapter(private val context: Context, private val items : FuelEntriesList) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var onItemClick: ((Car) -> Unit)? = null
 

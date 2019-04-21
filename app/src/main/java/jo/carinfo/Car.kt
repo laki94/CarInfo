@@ -7,14 +7,14 @@ class Car(aName: String = ""): Serializable
 {
 
     var mName : String = aName
-    var mEntries = EntriesList()
+    var mFuelEntries = FuelEntriesList()
 
     fun addEntry(aEntry: Entry)
     {
         if (aEntry is FuelEntry)
         {
             Log.d("Car", String.format("adding new fuel entry to %s", mName))
-            mEntries.add(aEntry)
+            mFuelEntries.add(aEntry)
         }
     }
 }

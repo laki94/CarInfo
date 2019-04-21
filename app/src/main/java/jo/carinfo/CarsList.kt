@@ -30,8 +30,8 @@ class CarsList: ArrayList<Car>(), Serializable
     {
         if (indexOf(aCar.mName) != -1)
         {
-            val orgEntries = this[indexOf(aCar.mName)].mEntries
-            val newEntries = aCar.mEntries
+            val orgEntries = this[indexOf(aCar.mName)].mFuelEntries
+            val newEntries = aCar.mFuelEntries
             if (newEntries.count() == orgEntries.count())
             {
                 for (entry in newEntries)

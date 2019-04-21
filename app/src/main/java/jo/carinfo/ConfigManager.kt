@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import java.io.*
+import com.google.gson.GsonBuilder
 
 const val CARS_FILE = "cars.txt"
 
@@ -17,14 +18,12 @@ class ConfigManager(private var context: Context) {
 
         if (fileObj.exists())
         {
-            val f = FileInputStream(fileObj)
-            val o = ObjectInputStream(f)
+            val gson = GsonBuilder().setPrettyPrinting().create()
             try
             {
                 Log.d("CFGMGR", "cars file exists, reading...")
-                result = o.readObject() as CarsList
+                result = gson.fromJson<CarsList>(fileObj.readText(), CarsList::class.java)
                 Log.d("CFGMGR", "got " + result.count().toString() + " cars from file")
-
             }catch(e: Exception)
             {
                 val builder = StringBuilder()
@@ -32,11 +31,6 @@ class ConfigManager(private var context: Context) {
                 builder.append(" - ")
                 builder.append(e.message)
                 Toast.makeText(context, builder.toString(), Toast.LENGTH_SHORT).show()
-            }
-            finally
-            {
-                o.close()
-                f.close()
             }
         }
         else
@@ -46,7 +40,7 @@ class ConfigManager(private var context: Context) {
     }
 
     fun saveCars(aCarsList: CarsList): Boolean {
-        var fileObj = File(context.filesDir, CARS_FILE)
+        val fileObj = File(context.filesDir, CARS_FILE)
         try {
             if (!fileObj.parentFile.exists())
                 fileObj.parentFile.mkdirs()
@@ -57,17 +51,17 @@ class ConfigManager(private var context: Context) {
             Log.d("CFGMGR", "saving " + aCarsList.count().toString() + " cars to file")
 
             val f = FileOutputStream(fileObj)
-            val o = ObjectOutputStream(f)
-
+            val sw = OutputStreamWriter(f)
+            val gson = GsonBuilder().setPrettyPrinting().create()
             try {
-                o.writeObject(aCarsList)
+                sw.write(gson.toJson(aCarsList))
                 Log.d("CFGMGR", "cars saved")
             } catch (e: Exception)
             {
                 Log.e("CFGMGR", String.format("cars not saved, %s", e.message))
                 return false
             } finally {
-                o.close()
+                sw.close()
                 f.close()
             }
 
