@@ -9,7 +9,7 @@ import android.widget.CheckBox
 import android.widget.TextView
 import kotlinx.android.synthetic.main.lvcars_item.view.*
 
-class EntriesAdapter(private val context: Context, private val items : FuelEntriesList) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class EntriesAdapter(private val context: Context, private val items : ArrayList<Entry>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var onItemClick: ((Car) -> Unit)? = null
 

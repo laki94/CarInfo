@@ -7,12 +7,6 @@
         android:layout_height="match_parent"
         tools:context=".OilEntryActivity">
 
-    <CalendarView
-            android:layout_width="350dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/cvDate" android:layout_marginTop="8dp"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"/>
     <EditText
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -22,25 +16,26 @@
             android:layout_marginStart="8dp"
             app:layout_constraintStart_toStartOf="parent" android:inputType="number"
             app:layout_constraintBottom_toBottomOf="@+id/etRemindAfter"
-            app:layout_constraintTop_toTopOf="@+id/etRemindAfter"/>
+            app:layout_constraintTop_toTopOf="@+id/etRemindAfter"
+            app:layout_constraintEnd_toStartOf="@+id/etRemindAfter" android:layout_marginEnd="8dp"/>
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/tvReminder"
             android:text="@string/remindAfter"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="8dp"
             android:textSize="18sp"
-            android:layout_marginStart="8dp"
-            app:layout_constraintStart_toStartOf="@+id/etRemindAfter" android:layout_marginTop="24dp"
-            app:layout_constraintTop_toBottomOf="@+id/cvDate"/>
+            app:layout_constraintEnd_toEndOf="@+id/etRemindAfter"
+            android:layout_marginEnd="8dp" android:layout_marginTop="16dp" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/etRemindAfter" android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/etRemindAfter"/>
     <EditText
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="15000"
             android:ems="10"
             android:id="@+id/etRemindAfter"
+            android:text="@string/oil_remind_const_15k"
             app:layout_constraintStart_toEndOf="@+id/etMileage" android:layout_marginStart="8dp"
-            android:inputType="number" android:layout_marginTop="8dp"
+            android:inputType="number"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@+id/tvReminder"/>
 </android.support.constraint.ConstraintLayout>

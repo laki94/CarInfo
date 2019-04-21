@@ -10,9 +10,5 @@ class OilEntryActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_oil_entry)
-
-        val c = Calendar.getInstance()
-        val dpd = findViewById<CalendarView>(R.id.cvDate)
-        dpd.date = c.timeInMillis
     }
 }

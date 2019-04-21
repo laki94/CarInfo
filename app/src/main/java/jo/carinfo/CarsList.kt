@@ -30,15 +30,35 @@ class CarsList: ArrayList<Car>(), Serializable
     {
         if (indexOf(aCar.mName) != -1)
         {
-            val orgEntries = this[indexOf(aCar.mName)].mFuelEntries
-            val newEntries = aCar.mFuelEntries
-            if (newEntries.count() == orgEntries.count())
+            val orgFuelEntries = FuelEntriesList()
+            val newFuelEntries = FuelEntriesList()
+
+            orgFuelEntries.addAll(this[indexOf(aCar.mName)].mFuelEntries)
+            newFuelEntries.addAll(aCar.mFuelEntries)
+
+            if (newFuelEntries.count() == orgFuelEntries.count())
             {
-                for (entry in newEntries)
-                    if (orgEntries.indexOf(entry) == -1)
+                for (entry in newFuelEntries)
+                    if (orgFuelEntries.indexOf(entry) == -1)
                         return -1
-                return indexOf(aCar.mName)
             }
+            else
+                return -1
+
+            val orgOilEntries = OilEntriesList()
+            val newOilEntries = OilEntriesList()
+            orgOilEntries.addAll(this[indexOf(aCar.mName)].mOilEntries)
+            newOilEntries.addAll(aCar.mOilEntries)
+            if (newOilEntries.count() == orgOilEntries.count())
+            {
+                for (entry in newOilEntries)
+                    if (orgOilEntries.indexOf(entry) == -1)
+                        return -1
+            }
+            else
+                return -1
+            
+            return indexOf(aCar.mName)
         }
         return -1
     }

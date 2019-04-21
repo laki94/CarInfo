@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
+import android.widget.EditText
 import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
@@ -18,6 +19,8 @@ class CarEntries : AppCompatActivity() {
 
     private var mainCar: Car? = null
     private var entriesAdapter: EntriesAdapter? = null
+
+    private val mAllEntries = ArrayList<Entry>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,11 +35,15 @@ class CarEntries : AppCompatActivity() {
         {
             val title = findViewById<TextView>(R.id.tvCarEntryTitle)
             title.text = format("%s %s", getString(R.string.entriesFor), mainCar?.mName)
+
+            mAllEntries.addAll(mainCar?.mFuelEntries!!.asIterable())
+            mAllEntries.addAll(mainCar?.mOilEntries!!.asIterable())
+            mAllEntries.sortBy { it.mDate }
         }
 
         val listView = findViewById<RecyclerView>(R.id.rvEntries)
 
-        entriesAdapter = EntriesAdapter(this, mainCar?.mFuelEntries!!)
+        entriesAdapter = EntriesAdapter(this, mAllEntries)
 
         listView.layoutManager = LinearLayoutManager(this)
         listView.adapter = entriesAdapter
@@ -140,8 +147,10 @@ class CarEntries : AppCompatActivity() {
                 lastError = getString(R.string.mileageInputError)
 
             if (lastError.isEmpty()) {
-                mainCar?.addEntry(FuelEntry(date, odoVal, milVal, fuelAmVal, perLitVal))
+                val entry = FuelEntry(date, odoVal, milVal, fuelAmVal, perLitVal)
+                mainCar?.addEntry(entry)
                 dialog.dismiss()
+                mAllEntries.add(entry)
                 entriesAdapter?.notifyDataSetChanged()
             } else
                 Toast.makeText(this, lastError, Toast.LENGTH_SHORT).show()
@@ -149,6 +158,43 @@ class CarEntries : AppCompatActivity() {
     }
 
     private fun createOilEntry() {
+        val builder = AlertDialog.Builder(this)
+        val inflater = layoutInflater
+        val dialogLayout = inflater.inflate(R.layout.activity_oil_entry, null)
 
+        builder.setView(dialogLayout)
+        builder.setPositiveButton(R.string.save) {_, _ ->}
+
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
+
+        val btn = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+        btn.setOnClickListener {
+            val mil = dialogLayout.findViewById<EditText>(R.id.etMileage)
+            val remindAfter = dialogLayout.findViewById<EditText>(R.id.etRemindAfter)
+            var lastError = ""
+            val date = Calendar.getInstance().time
+            var milVal = 0
+            var remAfterVal = 0
+
+            if (mil.text.toString().toIntOrNull() == null)
+                lastError = getString(R.string.mileageInputError)
+            else {
+                milVal = mil.text.toString().toInt()
+                if (remindAfter.text.toString().toIntOrNull() == null)
+                    lastError = getString(R.string.remindAfterInputError)
+                else
+                    remAfterVal = remindAfter.text.toString().toInt()
+            }
+
+            if (lastError.isEmpty()) {
+                val entry = OilEntry(date, milVal, remAfterVal)
+                mainCar?.addEntry(entry)
+                dialog.dismiss()
+                mAllEntries.add(entry)
+                entriesAdapter?.notifyDataSetChanged()
+            } else
+                Toast.makeText(this, lastError, Toast.LENGTH_SHORT).show()
+        }
     }
 }

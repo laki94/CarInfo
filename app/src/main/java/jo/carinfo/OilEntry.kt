@@ -3,16 +3,17 @@ package jo.carinfo
 import android.content.Context
 import java.util.*
 
-class OilEntry(aDate: Date = Date(0), aMileage: Int, aRemindAfter: Int): Entry(aDate) {
+class OilEntry(aDate: Date = Date(0), aMileage: Int = 0, aRemindAfter: Int = 0): Entry(aDate) {
 
     val mOrgMileage = aMileage
-    val aRemindAfter = aRemindAfter
+    val mRemindAfter = aRemindAfter
 
     override fun getObjectString(context: Context): String {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return String.format("%s: %d\n%s: %d", context.getString(R.string.mileage), mOrgMileage,
+            context.getString(R.string.remindAfter), mRemindAfter)
     }
 
     override fun getRawData(): String {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return String.format("%d,%d", mOrgMileage, mRemindAfter)
     }
 }
