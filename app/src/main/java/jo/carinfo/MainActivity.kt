@@ -21,7 +21,6 @@ class MainActivity : AppCompatActivity() {
 
     private var mCars: CarsList? = null
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -92,5 +91,11 @@ class MainActivity : AppCompatActivity() {
 
             }
         }
+    }
+
+    fun onFuelUsageClick(view: View)
+    {
+        val intent = Intent(this, FuelUsageGraph::class.java)
+        startActivity(intent)
     }
 }

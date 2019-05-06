@@ -29,6 +29,7 @@
     <string name="dataChangedWantSave">Data changed, do you want to save?</string>
     <string name="remindAfter">Remind after (km)</string>
     <string name="oil_remind_const_15k">15000</string>
+    <string name="selectDate">Select date</string>
     <!-- Error messages-->
     <string name="couldNotGetCars">Error while getting vehicles</string>
     <string name="couldNotSaveCars">Error while saving vehicles</string>

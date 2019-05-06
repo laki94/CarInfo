@@ -9,6 +9,11 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme.NoActionBar">
+        <activity
+            android:name=".FuelUsageGraph"
+            android:screenOrientation="landscape"
+        >
+        </activity>
         <activity android:name=".OilEntryActivity">
         </activity>
         <activity android:name=".CarEntries">
