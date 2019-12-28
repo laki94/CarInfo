@@ -5,6 +5,7 @@ import java.io.Serializable
 import java.util.*
 
 abstract class Entry(date: Date = Date(0)): Serializable {
+    var mId = -1
     var mDate = date
 
     abstract fun getObjectString(context: Context): String

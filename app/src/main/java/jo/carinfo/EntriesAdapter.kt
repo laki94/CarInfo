@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.lvcars_item.view.*
 
 class EntriesAdapter(private val context: Context, private val items : ArrayList<Entry>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    var onItemClick: ((Car) -> Unit)? = null
+    var onItemClick: ((Entry) -> Unit)? = null
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val myHolder = holder as EntriesViewHolder
@@ -38,6 +38,9 @@ class EntriesAdapter(private val context: Context, private val items : ArrayList
 
         init {
             cbSelectCar.visibility = View.GONE
+            tvCarName.setOnClickListener{
+                onItemClick?.invoke(items[adapterPosition])
+            }
         }
     }
 }
