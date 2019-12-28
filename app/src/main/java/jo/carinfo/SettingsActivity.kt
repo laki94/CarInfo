@@ -16,25 +16,68 @@ const val FUEL_ENTRY_CLICK = 0
 class SettingsActivity : AppCompatActivity() {
 
     private val originalCarsList = CarsList()
-    private var newCarsList = CarsList()
     private var adapter: CarAdapter? = null
 
     private fun addAndRefreshList(aCarName: String) {
-        if (aCarName.isNotEmpty()) {
-            newCarsList.add(Car(aCarName))
-            adapter?.notifyItemChanged(newCarsList.count() - 1)
+        if (originalCarsList.indexOf(aCarName) != -1) {
+            Toast.makeText(this, R.string.carNameAlreadyExists, Toast.LENGTH_SHORT).show()
+        }
+        else if (aCarName.isNotEmpty()) {
+            val cfgManager = ConfigManager(this)
+            if (cfgManager.addCar(aCarName)) {
+                originalCarsList.add(Car(aCarName))
+                adapter?.notifyItemChanged(originalCarsList.count() - 1)
+            }
+            else
+                Toast.makeText(this, R.string.couldNotSaveCars, Toast.LENGTH_SHORT).show()
         }
     }
 
-    fun onCarAddClick(view: View) {
+    private fun editCarOnList(aOldCarName: String, aNewCarName: String) {
+        if (originalCarsList.indexOf(aNewCarName) != -1) {
+            Toast.makeText(this, R.string.carNameAlreadyExists, Toast.LENGTH_SHORT).show()
+        }
+        else if (originalCarsList.indexOf(aOldCarName) == -1) {
+            Toast.makeText(this, R.string.unknownError, Toast.LENGTH_SHORT).show()
+        }
+        else if (aNewCarName.isNotEmpty()) {
+            val cfgManager = ConfigManager(this)
+            if (cfgManager.editCarName(aOldCarName, aNewCarName)) {
+                originalCarsList.changeName(aOldCarName, aNewCarName)
+                adapter?.notifyItemChanged(originalCarsList.indexOf(aNewCarName))
+            }
+            else
+                Toast.makeText(this, R.string.couldNotSaveCars, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun onEditCarClick(view: View) {
+        if (view is TextView)
+            createAddCarDialog(view.text.toString())
+    }
+
+    private fun createAddCarDialog(aStartText: String = "")
+    {
         val builder = AlertDialog.Builder(this)
         val inflater = layoutInflater
-        builder.setTitle(R.string.creatingCar)
         val dialogLayout = inflater.inflate(R.layout.dlg_add_car, null)
         val etCarName = dialogLayout.findViewById<EditText>(R.id.etCarName)
+        if (aStartText.isEmpty()) {
+            builder.setTitle(R.string.creatingCar)
+            builder.setPositiveButton(R.string.save) { _, _ -> addAndRefreshList(etCarName.text.toString()) }
+        }
+        else {
+            builder.setTitle(R.string.editingCar)
+            builder.setPositiveButton(R.string.save) { _, _ -> editCarOnList(aStartText, etCarName.text.toString()) }
+        }
+        etCarName.setText(aStartText)
+        etCarName.setSelection(etCarName.text.length)
         builder.setView(dialogLayout)
-        builder.setPositiveButton(R.string.save) { _, _ -> addAndRefreshList(etCarName.text.toString()) }
         builder.show()
+    }
+
+    fun onCarAddClick(view: View) {
+        createAddCarDialog()
     }
 
     override fun onBackPressed() {
@@ -43,44 +86,15 @@ class SettingsActivity : AppCompatActivity() {
                 adapter?.stopEditing()
             }
             else -> {
-                askForSaveCarsAndQuit()
-            }
-        }
-    }
-
-    private fun askForSaveCarsAndQuit() {
-        var doAsk = newCarsList.count() != originalCarsList.count()
-
-        if (!doAsk)
-            for (car in newCarsList) {
-                if (originalCarsList.indexOf(car) == -1) {
-                    doAsk = true
-                    break
-                }
-            }
-
-        if (doAsk) {
-            val builder = AlertDialog.Builder(this)
-            builder.setTitle(R.string.dataChangedWantSave)
-            builder.setPositiveButton(R.string.Yes) { _, _ ->
-                saveCars()
                 closeActivity(true)
             }
-
-            builder.setNegativeButton(R.string.No) { _, _ ->
-                closeActivity(false)
-            }
-
-            builder.setNeutralButton(R.string.Cancel) { _, _ -> }
-            builder.show()
-        } else
-            closeActivity(false)
+        }
     }
 
     private fun closeActivity(aReturnCars: Boolean) {
         val intent = Intent()
         if (aReturnCars) {
-            intent.putExtra("cars", newCarsList)
+            intent.putExtra("cars", originalCarsList)
         }
         setResult(Activity.RESULT_OK, intent)
         finish()
@@ -88,13 +102,22 @@ class SettingsActivity : AppCompatActivity() {
 
     fun onCarRemoveClick(view: View) {
         val checkedIds = adapter?.getCheckedIds()
+        var wasErr = false
         if (!checkedIds.isNullOrEmpty()) {
             checkedIds.sort()
             for (id in checkedIds.asReversed()) {
-                newCarsList.removeAt(id)
+                val cfgManager = ConfigManager(this)
+                if (cfgManager.removeCar(originalCarsList[id].mName)) {
+                    originalCarsList.removeAt(id)
+                }
+                else {
+                    wasErr = true
+                }
             }
+        if (wasErr)
+            Toast.makeText(this, R.string.couldNotRemoveCars, Toast.LENGTH_SHORT).show()
 
-            when (newCarsList.isEmpty()) {
+            when (originalCarsList.isEmpty()) {
                 true -> {
                     adapter?.stopEditing()
                 }
@@ -103,12 +126,6 @@ class SettingsActivity : AppCompatActivity() {
                 }
             }
         }
-    }
-
-    private fun saveCars() {
-        val cfgManager = ConfigManager(this)
-        if (!cfgManager.saveCars(newCarsList))
-            Toast.makeText(this, R.string.couldNotSaveCars, Toast.LENGTH_SHORT).show()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -121,10 +138,9 @@ class SettingsActivity : AppCompatActivity() {
             if (extras.containsKey("cars")) {
                 for (car in extras.getSerializable("cars") as ArrayList<Car>)
                     originalCarsList.add(car)
-                newCarsList = originalCarsList.clone() as CarsList
             }
 
-        adapter = CarAdapter(this, newCarsList)
+        adapter = CarAdapter(this, originalCarsList)
 
         adapter.let {
             it?.onItemClick = { it ->
@@ -147,7 +163,7 @@ class SettingsActivity : AppCompatActivity() {
                     if (extras.containsKey("car"))
                     {
                         val car = extras.getSerializable("car") as Car
-                        newCarsList[newCarsList.indexOf(car.mName)] = car
+                        originalCarsList[originalCarsList.indexOf(car.mName)] = car
                     }
 
             }

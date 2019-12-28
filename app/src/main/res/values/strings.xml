@@ -7,6 +7,7 @@
     <string name="putCarName">Put a car name</string>
     <string name="save">Save</string>
     <string name="creatingCar">Creating car</string>
+    <string name="editingCar">Editing car</string>
     <string name="carsList">Cars list</string>
     <string name="removeCars">Remove</string>
     <string name="doSaveCarsQ">Save cars?</string>
@@ -32,10 +33,12 @@
     <!-- Error messages-->
     <string name="couldNotGetCars">Error while getting vehicles</string>
     <string name="couldNotSaveCars">Error while saving vehicles</string>
+    <string name="couldNotRemoveCars">Error while removing vegicles</string>
     <string name="mileageInputError">Mileage is invalid</string>
     <string name="fuelAmountInputError">Fuel amount is invalid</string>
     <string name="perLiterInputError">Per liter value is invalid</string>
     <string name="carsNotSavedAfterEntry">Could not add entry</string>
     <string name="remindAfterInputError">Remind after value is invalid</string>
-
+    <string name="carNameAlreadyExists">Name already exists</string>
+    <string name="unknownError">Unknown error occurred</string>
 </resources>

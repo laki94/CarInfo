@@ -4,6 +4,13 @@ import java.io.Serializable
 
 class CarsList: ArrayList<Car>(), Serializable
 {
+    fun changeName(aOldName: String, aNewName: String)
+    {
+        if (indexOf(aOldName) != -1) {
+            this[indexOf(aOldName)].mName = aNewName
+        }
+    }
+
     fun getCarWithName(aName: String): Car?
     {
         val idxOfCar = indexOf(aName)

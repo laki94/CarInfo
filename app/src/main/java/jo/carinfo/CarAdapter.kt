@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
+import kotlinx.android.synthetic.main.activity_settings.view.*
 import kotlinx.android.synthetic.main.lvcars_item.view.*
 
 class CarAdapter(private val context: Context, private val items : CarsList) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -58,14 +59,7 @@ class CarAdapter(private val context: Context, private val items : CarsList) : R
             myHolder.cbSelectCar.isChecked = false
 
         myHolder.tvCarName.setOnLongClickListener {
-            if (!mEditing)
-            {
-                mEditing = true
-                mOnLongPos = position
-                (context as SettingsActivity).findViewById<Toolbar>(R.id.tbEdit).visibility = View.VISIBLE
-                notifyDataSetChanged()
-            }
-            myHolder.cbSelectCar.isChecked = !myHolder.cbSelectCar.isChecked
+            (context as SettingsActivity).onEditCarClick(it)
             true
         }
 
