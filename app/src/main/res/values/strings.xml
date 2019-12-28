@@ -40,5 +40,7 @@
     <string name="carsNotSavedAfterEntry">Could not add entry</string>
     <string name="remindAfterInputError">Remind after value is invalid</string>
     <string name="carNameAlreadyExists">Name already exists</string>
+    <string name="carNameTooLong">Name too long</string>
+    <string name="invalidCarName">Invalid name</string>
     <string name="unknownError">Unknown error occurred</string>
 </resources>

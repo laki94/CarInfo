@@ -40,5 +40,7 @@
     <string name="carsNotSavedAfterEntry">Dodanie wpisu nie powiodło się</string>
     <string name="remindAfterInputError">Podana wartość "przypomnij za" jest błędna</string>
     <string name="carNameAlreadyExists">Podana nazwa już istnieje</string>
+    <string name="carNameTooLong">Podana nazwa jest zbyt długa</string>
+    <string name="invalidCarName">Podano błędną nazwę</string>
     <string name="unknownError">Wystąpił nieznany błąd</string>
 </resources>

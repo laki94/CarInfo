@@ -19,36 +19,23 @@ class SettingsActivity : AppCompatActivity() {
     private var adapter: CarAdapter? = null
 
     private fun addAndRefreshList(aCarName: String) {
-        if (originalCarsList.indexOf(aCarName) != -1) {
-            Toast.makeText(this, R.string.carNameAlreadyExists, Toast.LENGTH_SHORT).show()
+        val cfgManager = ConfigManager(this)
+        if (cfgManager.addCar(aCarName)) {
+            originalCarsList.add(Car(aCarName))
+            adapter?.notifyItemChanged(originalCarsList.count() - 1)
         }
-        else if (aCarName.isNotEmpty()) {
-            val cfgManager = ConfigManager(this)
-            if (cfgManager.addCar(aCarName)) {
-                originalCarsList.add(Car(aCarName))
-                adapter?.notifyItemChanged(originalCarsList.count() - 1)
-            }
-            else
-                Toast.makeText(this, R.string.couldNotSaveCars, Toast.LENGTH_SHORT).show()
-        }
+        else
+            Toast.makeText(this, R.string.couldNotSaveCars, Toast.LENGTH_SHORT).show()
     }
 
     private fun editCarOnList(aOldCarName: String, aNewCarName: String) {
-        if (originalCarsList.indexOf(aNewCarName) != -1) {
-            Toast.makeText(this, R.string.carNameAlreadyExists, Toast.LENGTH_SHORT).show()
+        val cfgManager = ConfigManager(this)
+        if (cfgManager.editCarName(aOldCarName, aNewCarName)) {
+            originalCarsList.changeName(aOldCarName, aNewCarName)
+            adapter?.notifyItemChanged(originalCarsList.indexOf(aNewCarName))
         }
-        else if (originalCarsList.indexOf(aOldCarName) == -1) {
-            Toast.makeText(this, R.string.unknownError, Toast.LENGTH_SHORT).show()
-        }
-        else if (aNewCarName.isNotEmpty()) {
-            val cfgManager = ConfigManager(this)
-            if (cfgManager.editCarName(aOldCarName, aNewCarName)) {
-                originalCarsList.changeName(aOldCarName, aNewCarName)
-                adapter?.notifyItemChanged(originalCarsList.indexOf(aNewCarName))
-            }
-            else
-                Toast.makeText(this, R.string.couldNotSaveCars, Toast.LENGTH_SHORT).show()
-        }
+        else
+            Toast.makeText(this, R.string.couldNotSaveCars, Toast.LENGTH_SHORT).show()
     }
 
     fun onEditCarClick(view: View) {
@@ -58,22 +45,54 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun createAddCarDialog(aStartText: String = "")
     {
+        val editing = aStartText.isNotEmpty()
         val builder = AlertDialog.Builder(this)
         val inflater = layoutInflater
         val dialogLayout = inflater.inflate(R.layout.dlg_add_car, null)
         val etCarName = dialogLayout.findViewById<EditText>(R.id.etCarName)
-        if (aStartText.isEmpty()) {
-            builder.setTitle(R.string.creatingCar)
-            builder.setPositiveButton(R.string.save) { _, _ -> addAndRefreshList(etCarName.text.toString()) }
+        if (editing) {
+            builder.setTitle(R.string.editingCar)
+            builder.setPositiveButton(R.string.save) { _, _ ->  }
         }
         else {
-            builder.setTitle(R.string.editingCar)
-            builder.setPositiveButton(R.string.save) { _, _ -> editCarOnList(aStartText, etCarName.text.toString()) }
+            builder.setTitle(R.string.creatingCar)
+            builder.setPositiveButton(R.string.save) { _, _ ->  }
         }
         etCarName.setText(aStartText)
         etCarName.setSelection(etCarName.text.length)
         builder.setView(dialogLayout)
-        builder.show()
+        val dialog = builder.create()
+        dialog.show()
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+            if (parseUserInput(etCarName.text.toString())) {
+                if (editing) {
+                    if (originalCarsList.indexOf(aStartText) == -1) {
+                        Toast.makeText(this, R.string.unknownError, Toast.LENGTH_SHORT).show()
+                    }
+                    else {
+                        editCarOnList(aStartText, etCarName.text.toString())
+                    }
+                } else {
+                    addAndRefreshList(etCarName.text.toString())
+                }
+                dialog.dismiss()
+            }
+        }
+    }
+
+    private fun parseUserInput(aInput: String): Boolean {
+        if (originalCarsList.indexOf(aInput) != -1) {
+            Toast.makeText(this, R.string.carNameAlreadyExists, Toast.LENGTH_SHORT).show()
+        }
+        else if (aInput.length > 45) {
+            Toast.makeText(this, R.string.carNameTooLong, Toast.LENGTH_SHORT).show()
+        }
+        else if (aInput.isEmpty()) {
+            Toast.makeText(this, R.string.invalidCarName, Toast.LENGTH_SHORT).show()
+        }
+        else
+            return true
+        return false
     }
 
     fun onCarAddClick(view: View) {
