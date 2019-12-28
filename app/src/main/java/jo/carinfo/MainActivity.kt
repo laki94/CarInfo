@@ -96,6 +96,7 @@ class MainActivity : AppCompatActivity() {
     fun onFuelUsageClick(view: View)
     {
         val intent = Intent(this, FuelUsageGraph::class.java)
+        intent.putExtra("cars", mCars)
         startActivity(intent)
     }
 }
