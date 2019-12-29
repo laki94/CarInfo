@@ -34,4 +34,8 @@ class ConfigManager(ctx: Context) {
     fun editFuelEntry(aEntry: FuelEntry): Boolean {
         return dbHandle.editFuelEntry(aEntry)
     }
+
+    fun removeEntry(aEntryId: Int): Boolean {
+        return dbHandle.removeEntry(aEntryId)
+    }
 }

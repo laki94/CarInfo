@@ -163,7 +163,7 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
         }
     }
 
-    fun removeFuelEntry(aEntryId: Int): Boolean {
+    fun removeEntry(aEntryId: Int): Boolean {
         val db = this.writableDatabase
         try {
             val _success = db.delete(TABLE_ENTRIES, "entry_id=?",  arrayOf(aEntryId.toString()))

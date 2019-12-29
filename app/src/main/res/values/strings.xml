@@ -31,10 +31,11 @@
     <string name="remindAfter">Remind after (km)</string>
     <string name="oil_remind_const_15k">15000</string>
     <string name="carRemoved">Car removed</string>
+    <string name="entryRemoved">Entry removed</string>
     <!-- Error messages-->
     <string name="couldNotGetCars">Error while getting vehicles</string>
     <string name="couldNotSaveCars">Error while saving vehicles</string>
-    <string name="couldNotRemoveCars">Error while removing vegicles</string>
+    <string name="couldNotRemoveCars">Error while removing vehicles</string>
     <string name="mileageInputError">Mileage is invalid</string>
     <string name="fuelAmountInputError">Fuel amount is invalid</string>
     <string name="perLiterInputError">Per liter value is invalid</string>
@@ -44,4 +45,5 @@
     <string name="carNameTooLong">Name too long</string>
     <string name="invalidCarName">Invalid name</string>
     <string name="unknownError">Unknown error occurred</string>
+    <string name="couldNotRemoveEntry">Error while removing entry</string>
 </resources>

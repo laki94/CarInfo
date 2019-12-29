@@ -19,6 +19,55 @@ class EntriesAdapter(private val context: Context, private val items : ArrayList
         myHolder.tvCarName.text = items[position].getObjectString(context)
     }
 
+    fun removeItem(position: Int) {
+        items.removeAt(position)
+        notifyItemRemoved(position)
+        notifyItemRangeChanged(position, itemCount)
+    }
+
+    fun addNewItem(aEntry: Entry) {
+        items.add(aEntry)
+        notifyItemChanged(itemCount - 1)
+    }
+
+    fun editItem(aEntry: Entry) {
+
+        for (tmpentry in items) {
+            if (tmpentry.mId == aEntry.mId) {
+                if (aEntry is FuelEntry) {
+                    (tmpentry as FuelEntry).mMileage = aEntry.mMileage
+                    tmpentry.mFuelAmount = aEntry.mFuelAmount
+                    tmpentry.mPerLiter = aEntry.mPerLiter
+                    tmpentry.mOdometer = aEntry.mOdometer
+                } else if (aEntry is OilEntry) {
+                    (tmpentry as OilEntry).mOrgMileage = aEntry.mOrgMileage
+                    tmpentry.mRemindAfter = aEntry.mRemindAfter
+                }
+                break
+            }
+        }
+        notifyItemChanged(getIndexOf(aEntry))
+    }
+
+    private fun getIndexOf(aEntry: Entry): Int {
+
+        for (i in 0 until items.count())
+        {
+            if (items[i].mId == aEntry.mId)
+                return i
+        }
+        return -1
+    }
+
+    fun refreshItem(position: Int) {
+        notifyItemChanged(position)
+    }
+
+    fun restoreItem(aEntry: Entry, position: Int) {
+        items.add(position, aEntry)
+        notifyItemInserted(position)
+    }
+
     override fun getItemCount(): Int {
         var result = 0
 
