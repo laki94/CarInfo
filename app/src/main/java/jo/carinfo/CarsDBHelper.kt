@@ -140,6 +140,7 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
                 values.put("entry_fuel_amount", aEntry.mFuelAmount)
                 values.put("entry_fuel_price", aEntry.mPerLiter)
                 val _success = db.insert(TABLE_ENTRIES, null, values)
+                aEntry.mId = Integer.parseInt("$_success")
                 return Integer.parseInt("$_success") != -1
             } finally {
                 db.close()
