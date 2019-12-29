@@ -9,7 +9,7 @@ import java.util.*
 
 class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DATABASE_VERSION) {
 
-    private val dateTimeFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()) //DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+    private val dateTimeFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
 
     override fun onCreate(p0: SQLiteDatabase) {
         val create_table = (
@@ -80,7 +80,9 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
     fun removeCar(aCarName: String): Boolean {
         val db = this.writableDatabase
         try {
-            val _success = db.delete(TABLE_CARS, "name=?",  arrayOf(aCarName))
+            var _success = db.delete(TABLE_ENTRIES, "carId=?", arrayOf(getCarId(aCarName).toString()))
+            if (Integer.parseInt("$_success") != -1)
+                _success = db.delete(TABLE_CARS, "name=?",  arrayOf(aCarName))
             return Integer.parseInt("$_success") != -1
         } finally {
             db.close()
@@ -119,6 +121,7 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
             {
                 newCar = Car(cursor.getString(cursor.getColumnIndex("name")))
                 newCar.mFuelEntries.addAll(getAllFuelEntries(cursor.getInt(cursor.getColumnIndex("id"))))
+                result.add(newCar)
             }
         }
         cursor.close()

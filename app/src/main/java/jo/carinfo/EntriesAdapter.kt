@@ -34,10 +34,8 @@ class EntriesAdapter(private val context: Context, private val items : ArrayList
 
     inner class EntriesViewHolder (view: View) : RecyclerView.ViewHolder(view) {
         val tvCarName : TextView = view.tvSimpleCarName
-        private val cbSelectCar: CheckBox = view.cbSelectCar
 
         init {
-            cbSelectCar.visibility = View.GONE
             tvCarName.setOnClickListener{
                 onItemClick?.invoke(items[adapterPosition])
             }

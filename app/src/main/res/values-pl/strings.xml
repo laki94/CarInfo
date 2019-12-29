@@ -30,6 +30,7 @@
     <string name="dataChangedWantSave">Zmieniono dane, czy chcesz zapisać?</string>
     <string name="remindAfter">Przypomnij za (km)</string>
     <string name="oil_remind_const_15k">15000</string>
+    <string name="carRemoved">Pojazd usunięty</string>
     <!-- Error messages -->
     <string name="couldNotGetCars">Błąd podczas pobierania pojazdów</string>
     <string name="couldNotSaveCars">Błąd podczas zapisywania pojazdów</string>
