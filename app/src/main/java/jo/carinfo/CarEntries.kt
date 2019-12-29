@@ -79,22 +79,28 @@ class CarEntries : AppCompatActivity() {
                 if (direction == ItemTouchHelper.LEFT) {
                     val delEntry = mAllEntries[pos]
                     entriesAdapter?.removeItem(pos)
+                    if (delEntry is FuelEntry)
+                        mainCar?.mFuelEntries?.remove(delEntry)
+                    else if (delEntry is OilEntry)
+                        mainCar?.mOilEntries?.remove(delEntry)
                     val snackbar = Snackbar.make(
                         findViewById(R.id.entries_layout),
                         R.string.entryRemoved,
-                        Snackbar.LENGTH_LONG
+                        Snackbar.LENGTH_INDEFINITE
                     )
                     snackbar.setAction("UNDO") {
                         entriesAdapter?.restoreItem(delEntry, pos)
+                        if (delEntry is FuelEntry)
+                            mainCar?.mFuelEntries?.add(delEntry)
+                        else if (delEntry is OilEntry)
+                            mainCar?.mOilEntries?.add(delEntry)
                     }
                     snackbar.addCallback(object : Snackbar.Callback() {
                         override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-                            if (event != DISMISS_EVENT_ACTION)
+                            if (event != DISMISS_EVENT_ACTION) {
                                 removeEntryOnList(delEntry)
-                            if (delEntry is FuelEntry)
-                                mainCar?.mFuelEntries?.remove(delEntry)
-                            else if (delEntry is OilEntry)
-                                mainCar?.mOilEntries?.remove(delEntry)
+
+                            }
                             super.onDismissed(transientBottomBar, event)
                         }
                     })
@@ -202,6 +208,10 @@ class CarEntries : AppCompatActivity() {
     private fun editEntry(aEntry: Entry) {
         if (aEntry is FuelEntry)
             createFuelEntry(aEntry)
+        else if (aEntry is OilEntry)
+            createOilEntry(aEntry)
+        else
+            throw NotImplementedError("Not implemented entry type to edit")
     }
 
     private fun createNewEntry(aEntryType: EntryType)
@@ -209,7 +219,7 @@ class CarEntries : AppCompatActivity() {
         when (aEntryType)
         {
             EntryType.Fuel -> { createFuelEntry(null) }
-            EntryType.Oil -> { createOilEntry() }
+            EntryType.Oil -> { createOilEntry(null) }
             else -> { }
         }
     }
@@ -318,7 +328,8 @@ class CarEntries : AppCompatActivity() {
         }
     }
 
-    private fun createOilEntry() {
+    private fun createOilEntry(aEntry: OilEntry?) {
+        val editing = aEntry != null
         val builder = AlertDialog.Builder(this)
         val inflater = layoutInflater
         val dialogLayout = inflater.inflate(R.layout.activity_oil_entry, null)
@@ -329,33 +340,52 @@ class CarEntries : AppCompatActivity() {
         val dialog: AlertDialog = builder.create()
         dialog.show()
 
+        val mil = dialogLayout.findViewById<TextView>(R.id.etMileage)
+        val remindAfter = dialogLayout.findViewById<TextView>(R.id.etRemindAfter)
+
+        if (editing) {
+            mil.text = aEntry?.mOrgMileage.toString()
+            remindAfter.text = aEntry?.mRemindAfter.toString()
+        }
+
         val btn = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
         btn.setOnClickListener {
-            val mil = dialogLayout.findViewById<EditText>(R.id.etMileage)
-            val remindAfter = dialogLayout.findViewById<EditText>(R.id.etRemindAfter)
-            var lastError = ""
             val date = Calendar.getInstance().time
-            var milVal = 0
-            var remAfterVal = 0
 
-            if (mil.text.toString().toIntOrNull() == null)
-                lastError = getString(R.string.mileageInputError)
-            else {
-                milVal = mil.text.toString().toInt()
-                if (remindAfter.text.toString().toIntOrNull() == null)
-                    lastError = getString(R.string.remindAfterInputError)
-                else
-                    remAfterVal = remindAfter.text.toString().toInt()
-            }
-
-            if (lastError.isEmpty()) {
+            val (parsed, err) = parseUserInputOil(dialogLayout)
+            if (parsed) {
+                val milVal = mil.text.toString().toInt()
+                val remAfterVal = remindAfter.text.toString().toInt()
                 val entry = OilEntry(date, milVal, remAfterVal)
-                mainCar?.addEntry(entry)
-                dialog.dismiss()
-                mAllEntries.add(entry)
-                entriesAdapter?.notifyDataSetChanged()
+                val cfgManager = ConfigManager(this)
+                if (editing) {
+                    entry.mId = aEntry!!.mId
+                    if (cfgManager.editOilEntry(entry)) {
+                        mainCar?.editEntry(entry)
+                        entriesAdapter?.editItem(entry)
+                        dialog.dismiss()
+                    }
+                    else
+                        Toast.makeText(this, R.string.unknownError, Toast.LENGTH_SHORT).show()
+                } else if (cfgManager.addOilEntry(mainCar!!.mName, entry)) {
+                    mainCar?.addEntry(entry)
+                    entriesAdapter?.addNewItem(entry)
+                    dialog.dismiss()
+                } else
+                    Toast.makeText(this, R.string.unknownError, Toast.LENGTH_SHORT).show()
             } else
-                Toast.makeText(this, lastError, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, err, Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun parseUserInputOil(aDialogLayout: View): Pair<Boolean, String> {
+        var err = ""
+        val mil = aDialogLayout.findViewById<EditText>(R.id.etMileage)
+        val remindAfter = aDialogLayout.findViewById<EditText>(R.id.etRemindAfter)
+        if (mil.text.toString().toIntOrNull() == null)
+            err = getString(R.string.mileageInputError)
+        else if (remindAfter.text.toString().toIntOrNull() == null)
+            err = getString(R.string.remindAfterInputError)
+        return Pair(err.isEmpty(), err)
     }
 }

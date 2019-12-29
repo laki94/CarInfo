@@ -159,7 +159,7 @@ class SettingsActivity : AppCompatActivity() {
                     val snackbar = Snackbar.make(
                         findViewById(R.id.cars_layout),
                         R.string.carRemoved,
-                        Snackbar.LENGTH_LONG
+                        Snackbar.LENGTH_INDEFINITE
                     )
                     snackbar.setAction("UNDO") {
                         adapter?.restoreItem(delCar, pos)
