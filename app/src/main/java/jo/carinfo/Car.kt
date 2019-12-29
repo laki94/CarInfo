@@ -25,4 +25,27 @@ class Car(aName: String = ""): Serializable
         else
             Log.e("Car", String.format("trying to add unknown entry to %s", mName))
     }
+
+    fun editEntry(aEntry: Entry) {
+        if (aEntry is FuelEntry) {
+            for (entry in mFuelEntries) {
+                if (entry.mId == aEntry.mId) {
+                    entry.mOdometer = aEntry.mOdometer
+                    entry.mPerLiter = aEntry.mPerLiter
+                    entry.mFuelAmount = aEntry.mFuelAmount
+                    entry.mMileage = entry.mMileage
+                    break
+                }
+            }
+        }
+        else if (aEntry is OilEntry) {
+            for (entry in mOilEntries) {
+                if (entry.mId == aEntry.mId) {
+                    entry.mOrgMileage = aEntry.mOrgMileage
+                    entry.mRemindAfter = aEntry.mRemindAfter
+                    break
+                }
+            }
+        }
+    }
 }

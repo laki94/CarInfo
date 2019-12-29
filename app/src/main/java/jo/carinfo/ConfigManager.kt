@@ -30,4 +30,8 @@ class ConfigManager(ctx: Context) {
         val carId = dbHandle.getCarId(aCarName)
         return dbHandle.addFuelEntry(carId, aEntry)
     }
+
+    fun editFuelEntry(aEntry: FuelEntry): Boolean {
+        return dbHandle.editFuelEntry(aEntry)
+    }
 }

@@ -45,6 +45,12 @@ class CarEntries : AppCompatActivity() {
 
         entriesAdapter = EntriesAdapter(this, mAllEntries)
 
+        entriesAdapter.let {
+            it?.onItemClick = {
+                editEntry(it)
+            }
+        }
+
         listView.layoutManager = LinearLayoutManager(this)
         listView.adapter = entriesAdapter
     }
@@ -78,18 +84,25 @@ class CarEntries : AppCompatActivity() {
         return type
     }
 
+    private fun editEntry(aEntry: Entry): Entry {
+        if (aEntry is FuelEntry)
+            createFuelEntry(aEntry)
+        return aEntry
+    }
+
     private fun createNewEntry(aEntryType: EntryType)
     {
         when (aEntryType)
         {
-            EntryType.Fuel -> { createFuelEntry() }
+            EntryType.Fuel -> { createFuelEntry(null) }
             EntryType.Oil -> { createOilEntry() }
             else -> { }
         }
     }
 
-    private fun createFuelEntry()
+    private fun createFuelEntry(aEntry: FuelEntry?)
     {
+        val editing = aEntry != null
         val builder = AlertDialog.Builder(this)
         val inflater = layoutInflater
         val dialogLayout = inflater.inflate(R.layout.activity_fuel_entry, null)
@@ -101,11 +114,23 @@ class CarEntries : AppCompatActivity() {
         dialog.show()
 
         val btn = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+
+        val odo = dialogLayout.findViewById<TextView>(R.id.etOdometer)
+        val mil = dialogLayout.findViewById<TextView>(R.id.etMileage)
+        val fuelAm = dialogLayout.findViewById<TextView>(R.id.etFuelAmount)
+        val perLit = dialogLayout.findViewById<TextView>(R.id.etPerLiter)
+
+        if (editing)
+        {
+            if (aEntry?.mOdometer != 0)
+                odo.text = aEntry?.mOdometer.toString()
+            if (aEntry?.mMileage != 0)
+                mil.text = aEntry?.mMileage.toString()
+            fuelAm.text = aEntry?.mFuelAmount.toString()
+            perLit.text = aEntry?.mPerLiter.toString()
+        }
+
         btn.setOnClickListener {
-            val odo = dialogLayout.findViewById<TextView>(R.id.etOdometer)
-            val mil = dialogLayout.findViewById<TextView>(R.id.etMileage)
-            val fuelAm = dialogLayout.findViewById<TextView>(R.id.etFuelAmount)
-            val perLit = dialogLayout.findViewById<TextView>(R.id.etPerLiter)
 
             val date = Calendar.getInstance().time
             var odoVal = 0
@@ -147,11 +172,38 @@ class CarEntries : AppCompatActivity() {
                 lastError = getString(R.string.mileageInputError)
 
             if (lastError.isEmpty()) {
+                val cfgManager = ConfigManager(this)
                 val entry = FuelEntry(date, odoVal, milVal, fuelAmVal, perLitVal)
-                mainCar?.addEntry(entry)
-                dialog.dismiss()
-                mAllEntries.add(entry)
-                entriesAdapter?.notifyDataSetChanged()
+                if (editing) {
+                    entry.mId = aEntry!!.mId
+                    if (cfgManager.editFuelEntry(entry)) {
+                        mainCar?.editEntry(entry)
+                        dialog.dismiss()
+
+                        for (tmpentry in mAllEntries) {
+                            if (tmpentry.mId == entry.mId) {
+                                (tmpentry as FuelEntry).mMileage = entry.mMileage
+                                tmpentry.mFuelAmount = entry.mFuelAmount
+                                tmpentry.mPerLiter = entry.mPerLiter
+                                tmpentry.mOdometer = entry.mOdometer
+                                break
+                            }
+                        }
+                        entriesAdapter?.notifyDataSetChanged()
+                    } else {
+                        Toast.makeText(this, R.string.unknownError, Toast.LENGTH_SHORT).show()
+                    }
+                }
+                else {
+                    if (cfgManager.addFuelEntry(mainCar!!.mName, entry)) {
+                        mainCar?.addEntry(entry)
+                        dialog.dismiss()
+                        mAllEntries.add(entry)
+                        entriesAdapter?.notifyDataSetChanged()
+                    }
+                    else
+                        Toast.makeText(this, R.string.unknownError, Toast.LENGTH_SHORT).show()
+                }
             } else
                 Toast.makeText(this, lastError, Toast.LENGTH_SHORT).show()
         }
