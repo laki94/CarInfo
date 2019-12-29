@@ -199,10 +199,9 @@ class CarEntries : AppCompatActivity() {
             Toast.makeText(this, R.string.couldNotRemoveEntry, Toast.LENGTH_SHORT).show()
     }
 
-    private fun editEntry(aEntry: Entry): Entry {
+    private fun editEntry(aEntry: Entry) {
         if (aEntry is FuelEntry)
             createFuelEntry(aEntry)
-        return aEntry
     }
 
     private fun createNewEntry(aEntryType: EntryType)

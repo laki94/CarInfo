@@ -5,6 +5,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/colorYellow"
         tools:context=".SettingsActivity">
 
     <android.support.constraint.ConstraintLayout
@@ -13,24 +14,33 @@
             android:layout_height="match_parent">
 
         <TextView
-                android:text="@string/carsList"
+                android:id="@+id/tvCarsList"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/tvCarsList" android:layout_marginTop="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/carsList"
+                android:textColor="@android:color/black"
+                android:textSize="28sp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginStart="8dp" android:textSize="28sp"
-                app:layout_constraintTop_toBottomOf="@+id/tbEdit"/>
+                app:layout_constraintTop_toBottomOf="@+id/tbEdit" />
+
         <android.support.v7.widget.RecyclerView
                 android:id="@+id/rvCars"
                 android:layout_width="0dp"
-                android:layout_height="0dp" android:layout_marginTop="8dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:onClick="onRecyclerClick"
-                app:layout_constraintTop_toBottomOf="@+id/tvCarsList" app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginStart="16dp" android:scrollbars="vertical" tools:listitem="@layout/lvcars_item"
-                android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHorizontal_bias="0.0" app:layout_constraintVertical_bias="1.0">
-        </android.support.v7.widget.RecyclerView>
+                android:scrollbars="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvCarsList"
+                app:layout_constraintVertical_bias="1.0"
+                tools:listitem="@layout/lvcars_item"></android.support.v7.widget.RecyclerView>
         <android.support.v7.widget.Toolbar
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

@@ -1,6 +1,9 @@
 package jo.carinfo
 
 import android.content.Context
+import android.graphics.Color
+import android.support.v4.content.ContextCompat
+import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +19,7 @@ class EntriesAdapter(private val context: Context, private val items : ArrayList
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val myHolder = holder as EntriesViewHolder
 
+        myHolder.cardView.setBackgroundColor(ContextCompat.getColor(context, android.R.color.holo_blue_dark))
         myHolder.tvCarName.text = items[position].getObjectString(context)
     }
 
@@ -83,6 +87,7 @@ class EntriesAdapter(private val context: Context, private val items : ArrayList
 
     inner class EntriesViewHolder (view: View) : RecyclerView.ViewHolder(view) {
         val tvCarName : TextView = view.tvSimpleCarName
+        val cardView : CardView = view.card_view
 
         init {
             tvCarName.setOnClickListener{

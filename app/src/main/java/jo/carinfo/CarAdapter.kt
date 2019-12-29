@@ -2,8 +2,10 @@ package jo.carinfo
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
@@ -21,6 +23,7 @@ class CarAdapter(private val context: Context, private val items : CarsList) : R
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val myHolder = holder as MyViewHolder
 
+        myHolder.cardView.setBackgroundColor(Color.YELLOW)
         myHolder.tvCarName.text = items[position].mName
     }
 
@@ -59,6 +62,7 @@ class CarAdapter(private val context: Context, private val items : CarsList) : R
 
     inner class MyViewHolder (view: View) : RecyclerView.ViewHolder(view) {
         val tvCarName : TextView = view.tvSimpleCarName
+        val cardView : CardView = view.card_view
 
         init {
             tvCarName.setOnClickListener{
