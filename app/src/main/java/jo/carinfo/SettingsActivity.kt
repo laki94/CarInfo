@@ -25,8 +25,7 @@ class SettingsActivity : AppCompatActivity() {
     private fun addAndRefreshList(aCarName: String) {
         val cfgManager = ConfigManager(this)
         if (cfgManager.addCar(aCarName)) {
-            originalCarsList.add(Car(aCarName))
-            adapter?.notifyItemChanged(originalCarsList.count() - 1)
+            adapter?.addNewItem(aCarName)
         } else
             Toast.makeText(this, R.string.couldNotSaveCars, Toast.LENGTH_SHORT).show()
     }
@@ -34,8 +33,7 @@ class SettingsActivity : AppCompatActivity() {
     private fun editCarOnList(aOldCarName: String, aNewCarName: String) {
         val cfgManager = ConfigManager(this)
         if (cfgManager.editCarName(aOldCarName, aNewCarName)) {
-            originalCarsList.changeName(aOldCarName, aNewCarName)
-            adapter?.notifyItemChanged(originalCarsList.indexOf(aNewCarName))
+            adapter?.editItem(aOldCarName, aNewCarName)
         } else
             Toast.makeText(this, R.string.couldNotSaveCars, Toast.LENGTH_SHORT).show()
     }
@@ -204,24 +202,24 @@ class SettingsActivity : AppCompatActivity() {
                         icon = BitmapFactory.decodeResource(resources, R.drawable.edit)
                         val icon_dest = RectF(itemView.left.toFloat() + width, itemView.top.toFloat() + width, itemView.left.toFloat() + 2*width, itemView.bottom.toFloat() - width)
                         c.drawBitmap(icon, null, icon_dest, p)
-                } else {
-                    p.color = Color.parseColor("#D32F2F")
-                    val background = RectF(
-                        itemView.right.toFloat() + dX,
-                        itemView.top.toFloat(),
-                        itemView.right.toFloat(),
-                        itemView.bottom.toFloat()
-                    )
-                    c.drawRect(background, p)
-                    icon = BitmapFactory.decodeResource(resources, R.drawable.delete)
-                    val icon_dest = RectF(
-                        itemView.right.toFloat() - 2 * width,
-                        itemView.top.toFloat() + width,
-                        itemView.right.toFloat() - width,
-                        itemView.bottom.toFloat() - width
-                    )
-                    c.drawBitmap(icon, null, icon_dest, p)
-                }
+                    } else {
+                        p.color = Color.parseColor("#D32F2F")
+                        val background = RectF(
+                            itemView.right.toFloat() + dX,
+                            itemView.top.toFloat(),
+                            itemView.right.toFloat(),
+                            itemView.bottom.toFloat()
+                        )
+                        c.drawRect(background, p)
+                        icon = BitmapFactory.decodeResource(resources, R.drawable.delete)
+                        val icon_dest = RectF(
+                            itemView.right.toFloat() - 2 * width,
+                            itemView.top.toFloat() + width,
+                            itemView.right.toFloat() - width,
+                            itemView.bottom.toFloat() - width
+                        )
+                        c.drawBitmap(icon, null, icon_dest, p)
+                    }
                 }
 
                 super.onChildDraw(
