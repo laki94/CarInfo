@@ -1,6 +1,9 @@
 package jo.carinfo
 
 import android.content.Context
+import android.graphics.Color
+import android.support.v4.content.ContextCompat
+import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -11,12 +14,62 @@ import kotlinx.android.synthetic.main.lvcars_item.view.*
 
 class EntriesAdapter(private val context: Context, private val items : ArrayList<Entry>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    var onItemClick: ((Car) -> Unit)? = null
+    var onItemClick: ((Entry) -> Unit)? = null
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val myHolder = holder as EntriesViewHolder
 
+        myHolder.cardView.setBackgroundColor(ContextCompat.getColor(context, android.R.color.holo_blue_dark))
         myHolder.tvCarName.text = items[position].getObjectString(context)
+    }
+
+    fun removeItem(position: Int) {
+        items.removeAt(position)
+        notifyItemRemoved(position)
+        notifyItemRangeChanged(position, itemCount)
+    }
+
+    fun addNewItem(aEntry: Entry) {
+        items.add(aEntry)
+        notifyItemChanged(itemCount - 1)
+    }
+
+    fun editItem(aEntry: Entry) {
+
+        for (tmpentry in items) {
+            if (tmpentry.mId == aEntry.mId) {
+                if (aEntry is FuelEntry) {
+                    (tmpentry as FuelEntry).mMileage = aEntry.mMileage
+                    tmpentry.mFuelAmount = aEntry.mFuelAmount
+                    tmpentry.mPerLiter = aEntry.mPerLiter
+                    tmpentry.mOdometer = aEntry.mOdometer
+                } else if (aEntry is OilEntry) {
+                    (tmpentry as OilEntry).mOrgMileage = aEntry.mOrgMileage
+                    tmpentry.mRemindAfter = aEntry.mRemindAfter
+                }
+                break
+            }
+        }
+        notifyItemChanged(getIndexOf(aEntry))
+    }
+
+    private fun getIndexOf(aEntry: Entry): Int {
+
+        for (i in 0 until items.count())
+        {
+            if (items[i].mId == aEntry.mId)
+                return i
+        }
+        return -1
+    }
+
+    fun refreshItem(position: Int) {
+        notifyItemChanged(position)
+    }
+
+    fun restoreItem(aEntry: Entry, position: Int) {
+        items.add(position, aEntry)
+        notifyItemInserted(position)
     }
 
     override fun getItemCount(): Int {
@@ -34,10 +87,12 @@ class EntriesAdapter(private val context: Context, private val items : ArrayList
 
     inner class EntriesViewHolder (view: View) : RecyclerView.ViewHolder(view) {
         val tvCarName : TextView = view.tvSimpleCarName
-        private val cbSelectCar: CheckBox = view.cbSelectCar
+        val cardView : CardView = view.card_view
 
         init {
-            cbSelectCar.visibility = View.GONE
+            tvCarName.setOnClickListener{
+                onItemClick?.invoke(items[adapterPosition])
+            }
         }
     }
 }

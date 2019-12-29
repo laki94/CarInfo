@@ -2,8 +2,10 @@ package jo.carinfo
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
@@ -11,75 +13,43 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
+import kotlinx.android.synthetic.main.activity_settings.view.*
 import kotlinx.android.synthetic.main.lvcars_item.view.*
 
 class CarAdapter(private val context: Context, private val items : CarsList) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var mEditing = false
-    private val mCheckedIds: ArrayList<Int> = arrayListOf()
-    private var mOnLongPos = -1
     var onItemClick: ((Car) -> Unit)? = null
-
-    fun isEditing(): Boolean
-    {
-        return mEditing
-    }
-
-    fun stopEditing()
-    {
-        (context as SettingsActivity).findViewById<Toolbar>(R.id.tbEdit).visibility = View.GONE
-        mEditing = false
-        notifyDataSetChanged()
-    }
-
-    fun getCheckedIds(): ArrayList<Int>
-    {
-        val result: ArrayList<Int> = (mCheckedIds.clone() as ArrayList<Int>)
-        mCheckedIds.clear()
-        mOnLongPos = -1
-        return result
-    }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val myHolder = holder as MyViewHolder
 
-        if (mEditing)
-        {
-            myHolder.cbSelectCar.visibility = View.VISIBLE
-        }
-        else
-        {
-            myHolder.cbSelectCar.visibility = View.INVISIBLE
-        }
-
+        myHolder.cardView.setBackgroundColor(Color.YELLOW)
         myHolder.tvCarName.text = items[position].mName
+    }
 
-        if (position != mOnLongPos)
-            myHolder.cbSelectCar.isChecked = false
+    fun removeItem(position: Int) {
+        items.removeAt(position)
+        notifyItemRemoved(position)
+        notifyItemRangeChanged(position, itemCount)
+    }
 
-        myHolder.tvCarName.setOnLongClickListener {
-            if (!mEditing)
-            {
-                mEditing = true
-                mOnLongPos = position
-                (context as SettingsActivity).findViewById<Toolbar>(R.id.tbEdit).visibility = View.VISIBLE
-                notifyDataSetChanged()
-            }
-            myHolder.cbSelectCar.isChecked = !myHolder.cbSelectCar.isChecked
-            true
-        }
+    fun addNewItem(aCarName: String) {
+        items.add(Car(aCarName))
+        notifyItemChanged(itemCount - 1)
+    }
 
-        myHolder.cbSelectCar.setOnCheckedChangeListener {_, isChecked ->
+    fun editItem(aOldCarName: String, aNewCarName: String) {
+        items.changeName(aOldCarName, aNewCarName)
+        notifyItemChanged(items.indexOf(aNewCarName))
+    }
 
-            if (isChecked)
-            {
-                if (!mCheckedIds.contains(position))
-                    mCheckedIds.add(position)
-            }
-            else
-                if (mCheckedIds.contains(position))
-                    mCheckedIds.remove(position)
-        }
+    fun refreshItem(position: Int) {
+        notifyItemChanged(position)
+    }
+
+    fun restoreItem(aCar: Car, position: Int) {
+        items.add(position, aCar)
+        notifyItemInserted(position)
     }
 
     override fun getItemCount(): Int {
@@ -92,14 +62,11 @@ class CarAdapter(private val context: Context, private val items : CarsList) : R
 
     inner class MyViewHolder (view: View) : RecyclerView.ViewHolder(view) {
         val tvCarName : TextView = view.tvSimpleCarName
-        val cbSelectCar: CheckBox = view.cbSelectCar
+        val cardView : CardView = view.card_view
 
         init {
             tvCarName.setOnClickListener{
-                if (mEditing)
-                    cbSelectCar.isChecked = !cbSelectCar.isChecked
-                else
-                    onItemClick?.invoke(items[adapterPosition])
+                onItemClick?.invoke(items[adapterPosition])
             }
         }
     }

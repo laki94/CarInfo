@@ -1,75 +1,50 @@
 package jo.carinfo
 
 import android.content.Context
-import android.util.Log
-import android.widget.Toast
-import java.io.*
-import com.google.gson.GsonBuilder
 
-const val CARS_FILE = "cars.txt"
+class ConfigManager(ctx: Context) {
 
-class ConfigManager(private var context: Context) {
+    private val dbHandle = CarsDBHelper(ctx)
 
-    fun getCars(): CarsList
-    {
-        Log.d("CFGMGR", "getting cars")
-        var result = CarsList()
-        val fileObj = File(context.filesDir, CARS_FILE)
-
-        if (fileObj.exists())
-        {
-            val gson = GsonBuilder().setPrettyPrinting().create()
-            try
-            {
-                Log.d("CFGMGR", "cars file exists, reading...")
-                result = gson.fromJson<CarsList>(fileObj.readText(), CarsList::class.java)
-                Log.d("CFGMGR", "got " + result.count().toString() + " cars from file")
-            }catch(e: Exception)
-            {
-                val builder = StringBuilder()
-                builder.append(R.string.couldNotGetCars)
-                builder.append(" - ")
-                builder.append(e.message)
-                Toast.makeText(context, builder.toString(), Toast.LENGTH_SHORT).show()
-            }
-        }
-        else
-            Log.d("CFGMGR", "cars file does not exists")
-
-        return result
+    fun saveCars(aCars: CarsList): Boolean {
+        return dbHandle.saveCars(aCars)
     }
 
-    fun saveCars(aCarsList: CarsList): Boolean {
-        val fileObj = File(context.filesDir, CARS_FILE)
-        try {
-            if (!fileObj.parentFile.exists())
-                fileObj.parentFile.mkdirs()
-
-            if (!fileObj.exists())
-                fileObj.createNewFile()
-
-            Log.d("CFGMGR", "saving " + aCarsList.count().toString() + " cars to file")
-
-            val f = FileOutputStream(fileObj)
-            val sw = OutputStreamWriter(f)
-            val gson = GsonBuilder().setPrettyPrinting().create()
-            try {
-                sw.write(gson.toJson(aCarsList))
-                Log.d("CFGMGR", "cars saved")
-            } catch (e: Exception)
-            {
-                Log.e("CFGMGR", String.format("cars not saved, %s", e.message))
-                return false
-            } finally {
-                sw.close()
-                f.close()
-            }
-
-            return true
-        } catch (e: FileNotFoundException) {
-            Log.e("CFGMGR", e.message)
-            return false
-        }
+    fun getAllCars(): CarsList {
+        return dbHandle.getAllCars()
     }
 
+    fun addCar(aCarName: String): Boolean {
+        return dbHandle.addCar(aCarName)
+    }
+
+    fun removeCar(aCarName: String): Boolean {
+        return dbHandle.removeCar(aCarName)
+    }
+
+    fun editCarName(aOldCarName: String, aNewCarName: String): Boolean {
+        return dbHandle.editCarName(aOldCarName, aNewCarName)
+    }
+
+    fun addFuelEntry(aCarName: String, aEntry: FuelEntry): Boolean {
+        val carId = dbHandle.getCarId(aCarName)
+        return dbHandle.addFuelEntry(carId, aEntry)
+    }
+
+    fun addOilEntry(aCarName: String, aEntry: OilEntry): Boolean {
+        val carId = dbHandle.getCarId(aCarName)
+        return dbHandle.addOilEntry(carId, aEntry)
+    }
+
+    fun editFuelEntry(aEntry: FuelEntry): Boolean {
+        return dbHandle.editFuelEntry(aEntry)
+    }
+
+    fun editOilEntry(aEntry: OilEntry): Boolean {
+        return dbHandle.editOilEntry(aEntry)
+    }
+
+    fun removeEntry(aEntryId: Int): Boolean {
+        return dbHandle.removeEntry(aEntryId)
+    }
 }

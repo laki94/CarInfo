@@ -27,7 +27,7 @@ class Core(context: Context) {
     private fun initializeCars()
     {
         Log.d("Core", "initializing cars")
-        mAllCars = cfgManager.getCars()
+        mAllCars = cfgManager.getAllCars()
         mCarsInitialized = true
     }
 }

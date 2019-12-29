@@ -7,6 +7,7 @@
     <string name="putCarName">Wprowadź nazwę samochodu</string>
     <string name="save">Zapisz</string>
     <string name="creatingCar">Tworzenie pojazdu</string>
+    <string name="editingCar">Edytowanie pojazdu</string>
     <string name="carsList">Lista pojazdów</string>
     <string name="removeCars">Usuń</string>
     <string name="doSaveCarsQ">Zapisać pojazdy?</string>
@@ -30,12 +31,20 @@
     <string name="remindAfter">Przypomnij za (km)</string>
     <string name="oil_remind_const_15k">15000</string>
     <string name="selectDate">Wybierz datę</string>
+    <string name="carRemoved">Pojazd usunięty</string>
+    <string name="entryRemoved">Wpis usunięty</string>
     <!-- Error messages -->
     <string name="couldNotGetCars">Błąd podczas pobierania pojazdów</string>
     <string name="couldNotSaveCars">Błąd podczas zapisywania pojazdów</string>
+    <string name="couldNotRemoveCars">Błąd podczas usuwania pojazdów</string>
     <string name="mileageInputError">Podany przebieg jest błędny</string>
     <string name="fuelAmountInputError">Podana ilość paliwa jest błędna</string>
     <string name="perLiterInputError">Podana wartość za litr jest błędna</string>
     <string name="carsNotSavedAfterEntry">Dodanie wpisu nie powiodło się</string>
     <string name="remindAfterInputError">Podana wartość "przypomnij za" jest błędna</string>
+    <string name="carNameAlreadyExists">Podana nazwa już istnieje</string>
+    <string name="carNameTooLong">Podana nazwa jest zbyt długa</string>
+    <string name="invalidCarName">Podano błędną nazwę</string>
+    <string name="unknownError">Wystąpił nieznany błąd</string>
+    <string name="couldNotRemoveEntry">Błąd podczas usuwania wpisu</string>
 </resources>

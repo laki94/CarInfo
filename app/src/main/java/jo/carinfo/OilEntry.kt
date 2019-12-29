@@ -5,8 +5,8 @@ import java.util.*
 
 class OilEntry(aDate: Date = Date(0), aMileage: Int = 0, aRemindAfter: Int = 0): Entry(aDate) {
 
-    val mOrgMileage = aMileage
-    val mRemindAfter = aRemindAfter
+    var mOrgMileage = aMileage
+    var mRemindAfter = aRemindAfter
 
     override fun getObjectString(context: Context): String {
         return String.format("%s: %d\n%s: %d", context.getString(R.string.mileage), mOrgMileage,

@@ -6,7 +6,7 @@ class FuelEntriesList: ArrayList<FuelEntry>()
     {
         for (i in 0 until this.count())
         {
-            if (this[i].getRawData().equals(aEntry.getRawData()))
+            if (aEntry.mId == this[i].mId)
                 return i
         }
         return -1
