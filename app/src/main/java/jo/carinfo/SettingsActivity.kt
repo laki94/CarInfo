@@ -13,6 +13,8 @@ import android.support.v7.widget.helper.ItemTouchHelper
 import android.util.Log
 import android.view.View
 import android.widget.*
+import yuku.ambilwarna.AmbilWarnaDialog
+import yuku.ambilwarna.AmbilWarnaDialog.OnAmbilWarnaListener
 
 const val FUEL_ENTRY_CLICK = 0
 
@@ -45,23 +47,41 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     fun onEditCarClick(aCar: Car) {
-        createAddCarDialog(aCar.mName)
+        createAddCarDialog(aCar)
     }
 
-    private fun createAddCarDialog(aStartText: String = "") {
-        val editing = aStartText.isNotEmpty()
+    private fun createAddCarDialog(aStartCar: Car?) {
+        val editing = aStartCar != null
         val builder = AlertDialog.Builder(this)
         val inflater = layoutInflater
         val dialogLayout = inflater.inflate(R.layout.dlg_add_car, null)
         val etCarName = dialogLayout.findViewById<EditText>(R.id.etCarName)
+        val bColorPicker = dialogLayout.findViewById<Button>(R.id.bPickChartColor)
+        var editColor = 0
+        bColorPicker.setOnClickListener {
+            val dlg = AmbilWarnaDialog(this, editColor, false, object : OnAmbilWarnaListener {
+
+                override fun onOk(dialog: AmbilWarnaDialog?, color: Int) {
+                    editColor = color
+                    bColorPicker.setBackgroundColor(editColor)
+                }
+
+                override fun onCancel(dialog: AmbilWarnaDialog?) {
+                }
+            })
+            dlg.show()
+        }
+
         if (editing) {
+            bColorPicker.setBackgroundColor(aStartCar!!.mChartColor)
             builder.setTitle(R.string.editingCar)
             builder.setPositiveButton(R.string.save) { _, _ -> }
         } else {
+            bColorPicker.setBackgroundColor(Color.BLACK)
             builder.setTitle(R.string.creatingCar)
             builder.setPositiveButton(R.string.save) { _, _ -> }
         }
-        etCarName.setText(aStartText)
+        etCarName.setText(aStartCar?.mName)
         etCarName.setSelection(etCarName.text.length)
         builder.setView(dialogLayout)
         val dialog = builder.create()
@@ -69,10 +89,10 @@ class SettingsActivity : AppCompatActivity() {
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
             if (parseUserInput(etCarName.text.toString())) {
                 if (editing) {
-                    if (originalCarsList.indexOf(aStartText) == -1) {
+                    if (originalCarsList.indexOf(aStartCar!!.mName) == -1) {
                         Toast.makeText(this, R.string.unknownError, Toast.LENGTH_SHORT).show()
                     } else {
-                        editCarOnList(aStartText, etCarName.text.toString())
+                        editCarOnList(aStartCar.mName, etCarName.text.toString())
                     }
                 } else {
                     addAndRefreshList(etCarName.text.toString())
@@ -95,7 +115,7 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     fun onCarAddClick(view: View) {
-        createAddCarDialog()
+        createAddCarDialog(null)
     }
 
     override fun onBackPressed() {

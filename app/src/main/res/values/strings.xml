@@ -33,6 +33,7 @@
     <string name="selectDate">Select date</string>
     <string name="carRemoved">Car removed</string>
     <string name="entryRemoved">Entry removed</string>
+    <string name="pickChartColor">Pick data set color</string>
     <!-- Error messages-->
     <string name="couldNotGetCars">Error while getting vehicles</string>
     <string name="couldNotSaveCars">Error while saving vehicles</string>

@@ -33,6 +33,7 @@
     <string name="selectDate">Wybierz datę</string>
     <string name="carRemoved">Pojazd usunięty</string>
     <string name="entryRemoved">Wpis usunięty</string>
+    <string name="pickChartColor">Wybierz kolor na wykresie</string>
     <!-- Error messages -->
     <string name="couldNotGetCars">Błąd podczas pobierania pojazdów</string>
     <string name="couldNotSaveCars">Błąd podczas zapisywania pojazdów</string>
