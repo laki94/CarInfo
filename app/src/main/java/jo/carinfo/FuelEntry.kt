@@ -2,6 +2,7 @@ package jo.carinfo
 
 import android.content.Context
 import java.util.*
+import kotlin.math.round
 
 class FuelEntry(date: Date = Date(0), odo: Int = 0, mile: Int = 0, fuelAm: Double = 0.0, perLiter: Double = 0.0): Entry(date) {
 
@@ -20,5 +21,9 @@ class FuelEntry(date: Date = Date(0), odo: Int = 0, mile: Int = 0, fuelAm: Doubl
     override fun getRawData(): String
     {
         return String.format("%d,%d,%.2f,%.2f", mOdometer, mMileage, mFuelAmount, mPerLiter)
+    }
+
+    fun getAvgFuelConsumption(): Double {
+        return "%.2f".format(mOdometer / mFuelAmount).toDouble()
     }
 }

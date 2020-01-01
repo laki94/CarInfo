@@ -1,6 +1,7 @@
 package jo.carinfo
 
 import android.app.AlertDialog
+import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.NavigationView
@@ -12,6 +13,15 @@ import android.util.Log
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
+import com.jjoe64.graphview.DefaultLabelFormatter
+import com.jjoe64.graphview.GraphView
+import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter
+import com.jjoe64.graphview.series.DataPoint
+import com.jjoe64.graphview.series.LineGraphSeries
+import java.text.NumberFormat
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class FuelUsageGraph : AppCompatActivity() {
 
@@ -28,16 +38,42 @@ class FuelUsageGraph : AppCompatActivity() {
                     mCars.add(car)
             }
 
-        val nv = findViewById<NavigationView>(R.id.nvFuelDrawer)
-        nv.setNavigationItemSelectedListener{
-            when (it.itemId) {
-                R.id.miCars -> showCars()
-                R.id.miSelectDate -> Log.d("asd", "asd")
-                else -> Log.d("zxc", "zzz")
-            }
-            true
-        }
+        showGraphPoints()
+//        val nv = findViewById<NavigationView>(R.id.nvFuelDrawer)
+//        nv.setNavigationItemSelectedListener{
+//            when (it.itemId) {
+//                R.id.miCars -> showCars()
+//                R.id.miSelectDate -> Log.d("asd", "asd")
+//                else -> Log.d("zxc", "zzz")
+//            }
+//            true
+//        }
     }
+
+    private fun showGraphPoints() {
+        var series = LineGraphSeries<DataPoint>()
+
+        val fuel_graph = findViewById<GraphView>(R.id.gvFuel)
+
+        fuel_graph.gridLabelRenderer.horizontalAxisTitle = "Data"
+        fuel_graph.gridLabelRenderer.verticalAxisTitle = "Spalanie"
+
+        fuel_graph.gridLabelRenderer.labelFormatter = DateAsXAxisLabelFormatter(this, SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()))
+        fuel_graph.viewport.setMaxX(100.0)
+          val rnd = Random()
+        for (car in mCars) {
+            series.color = car.mChartColor
+            for (single_entry in car.mFuelEntries) {
+                series.appendData(DataPoint(single_entry.mDate, single_entry.getAvgFuelConsumption()), true, 40)
+            }
+            fuel_graph.addSeries(series)
+        }
+        fuel_graph.viewport.isXAxisBoundsManual = true
+        fuel_graph.viewport.isScalable = true
+        fuel_graph.viewport.isScrollable = true
+//
+    }
+
 
     private fun showCars()
     {
