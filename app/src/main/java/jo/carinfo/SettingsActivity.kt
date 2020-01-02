@@ -87,31 +87,22 @@ class SettingsActivity : AppCompatActivity() {
         val dialog = builder.create()
         dialog.show()
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
-            if (parseUserInput(etCarName.text.toString())) {
-                if (editing) {
-                    if (originalCarsList.indexOf(aStartCar!!.mName) == -1) {
-                        Toast.makeText(this, R.string.unknownError, Toast.LENGTH_SHORT).show()
-                    } else {
-                        editCarOnList(aStartCar.mName, etCarName.text.toString())
-                    }
-                } else {
-                    addAndRefreshList(etCarName.text.toString())
-                }
+
+            val carName = etCarName.text.toString()
+            if ((editing) && (!aStartCar!!.mName.equals(carName)) && (originalCarsList.indexOf(carName) != -1))
+                Toast.makeText(this, R.string.carNameAlreadyExists, Toast.LENGTH_SHORT).show()
+            else if (carName.length > 45)
+                Toast.makeText(this, R.string.carNameTooLong, Toast.LENGTH_SHORT).show()
+            else if (carName.isEmpty())
+                Toast.makeText(this, R.string.invalidCarName, Toast.LENGTH_SHORT).show()
+            else {
+                if (editing)
+                    editCarOnList(aStartCar!!.mName, carName)
+                else
+                    addAndRefreshList(carName)
                 dialog.dismiss()
             }
         }
-    }
-
-    private fun parseUserInput(aInput: String): Boolean {
-        if (originalCarsList.indexOf(aInput) != -1) {
-            Toast.makeText(this, R.string.carNameAlreadyExists, Toast.LENGTH_SHORT).show()
-        } else if (aInput.length > 45) {
-            Toast.makeText(this, R.string.carNameTooLong, Toast.LENGTH_SHORT).show()
-        } else if (aInput.isEmpty()) {
-            Toast.makeText(this, R.string.invalidCarName, Toast.LENGTH_SHORT).show()
-        } else
-            return true
-        return false
     }
 
     fun onCarAddClick(view: View) {
