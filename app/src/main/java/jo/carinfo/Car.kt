@@ -11,7 +11,7 @@ class Car(aName: String = ""): Serializable
     var mName : String = aName
     val mFuelEntries = FuelEntriesList()
     val mOilEntries = OilEntriesList()
-    val mChartColor = Color.argb(255, 0, 0, 0)
+    var mChartColor = Color.argb(255, 0, 0, 0)
     
     fun addEntry(aEntry: Entry)
     {

@@ -13,8 +13,10 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
 
     override fun onCreate(p0: SQLiteDatabase) {
         p0.execSQL(
-                "CREATE TABLE IF NOT EXISTS $TABLE_CARS ('id' INTEGER PRIMARY KEY," +
-                "'name' VARCHAR(45) NULL)")
+                "CREATE TABLE IF NOT EXISTS $TABLE_CARS (" +
+                    "'id' INTEGER PRIMARY KEY," +
+                    "'name' VARCHAR(45) NULL," +
+                    "'chart_color' INTEGER NULL)")
 
         p0.execSQL(
                 "CREATE TABLE IF NOT EXISTS $TABLE_ENTRIES (" +
@@ -40,11 +42,12 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
         onUpgrade(db, oldVersion, newVersion)
     }
 
-    fun addCar(aCarName: String): Boolean {
+    fun addCar(aCar: Car): Boolean {
         val values = ContentValues()
         val db = this.writableDatabase
         try {
-            values.put("name", aCarName)
+            values.put("name", aCar.mName)
+            values.put("chart_color", aCar.mChartColor)
             val _success = db.insert(TABLE_CARS, null, values)
             return Integer.parseInt("$_success") != -1
         } finally {
@@ -52,12 +55,13 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
         }
     }
 
-    fun editCarName(aOldCarName: String, aNewName: String): Boolean {
+    fun editCar(aOldCar: Car, aNewCar: Car): Boolean {
         val values = ContentValues()
         val db = this.writableDatabase
         try {
-            values.put("name", aNewName)
-            val _success = db.update(TABLE_CARS, values, "name=?", arrayOf(aOldCarName))
+            values.put("name", aNewCar.mName)
+            values.put("chart_color", aNewCar.mChartColor)
+            val _success = db.update(TABLE_CARS, values, "name=?", arrayOf(aOldCar.mName))
             return Integer.parseInt("$_success") != -1
         } finally {
             db.close()
@@ -100,6 +104,7 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
             {
                 values.clear()
                 values.put("name", car.mName)
+                values.put("chart_color", car.mChartColor)
                 _success = db.insert(TABLE_CARS, null, values)
                 if (Integer.parseInt("$_success") == -1)
                     return false
@@ -118,12 +123,14 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
             if (cursor.moveToFirst())
             {
                 var newCar = Car(cursor.getString(cursor.getColumnIndex("name")))
+                newCar.mChartColor = cursor.getInt(cursor.getColumnIndex("chart_color"))
                 newCar.mFuelEntries.addAll(getAllFuelEntries(cursor.getInt(cursor.getColumnIndex("id"))))
                 newCar.mOilEntries.addAll(getAllOilEntries(cursor.getInt(cursor.getColumnIndex("id"))))
                 result.add(newCar)
                 while (cursor.moveToNext())
                 {
                     newCar = Car(cursor.getString(cursor.getColumnIndex("name")))
+                    newCar.mChartColor = cursor.getInt(cursor.getColumnIndex("chart_color"))
                     newCar.mFuelEntries.addAll(getAllFuelEntries(cursor.getInt(cursor.getColumnIndex("id"))))
                     newCar.mOilEntries.addAll(getAllOilEntries(cursor.getInt(cursor.getColumnIndex("id"))))
                     result.add(newCar)
@@ -278,7 +285,7 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
 
     companion object {
         const val DATABASE_NAME = "carsdb"
-        const val DATABASE_VERSION = 5
+        const val DATABASE_VERSION = 6
         const val TABLE_CARS = "cars"
         const val TABLE_ENTRIES = "entries"
         const val NAME_PARAM = "name"

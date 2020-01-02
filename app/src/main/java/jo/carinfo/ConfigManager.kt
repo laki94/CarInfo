@@ -14,16 +14,16 @@ class ConfigManager(ctx: Context) {
         return dbHandle.getAllCars()
     }
 
-    fun addCar(aCarName: String): Boolean {
-        return dbHandle.addCar(aCarName)
+    fun addCar(aCar: Car): Boolean {
+        return dbHandle.addCar(aCar)
     }
 
     fun removeCar(aCarName: String): Boolean {
         return dbHandle.removeCar(aCarName)
     }
 
-    fun editCarName(aOldCarName: String, aNewCarName: String): Boolean {
-        return dbHandle.editCarName(aOldCarName, aNewCarName)
+    fun editCar(aOldCar: Car, aNewCar: Car): Boolean {
+        return dbHandle.editCar(aOldCar, aNewCar)
     }
 
     fun addFuelEntry(aCarName: String, aEntry: FuelEntry): Boolean {

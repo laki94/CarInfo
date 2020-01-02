@@ -24,18 +24,18 @@ class SettingsActivity : AppCompatActivity() {
     private var adapter: CarAdapter? = null
     private val p = Paint()
 
-    private fun addAndRefreshList(aCarName: String) {
+    private fun addAndRefreshList(aCar: Car) {
         val cfgManager = ConfigManager(this)
-        if (cfgManager.addCar(aCarName)) {
-            adapter?.addNewItem(aCarName)
+        if (cfgManager.addCar(aCar)) {
+            adapter?.addNewItem(aCar)
         } else
             Toast.makeText(this, R.string.couldNotSaveCars, Toast.LENGTH_SHORT).show()
     }
 
-    private fun editCarOnList(aOldCarName: String, aNewCarName: String) {
+    private fun editCarOnList(aOldCar: Car, aNewCar: Car) {
         val cfgManager = ConfigManager(this)
-        if (cfgManager.editCarName(aOldCarName, aNewCarName)) {
-            adapter?.editItem(aOldCarName, aNewCarName)
+        if (cfgManager.editCar(aOldCar, aNewCar)) {
+            adapter?.editItem(aOldCar, aNewCar)
         } else
             Toast.makeText(this, R.string.couldNotSaveCars, Toast.LENGTH_SHORT).show()
     }
@@ -57,7 +57,9 @@ class SettingsActivity : AppCompatActivity() {
         val dialogLayout = inflater.inflate(R.layout.dlg_add_car, null)
         val etCarName = dialogLayout.findViewById<EditText>(R.id.etCarName)
         val bColorPicker = dialogLayout.findViewById<Button>(R.id.bPickChartColor)
-        var editColor = 0
+        var editColor = Color.BLACK
+        if (editing)
+            editColor = aStartCar!!.mChartColor
         bColorPicker.setOnClickListener {
             val dlg = AmbilWarnaDialog(this, editColor, false, object : OnAmbilWarnaListener {
 
@@ -71,16 +73,12 @@ class SettingsActivity : AppCompatActivity() {
             })
             dlg.show()
         }
-
-        if (editing) {
-            bColorPicker.setBackgroundColor(aStartCar!!.mChartColor)
+        bColorPicker.setBackgroundColor(editColor)
+        builder.setPositiveButton(R.string.save) { _, _ -> }
+        if (editing)
             builder.setTitle(R.string.editingCar)
-            builder.setPositiveButton(R.string.save) { _, _ -> }
-        } else {
-            bColorPicker.setBackgroundColor(Color.BLACK)
+        else
             builder.setTitle(R.string.creatingCar)
-            builder.setPositiveButton(R.string.save) { _, _ -> }
-        }
         etCarName.setText(aStartCar?.mName)
         etCarName.setSelection(etCarName.text.length)
         builder.setView(dialogLayout)
@@ -96,10 +94,13 @@ class SettingsActivity : AppCompatActivity() {
             else if (carName.isEmpty())
                 Toast.makeText(this, R.string.invalidCarName, Toast.LENGTH_SHORT).show()
             else {
+                val newCar = Car(carName)
+                newCar.mChartColor = editColor
+
                 if (editing)
-                    editCarOnList(aStartCar!!.mName, carName)
+                    editCarOnList(aStartCar!!, newCar)
                 else
-                    addAndRefreshList(carName)
+                    addAndRefreshList(newCar)
                 dialog.dismiss()
             }
         }

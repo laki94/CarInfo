@@ -4,10 +4,16 @@ import java.io.Serializable
 
 class CarsList: ArrayList<Car>(), Serializable
 {
-    fun changeName(aOldName: String, aNewName: String)
+    fun changeName(aOldCar: Car, aNewCar: Car)
     {
-        if (indexOf(aOldName) != -1) {
-            this[indexOf(aOldName)].mName = aNewName
+        if (indexOf(aOldCar) != -1) {
+            this[indexOf(aOldCar)].mName = aNewCar.mName
+        }
+    }
+
+    fun changeColor(aOldCar: Car, aNewCar: Car) {
+        if (indexOf(aOldCar) != -1) {
+            this[indexOf(aOldCar)].mChartColor = aNewCar.mChartColor
         }
     }
 

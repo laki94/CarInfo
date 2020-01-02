@@ -33,14 +33,15 @@ class CarAdapter(private val context: Context, private val items : CarsList) : R
         notifyItemRangeChanged(position, itemCount)
     }
 
-    fun addNewItem(aCarName: String) {
-        items.add(Car(aCarName))
+    fun addNewItem(aCar: Car) {
+        items.add(aCar)
         notifyItemChanged(itemCount - 1)
     }
 
-    fun editItem(aOldCarName: String, aNewCarName: String) {
-        items.changeName(aOldCarName, aNewCarName)
-        notifyItemChanged(items.indexOf(aNewCarName))
+    fun editItem(aOldCar: Car, aNewCar: Car) {
+        items.changeName(aOldCar, aNewCar)
+        items.changeColor(aOldCar, aNewCar)
+        notifyItemChanged(items.indexOf(aNewCar))
     }
 
     fun refreshItem(position: Int) {
