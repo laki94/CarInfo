@@ -229,30 +229,15 @@ class CarEntries : AppCompatActivity() {
         var lastError = ""
 
         val odo = aDialogLayout.findViewById<TextView>(R.id.etOdometer)
-        val mil = aDialogLayout.findViewById<TextView>(R.id.etMileage)
         val fuelAm = aDialogLayout.findViewById<TextView>(R.id.etFuelAmount)
         val perLit = aDialogLayout.findViewById<TextView>(R.id.etPerLiter)
 
-        var haveMileage = false
-
-        if (odo.text.toString().toIntOrNull() != null)
-            haveMileage = true
-
-        if (mil.text.toString().toIntOrNull() != null)
-            haveMileage = true
-
-        if (haveMileage)
-        {
-            if (fuelAm.text.toString().toDoubleOrNull() == null)
-                lastError = getString(R.string.fuelAmountInputError)
-            else
-            {
-                if (perLit.text.toString().toDoubleOrNull() == null)
-                    lastError = getString(R.string.perLiterInputError)
-            }
-        }
-        else
+        if (odo.text.toString().toIntOrNull() == null)
             lastError = getString(R.string.mileageInputError)
+        else if (fuelAm.text.toString().toDoubleOrNull() == null)
+            lastError = getString(R.string.fuelAmountInputError)
+        else if (perLit.text.toString().toDoubleOrNull() == null)
+            lastError = getString(R.string.perLiterInputError)
 
         return Pair(lastError.isEmpty(), lastError)
     }
@@ -273,7 +258,7 @@ class CarEntries : AppCompatActivity() {
         val btn = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
 
         val odo = dialogLayout.findViewById<TextView>(R.id.etOdometer)
-        val mil = dialogLayout.findViewById<TextView>(R.id.etMileage)
+//        val mil = dialogLayout.findViewById<TextView>(R.id.etMileage)
         val fuelAm = dialogLayout.findViewById<TextView>(R.id.etFuelAmount)
         val perLit = dialogLayout.findViewById<TextView>(R.id.etPerLiter)
 
@@ -281,8 +266,8 @@ class CarEntries : AppCompatActivity() {
         {
             if (aEntry?.mOdometer != 0)
                 odo.text = aEntry?.mOdometer.toString()
-            if (aEntry?.mMileage != 0)
-                mil.text = aEntry?.mMileage.toString()
+//            if (aEntry?.mMileage != 0)
+//                mil.text = aEntry?.mMileage.toString()
             fuelAm.text = aEntry?.mFuelAmount.toString()
             perLit.text = aEntry?.mPerLiter.toString()
         }
@@ -293,16 +278,16 @@ class CarEntries : AppCompatActivity() {
             if (parsed) {
                 val date = Calendar.getInstance().time
                 var odoVal = 0
-                var milVal = 0
+//                var milVal = 0
                 if (odo.text.toString().toIntOrNull() != null)
                     odoVal = odo.text.toString().toInt()
-                if (mil.text.toString().toIntOrNull() != null)
-                    milVal = mil.text.toString().toInt()
+//                if (mil.text.toString().toIntOrNull() != null)
+//                    milVal = mil.text.toString().toInt()
                 var fuelAmVal = String.format(Locale.ROOT, "%.2f", fuelAm.text.toString().toDouble()).toDouble()
                 var perLitVal = String.format(Locale.ROOT, "%.2f", perLit.text.toString().toDouble()).toDouble()
 
                 val cfgManager = ConfigManager(this)
-                val entry = FuelEntry(date, odoVal, milVal, fuelAmVal, perLitVal)
+                val entry = FuelEntry(date, odoVal, fuelAmVal, perLitVal)
                 if (editing) {
                     entry.mId = aEntry!!.mId
                     if (cfgManager.editFuelEntry(entry)) {

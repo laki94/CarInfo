@@ -36,7 +36,6 @@ class Car(aName: String = ""): Serializable
                     entry.mOdometer = aEntry.mOdometer
                     entry.mPerLiter = aEntry.mPerLiter
                     entry.mFuelAmount = aEntry.mFuelAmount
-                    entry.mMileage = entry.mMileage
                     break
                 }
             }

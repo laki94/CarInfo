@@ -144,7 +144,6 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
                 values.put("entry_type", FUEL_ENTRY)
                 values.put("entry_date", dateTimeFormat.format(aEntry.mDate))
                 values.put("entry_odo", aEntry.mOdometer)
-                values.put("entry_mil", aEntry.mMileage)
                 values.put("entry_fuel_amount", aEntry.mFuelAmount)
                 values.put("entry_fuel_price", aEntry.mPerLiter)
                 val _success = db.insert(TABLE_ENTRIES, null, values)
@@ -183,7 +182,6 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
         val db = this.writableDatabase
         try {
             values.put("entry_odo", aEntry.mOdometer)
-            values.put("entry_mil", aEntry.mMileage)
             values.put("entry_fuel_amount", aEntry.mFuelAmount)
             values.put("entry_fuel_price", aEntry.mPerLiter)
             val _success = db.update(TABLE_ENTRIES, values, "entry_id=?", arrayOf(aEntry.mId.toString()))
@@ -255,7 +253,6 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
                 {
                     var entry = FuelEntry()
                     entry.mId = cursor.getInt(cursor.getColumnIndex("entry_id"))
-                    entry.mMileage = cursor.getInt(cursor.getColumnIndex("entry_mil"))
                     entry.mOdometer = cursor.getInt(cursor.getColumnIndex("entry_odo"))
                     entry.mDate = dateTimeFormat.parse(cursor.getString(cursor.getColumnIndex("entry_date")))
                     entry.mFuelAmount = cursor.getDouble(cursor.getColumnIndex("entry_fuel_amount"))
@@ -265,7 +262,6 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
                     {
                         entry = FuelEntry()
                         entry.mId = cursor.getInt(cursor.getColumnIndex("entry_id"))
-                        entry.mMileage = cursor.getInt(cursor.getColumnIndex("entry_mil"))
                         entry.mOdometer = cursor.getInt(cursor.getColumnIndex("entry_odo"))
                         entry.mDate = dateTimeFormat.parse(cursor.getString(cursor.getColumnIndex("entry_date")))
                         entry.mFuelAmount = cursor.getDouble(cursor.getColumnIndex("entry_fuel_amount"))
@@ -282,7 +278,7 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
 
     companion object {
         const val DATABASE_NAME = "carsdb"
-        const val DATABASE_VERSION = 4
+        const val DATABASE_VERSION = 5
         const val TABLE_CARS = "cars"
         const val TABLE_ENTRIES = "entries"
         const val NAME_PARAM = "name"

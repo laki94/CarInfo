@@ -39,8 +39,7 @@ class EntriesAdapter(private val context: Context, private val items : ArrayList
         for (tmpentry in items) {
             if (tmpentry.mId == aEntry.mId) {
                 if (aEntry is FuelEntry) {
-                    (tmpentry as FuelEntry).mMileage = aEntry.mMileage
-                    tmpentry.mFuelAmount = aEntry.mFuelAmount
+                    (tmpentry as FuelEntry).mFuelAmount = aEntry.mFuelAmount
                     tmpentry.mPerLiter = aEntry.mPerLiter
                     tmpentry.mOdometer = aEntry.mOdometer
                 } else if (aEntry is OilEntry) {
