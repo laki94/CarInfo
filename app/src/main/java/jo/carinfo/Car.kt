@@ -10,7 +10,6 @@ class Car(aName: String = ""): Serializable
 
     var mName : String = aName
     val mFuelEntries = FuelEntriesList()
-    val mOilEntries = OilEntriesList()
     var mChartColor = Color.argb(255, 0, 0, 0)
     
     fun addEntry(aEntry: Entry)
@@ -19,11 +18,6 @@ class Car(aName: String = ""): Serializable
         {
             Log.d("Car", String.format("adding new fuel entry to %s", mName))
             mFuelEntries.add(aEntry)
-        }
-        else if (aEntry is OilEntry)
-        {
-            Log.d("Car", String.format("adding new oil entry to %s", mName))
-            mOilEntries.add(aEntry)
         }
         else
             Log.e("Car", String.format("trying to add unknown entry to %s", mName))
@@ -36,15 +30,6 @@ class Car(aName: String = ""): Serializable
                     entry.mOdometer = aEntry.mOdometer
                     entry.mPerLiter = aEntry.mPerLiter
                     entry.mFuelAmount = aEntry.mFuelAmount
-                    break
-                }
-            }
-        }
-        else if (aEntry is OilEntry) {
-            for (entry in mOilEntries) {
-                if (entry.mId == aEntry.mId) {
-                    entry.mOrgMileage = aEntry.mOrgMileage
-                    entry.mRemindAfter = aEntry.mRemindAfter
                     break
                 }
             }

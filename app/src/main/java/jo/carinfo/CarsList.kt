@@ -57,19 +57,6 @@ open class CarsList: ArrayList<Car>(), Serializable
             }
             else
                 return -1
-
-            val orgOilEntries = OilEntriesList()
-            val newOilEntries = OilEntriesList()
-            orgOilEntries.addAll(this[indexOf(aCar.mName)].mOilEntries)
-            newOilEntries.addAll(aCar.mOilEntries)
-            if (newOilEntries.count() == orgOilEntries.count())
-            {
-                for (entry in newOilEntries)
-                    if (orgOilEntries.indexOf(entry) == -1)
-                        return -1
-            }
-            else
-                return -1
             
             return indexOf(aCar.mName)
         }

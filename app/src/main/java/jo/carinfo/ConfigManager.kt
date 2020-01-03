@@ -31,17 +31,8 @@ class ConfigManager(ctx: Context) {
         return dbHandle.addFuelEntry(carId, aEntry)
     }
 
-    fun addOilEntry(aCarName: String, aEntry: OilEntry): Boolean {
-        val carId = dbHandle.getCarId(aCarName)
-        return dbHandle.addOilEntry(carId, aEntry)
-    }
-
     fun editFuelEntry(aEntry: FuelEntry): Boolean {
         return dbHandle.editFuelEntry(aEntry)
-    }
-
-    fun editOilEntry(aEntry: OilEntry): Boolean {
-        return dbHandle.editOilEntry(aEntry)
     }
 
     fun removeEntry(aEntryId: Int): Boolean {

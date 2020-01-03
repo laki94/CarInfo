@@ -26,10 +26,8 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
                 "'entry_type' INTEGER NOT NULL," +
                 "'entry_date' VARCHAR(19) NOT NULL," +
                 "'entry_odo' INTEGER NULL," +
-                "'entry_mil' INTEGER NULL," +
                 "'entry_fuel_amount' REAL NULL," +
                 "'entry_fuel_price' REAL NULL," +
-                "'entry_remind_after' INTEGER NULL," +
                 "'carId' INTEGER NOT NULL," +
                 "FOREIGN KEY(carId) REFERENCES cars(id))")
 
@@ -144,14 +142,12 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
                 var newCar = Car(cursor.getString(cursor.getColumnIndex("name")))
                 newCar.mChartColor = cursor.getInt(cursor.getColumnIndex("chart_color"))
                 newCar.mFuelEntries.addAll(getAllFuelEntries(cursor.getInt(cursor.getColumnIndex("id"))))
-                newCar.mOilEntries.addAll(getAllOilEntries(cursor.getInt(cursor.getColumnIndex("id"))))
                 result.add(newCar)
                 while (cursor.moveToNext())
                 {
                     newCar = Car(cursor.getString(cursor.getColumnIndex("name")))
                     newCar.mChartColor = cursor.getInt(cursor.getColumnIndex("chart_color"))
                     newCar.mFuelEntries.addAll(getAllFuelEntries(cursor.getInt(cursor.getColumnIndex("id"))))
-                    newCar.mOilEntries.addAll(getAllOilEntries(cursor.getInt(cursor.getColumnIndex("id"))))
                     result.add(newCar)
                 }
             }
@@ -182,27 +178,6 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
         return false
     }
 
-    fun addOilEntry(aOwnerId: Int, aEntry: OilEntry): Boolean {
-        if (aOwnerId != -1) {
-            val values = ContentValues()
-            val db = this.writableDatabase
-            try {
-                values.put("carId", aOwnerId)
-                values.put("entry_type", OIL_ENTRY)
-                values.put("entry_date", dateTimeFormat.format(aEntry.mDate))
-                values.put("entry_mil", aEntry.mOrgMileage)
-                values.put("entry_remind_after", aEntry.mRemindAfter)
-                val _success = db.insert(TABLE_ENTRIES, null, values)
-                aEntry.mId = Integer.parseInt("$_success")
-                return Integer.parseInt("$_success") != -1
-            } finally {
-                db.close()
-            }
-        }
-        return false
-    }
-
-
     fun editFuelEntry(aEntry: FuelEntry): Boolean {
         val values = ContentValues()
         val db = this.writableDatabase
@@ -210,19 +185,6 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
             values.put("entry_odo", aEntry.mOdometer)
             values.put("entry_fuel_amount", aEntry.mFuelAmount)
             values.put("entry_fuel_price", aEntry.mPerLiter)
-            val _success = db.update(TABLE_ENTRIES, values, "entry_id=?", arrayOf(aEntry.mId.toString()))
-            return Integer.parseInt("$_success") != -1
-        } finally {
-            db.close()
-        }
-    }
-
-    fun editOilEntry(aEntry: OilEntry): Boolean {
-        val values = ContentValues()
-        val db = this.writableDatabase
-        try {
-            values.put("entry_mil", aEntry.mOrgMileage)
-            values.put("entry_remind_after", aEntry.mRemindAfter)
             val _success = db.update(TABLE_ENTRIES, values, "entry_id=?", arrayOf(aEntry.mId.toString()))
             return Integer.parseInt("$_success") != -1
         } finally {
@@ -238,35 +200,6 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
         } finally {
             db.close()
         }
-    }
-
-    private fun getAllOilEntries(aCarId: Int): OilEntriesList {
-        val result = OilEntriesList()
-        if (aCarId != -1) {
-            val db = this.readableDatabase
-            val cursor = db.rawQuery("SELECT * FROM $TABLE_ENTRIES WHERE $CARID_PARAM=? AND $ENTRY_TYPE_PARAM=?", arrayOf(aCarId.toString(), OIL_ENTRY.toString()))
-            try {
-                if (cursor.moveToFirst()) {
-                    var entry = OilEntry()
-                    entry.mId = cursor.getInt(cursor.getColumnIndex("entry_id"))
-                    entry.mDate = dateTimeFormat.parse(cursor.getString(cursor.getColumnIndex("entry_date")))
-                    entry.mRemindAfter = cursor.getInt(cursor.getColumnIndex("entry_remind_after"))
-                    entry.mOrgMileage = cursor.getInt(cursor.getColumnIndex("entry_mil"))
-                    result.add(entry)
-                    while (cursor.moveToNext()) {
-                        entry = OilEntry()
-                        entry.mId = cursor.getInt(cursor.getColumnIndex("entry_id"))
-                        entry.mDate = dateTimeFormat.parse(cursor.getString(cursor.getColumnIndex("entry_date")))
-                        entry.mRemindAfter = cursor.getInt(cursor.getColumnIndex("entry_remind_after"))
-                        entry.mOrgMileage = cursor.getInt(cursor.getColumnIndex("entry_mil"))
-                        result.add(entry)
-                    }
-                }
-            } finally {
-                cursor.close()
-            }
-        }
-        return result
     }
 
     private fun getAllFuelEntries(aCarId: Int): FuelEntriesList {
@@ -304,7 +237,7 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
 
     companion object {
         const val DATABASE_NAME = "carsdb"
-        const val DATABASE_VERSION = 7
+        const val DATABASE_VERSION = 8
         const val TABLE_CARS = "cars"
         const val TABLE_ENTRIES = "entries"
         const val NAME_PARAM = "name"

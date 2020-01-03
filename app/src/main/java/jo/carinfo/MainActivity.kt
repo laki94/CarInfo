@@ -13,7 +13,6 @@ import android.widget.Toast
 
 const val SETTINGS_CLICK = 1
 const val FUEL_ENTRY = 2
-const val OIL_ENTRY = 3
 
 class MainActivity : AppCompatActivity() {
 

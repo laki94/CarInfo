@@ -42,9 +42,6 @@ class EntriesAdapter(private val context: Context, private val items : ArrayList
                     (tmpentry as FuelEntry).mFuelAmount = aEntry.mFuelAmount
                     tmpentry.mPerLiter = aEntry.mPerLiter
                     tmpentry.mOdometer = aEntry.mOdometer
-                } else if (aEntry is OilEntry) {
-                    (tmpentry as OilEntry).mOrgMileage = aEntry.mOrgMileage
-                    tmpentry.mRemindAfter = aEntry.mRemindAfter
                 }
                 break
             }

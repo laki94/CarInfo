@@ -42,7 +42,6 @@ class CarEntries : AppCompatActivity() {
             title.text = format("%s %s", getString(R.string.entriesFor), mainCar?.mName)
 
             mAllEntries.addAll(mainCar?.mFuelEntries!!.asIterable())
-            mAllEntries.addAll(mainCar?.mOilEntries!!.asIterable())
             mAllEntries.sortBy { it.mDate }
         }
 
@@ -81,8 +80,6 @@ class CarEntries : AppCompatActivity() {
                     entriesAdapter?.removeItem(pos)
                     if (delEntry is FuelEntry)
                         mainCar?.mFuelEntries?.remove(delEntry)
-                    else if (delEntry is OilEntry)
-                        mainCar?.mOilEntries?.remove(delEntry)
                     val snackbar = Snackbar.make(
                         findViewById(R.id.entries_layout),
                         R.string.entryRemoved,
@@ -92,8 +89,6 @@ class CarEntries : AppCompatActivity() {
                         entriesAdapter?.restoreItem(delEntry, pos)
                         if (delEntry is FuelEntry)
                             mainCar?.mFuelEntries?.add(delEntry)
-                        else if (delEntry is OilEntry)
-                            mainCar?.mOilEntries?.add(delEntry)
                     }
                     snackbar.addCallback(object : Snackbar.Callback() {
                         override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
@@ -178,25 +173,7 @@ class CarEntries : AppCompatActivity() {
     }
 
     fun onEntryAddClick(view: View) {
-        val builder = AlertDialog.Builder(this)
-        val inflater = layoutInflater
-        builder.setTitle(R.string.entryType)
-        val dialogLayout = inflater.inflate(R.layout.dlg_select_entry_type, null)
-        val rg = dialogLayout.findViewById<RadioGroup>(R.id.rgEntryTypes)
-        builder.setView(dialogLayout)
-        builder.setPositiveButton(R.string.Next) { _, _ -> createNewEntry(getEntryType(rg.checkedRadioButtonId)) }
-        builder.show()
-    }
-
-    private fun getEntryType(aRadioId: Int): EntryType
-    {
-        var type = EntryType.Unknown
-        when (aRadioId)
-        {
-            R.id.rbFuel -> type = EntryType.Fuel
-            R.id.rbOil -> type = EntryType.Oil
-        }
-        return type
+        createNewEntry(EntryType.Fuel)
     }
 
     private fun removeEntryOnList(aEntry: Entry){
@@ -208,8 +185,6 @@ class CarEntries : AppCompatActivity() {
     private fun editEntry(aEntry: Entry) {
         if (aEntry is FuelEntry)
             createFuelEntry(aEntry)
-        else if (aEntry is OilEntry)
-            createOilEntry(aEntry)
         else
             throw NotImplementedError("Not implemented entry type to edit")
     }
@@ -219,7 +194,6 @@ class CarEntries : AppCompatActivity() {
         when (aEntryType)
         {
             EntryType.Fuel -> { createFuelEntry(null) }
-            EntryType.Oil -> { createOilEntry(null) }
             else -> { }
         }
     }
@@ -311,66 +285,5 @@ class CarEntries : AppCompatActivity() {
             else
                 Toast.makeText(this, R.string.unknownError, Toast.LENGTH_SHORT).show()
         }
-    }
-
-    private fun createOilEntry(aEntry: OilEntry?) {
-        val editing = aEntry != null
-        val builder = AlertDialog.Builder(this)
-        val inflater = layoutInflater
-        val dialogLayout = inflater.inflate(R.layout.activity_oil_entry, null)
-
-        builder.setView(dialogLayout)
-        builder.setPositiveButton(R.string.save) {_, _ ->}
-
-        val dialog: AlertDialog = builder.create()
-        dialog.show()
-
-        val mil = dialogLayout.findViewById<TextView>(R.id.etMileage)
-        val remindAfter = dialogLayout.findViewById<TextView>(R.id.etRemindAfter)
-
-        if (editing) {
-            mil.text = aEntry?.mOrgMileage.toString()
-            remindAfter.text = aEntry?.mRemindAfter.toString()
-        }
-
-        val btn = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
-        btn.setOnClickListener {
-            val date = Calendar.getInstance().time
-
-            val (parsed, err) = parseUserInputOil(dialogLayout)
-            if (parsed) {
-                val milVal = mil.text.toString().toInt()
-                val remAfterVal = remindAfter.text.toString().toInt()
-                val entry = OilEntry(date, milVal, remAfterVal)
-                val cfgManager = ConfigManager(this)
-                if (editing) {
-                    entry.mId = aEntry!!.mId
-                    if (cfgManager.editOilEntry(entry)) {
-                        mainCar?.editEntry(entry)
-                        entriesAdapter?.editItem(entry)
-                        dialog.dismiss()
-                    }
-                    else
-                        Toast.makeText(this, R.string.unknownError, Toast.LENGTH_SHORT).show()
-                } else if (cfgManager.addOilEntry(mainCar!!.mName, entry)) {
-                    mainCar?.addEntry(entry)
-                    entriesAdapter?.addNewItem(entry)
-                    dialog.dismiss()
-                } else
-                    Toast.makeText(this, R.string.unknownError, Toast.LENGTH_SHORT).show()
-            } else
-                Toast.makeText(this, err, Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun parseUserInputOil(aDialogLayout: View): Pair<Boolean, String> {
-        var err = ""
-        val mil = aDialogLayout.findViewById<EditText>(R.id.etMileage)
-        val remindAfter = aDialogLayout.findViewById<EditText>(R.id.etRemindAfter)
-        if (mil.text.toString().toIntOrNull() == null)
-            err = getString(R.string.mileageInputError)
-        else if (remindAfter.text.toString().toIntOrNull() == null)
-            err = getString(R.string.remindAfterInputError)
-        return Pair(err.isEmpty(), err)
     }
 }
