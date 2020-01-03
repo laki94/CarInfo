@@ -1,6 +1,7 @@
 package jo.carinfo
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -16,16 +17,17 @@ import android.view.View
 import com.jjoe64.graphview.DefaultLabelFormatter
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter
-import com.jjoe64.graphview.series.DataPoint
-import com.jjoe64.graphview.series.LineGraphSeries
+import com.jjoe64.graphview.series.*
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.math.round
 
 class FuelUsageGraph : AppCompatActivity() {
 
-    private val mCars = CarsList()
+    private val mCars = CarsListGraph()
+    private var mAdapter: CarGraphAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,57 +40,71 @@ class FuelUsageGraph : AppCompatActivity() {
                     mCars.add(car)
             }
 
-        showGraphPoints()
-//        val nv = findViewById<NavigationView>(R.id.nvFuelDrawer)
-//        nv.setNavigationItemSelectedListener{
-//            when (it.itemId) {
-//                R.id.miCars -> showCars()
-//                R.id.miSelectDate -> Log.d("asd", "asd")
-//                else -> Log.d("zxc", "zzz")
-//            }
-//            true
-//        }
+        showCars()
+    }
+
+    private fun clearGraphPoints() {
+        val fuel_graph = findViewById<GraphView>(R.id.gvFuel)
+        fuel_graph.removeAllSeries()
     }
 
     private fun showGraphPoints() {
-        var series = LineGraphSeries<DataPoint>()
-
+        var series: LineGraphSeries<DataPoint>
         val fuel_graph = findViewById<GraphView>(R.id.gvFuel)
+        var maxY = 10.0
 
         fuel_graph.gridLabelRenderer.horizontalAxisTitle = "Data"
         fuel_graph.gridLabelRenderer.verticalAxisTitle = "Spalanie"
-
+        fuel_graph.gridLabelRenderer.numHorizontalLabels = 4
         fuel_graph.gridLabelRenderer.labelFormatter = DateAsXAxisLabelFormatter(this, SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()))
-        fuel_graph.viewport.setMaxX(100.0)
-          val rnd = Random()
+
         for (car in mCars) {
-            series.color = car.mChartColor
-            for (single_entry in car.mFuelEntries) {
-                series.appendData(DataPoint(single_entry.mDate, single_entry.getAvgFuelConsumption()), true, 40)
+            if (!mCars.isCarHidden(car)) {
+                for (entry in car.mFuelEntries)
+                if (maxY < entry.getAvgFuelConsumption())
+                    maxY = entry.getAvgFuelConsumption()
             }
-            fuel_graph.addSeries(series)
+        }
+        fuel_graph.viewport.setMaxY(maxY)
+
+        for (car in mCars) {
+            if (!mCars.isCarHidden(car)) {
+                series = LineGraphSeries()
+                series.isDrawDataPoints = true
+                series.color = car.mChartColor
+                series.setOnDataPointTapListener(object : OnDataPointTapListener {
+                    override fun onTap(series: Series<*>?, dataPoint: DataPointInterface?) {
+                        Log.d("series", String.format("%f, %.2f", dataPoint?.x, dataPoint?.y))
+                    }
+                })
+                for (single_entry in car.mFuelEntries)
+                    series.appendData(DataPoint(single_entry.mDate, single_entry.getAvgFuelConsumption()), true, 1000)
+
+                fuel_graph.addSeries(series)
+            }
         }
         fuel_graph.viewport.isXAxisBoundsManual = true
         fuel_graph.viewport.isScalable = true
         fuel_graph.viewport.isScrollable = true
-//
     }
 
 
     private fun showCars()
     {
-        val builder = AlertDialog.Builder(this)
-        val inflater = layoutInflater // CHYBA PRZYCISK CARS TO WYJEBANIA, POKAZAC AUTA NA DRAWERZE A NA SAMEJ GORZE WYBOR DATY
-        builder.setTitle(R.string.cars)
-        val dialogLayout = inflater.inflate(R.layout.dlg_cars_graph, null)
-//        val etCarName = dialogLayout.findViewById<EditText>(R.id.etCarName)
-        val rv = dialogLayout.findViewById<RecyclerView>(R.id.rvCarsGraph)
-        rv.adapter = CarAdapter(this, mCars)
-        rv.layoutManager = LinearLayoutManager(this)
-//        rv.adapter.notifyDataSetChanged()
-        builder.setView(dialogLayout)
-        builder.setPositiveButton(R.string.save) { _, _ -> } //addAndRefreshList(etCarName.text.toString()) }
-        builder.show()
+        val listView = findViewById<RecyclerView>(R.id.rvCarsGraph)
+
+        mAdapter = CarGraphAdapter(this, mCars)
+
+        mAdapter.let {
+            it?.onItemClick = { it, isChecked ->
+                mAdapter?.changeItemVisibility(it, isChecked)
+                clearGraphPoints()
+                showGraphPoints()
+            }
+        }
+
+        listView.layoutManager = LinearLayoutManager(this)
+        listView.adapter = mAdapter
     }
 
     override fun onBackPressed() {

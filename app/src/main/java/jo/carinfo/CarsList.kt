@@ -2,7 +2,7 @@ package jo.carinfo
 
 import java.io.Serializable
 
-class CarsList: ArrayList<Car>(), Serializable
+open class CarsList: ArrayList<Car>(), Serializable
 {
     fun changeName(aOldCar: Car, aNewCar: Car)
     {
