@@ -32,6 +32,23 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
                 "'entry_remind_after' INTEGER NULL," +
                 "'carId' INTEGER NOT NULL," +
                 "FOREIGN KEY(carId) REFERENCES cars(id))")
+
+        p0.execSQL("INSERT INTO $TABLE_CARS (name, chart_color) VALUES ('test', 4278190080);")
+        p0.execSQL("INSERT INTO $TABLE_CARS (name, chart_color) VALUES ('test2', 4278190335);")
+
+        p0.execSQL("INSERT INTO $TABLE_ENTRIES (entry_type, entry_date, entry_odo, entry_fuel_amount, entry_fuel_price, carId) VALUES " +
+                "(2, '2019-12-11', 610, 52.4, 4.55, 1);")
+        p0.execSQL("INSERT INTO $TABLE_ENTRIES (entry_type, entry_date, entry_odo, entry_fuel_amount, entry_fuel_price, carId) VALUES " +
+                "(2, '2020-01-01', 655, 55.4, 4.75, 1);")
+        p0.execSQL("INSERT INTO $TABLE_ENTRIES (entry_type, entry_date, entry_odo, entry_fuel_amount, entry_fuel_price, carId) VALUES " +
+                "(2, '2020-02-13', 620, 50.0, 4.65, 1);")
+
+        p0.execSQL("INSERT INTO $TABLE_ENTRIES (entry_type, entry_date, entry_odo, entry_fuel_amount, entry_fuel_price, carId) VALUES " +
+                "(2, '2019-11-22', 499, 33.4, 4.55, 2);")
+        p0.execSQL("INSERT INTO $TABLE_ENTRIES (entry_type, entry_date, entry_odo, entry_fuel_amount, entry_fuel_price, carId) VALUES " +
+                "(2, '2020-01-01', 541, 37.4, 4.75, 2);")
+        p0.execSQL("INSERT INTO $TABLE_ENTRIES (entry_type, entry_date, entry_odo, entry_fuel_amount, entry_fuel_price, carId) VALUES " +
+                "(2, '2020-02-13', 504, 36.0, 4.65, 2);")
     }
 
     override fun onUpgrade(p0: SQLiteDatabase, oldVer: Int, newVer: Int) {
@@ -287,7 +304,7 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
 
     companion object {
         const val DATABASE_NAME = "carsdb"
-        const val DATABASE_VERSION = 4
+        const val DATABASE_VERSION = 7
         const val TABLE_CARS = "cars"
         const val TABLE_ENTRIES = "entries"
         const val NAME_PARAM = "name"
