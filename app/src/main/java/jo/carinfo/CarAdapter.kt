@@ -1,19 +1,13 @@
 package jo.carinfo
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.CardView
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
 import android.widget.TextView
-import kotlinx.android.synthetic.main.activity_settings.view.*
+import androidx.cardview.widget.CardView
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.lvcars_item.view.*
 
 class CarAdapter(private val context: Context, private val items : CarsList) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {

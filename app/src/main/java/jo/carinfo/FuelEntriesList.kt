@@ -11,4 +11,8 @@ class FuelEntriesList: ArrayList<FuelEntry>()
         }
         return -1
     }
+
+    fun sortByDate() {
+        this.sortWith(compareBy({ it.mDate }))
+    }
 }

@@ -1,15 +1,12 @@
 package jo.carinfo
 
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.text.method.Touch
 import android.util.Log
 import android.view.View
-import android.widget.RadioGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 
 const val SETTINGS_CLICK = 1
 const val FUEL_ENTRY = 2

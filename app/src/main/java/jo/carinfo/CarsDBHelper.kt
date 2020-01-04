@@ -239,6 +239,7 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
                 cursor.close()
             }
         }
+        result.sortByDate()
         return result
     }
 
@@ -269,7 +270,7 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
 
     companion object {
         const val DATABASE_NAME = "carsdb"
-        const val DATABASE_VERSION = 9
+        const val DATABASE_VERSION = 1
         const val TABLE_CARS = "cars"
         const val TABLE_ENTRIES = "entries"
         const val TABLE_STATIONS = "stations"

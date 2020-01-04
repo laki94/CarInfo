@@ -1,28 +1,18 @@
 package jo.carinfo
 
-import android.app.AlertDialog
-import android.content.Intent
-import android.graphics.Color
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.design.widget.NavigationView
-import android.support.v4.widget.DrawerLayout
-import android.support.v7.app.ActionBarDrawerToggle
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.Gravity
-import android.view.MenuItem
-import android.view.View
-import com.jjoe64.graphview.DefaultLabelFormatter
+import androidx.appcompat.app.AppCompatActivity
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter
 import com.jjoe64.graphview.series.*
-import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.math.round
 
 class FuelUsageGraph : AppCompatActivity() {
 
@@ -69,6 +59,7 @@ class FuelUsageGraph : AppCompatActivity() {
 
         for (car in mCars) {
             if (!mCars.isCarHidden(car)) {
+                car.mFuelEntries.sortByDate()
                 series = LineGraphSeries()
                 series.isDrawDataPoints = true
                 series.color = car.mChartColor
