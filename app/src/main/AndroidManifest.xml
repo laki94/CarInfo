@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="jo.carinfo">
+        package="jo.carinfo">
 
     <application
             android:allowBackup="true"
@@ -9,26 +9,20 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme.NoActionBar">
+        <activity android:name=".StationsActivity"></activity>
         <activity
-            android:name=".FuelUsageGraph"
-            android:screenOrientation="landscape"
-        >
-        </activity>
-        <activity android:name=".OilEntryActivity">
-        </activity>
-        <activity android:name=".CarEntries">
-        </activity>
-        <activity android:name=".simple_name">
-        </activity>
-        <activity android:name=".FuelEntryActivity">
-        </activity>
-        <activity android:name=".SettingsActivity">
-        </activity>
+                android:name=".FuelUsageGraph"
+                android:screenOrientation="landscape"></activity>
+        <activity android:name=".OilEntryActivity"></activity>
+        <activity android:name=".CarEntries"></activity>
+        <activity android:name=".simple_name"></activity>
+        <activity android:name=".FuelEntryActivity"></activity>
+        <activity android:name=".SettingsActivity"></activity>
         <activity android:name=".MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>

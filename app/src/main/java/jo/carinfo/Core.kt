@@ -8,6 +8,9 @@ class Core(context: Context) {
     private var mAllCars = CarsList()
     private var mCarsInitialized = false
 
+    private var mAllStations = StationList()
+    private var mStationsInitialized = false
+
     private val cfgManager = ConfigManager(context)
 
     fun getAllCars(): CarsList
@@ -16,6 +19,13 @@ class Core(context: Context) {
             initializeCars()
 
         return mAllCars
+    }
+
+    fun getAllStations(): StationList {
+        if (!mStationsInitialized)
+            initializeStations()
+
+        return mAllStations
     }
 
     fun saveCars(aCarsList: CarsList): Boolean
@@ -29,5 +39,11 @@ class Core(context: Context) {
         Log.d("Core", "initializing cars")
         mAllCars = cfgManager.getAllCars()
         mCarsInitialized = true
+    }
+
+    private fun initializeStations() {
+        Log.d("Core", "initializing stations")
+        mAllStations = cfgManager.getAllStations()
+        mStationsInitialized = true
     }
 }

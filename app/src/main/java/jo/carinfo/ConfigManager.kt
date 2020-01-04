@@ -38,4 +38,8 @@ class ConfigManager(ctx: Context) {
     fun removeEntry(aEntryId: Int): Boolean {
         return dbHandle.removeEntry(aEntryId)
     }
+
+    fun getAllStations(): StationList {
+        return dbHandle.getAllStations()
+    }
 }

@@ -31,6 +31,12 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
                 "'carId' INTEGER NOT NULL," +
                 "FOREIGN KEY(carId) REFERENCES cars(id))")
 
+        p0.execSQL(
+            "CREATE TABLE IF NOT EXISTS $TABLE_STATIONS (" +
+                "'station_id' INTEGER PRIMARY KEY," +
+                "'latitude' REAL NOT NULL," +
+                "'longitude' REAL NOT NULL)")
+
         p0.execSQL("INSERT INTO $TABLE_CARS (name, chart_color) VALUES ('test', 4278190080);")
         p0.execSQL("INSERT INTO $TABLE_CARS (name, chart_color) VALUES ('test2', 4278190335);")
 
@@ -52,6 +58,7 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
     override fun onUpgrade(p0: SQLiteDatabase, oldVer: Int, newVer: Int) {
         p0.execSQL("DROP TABLE IF EXISTS $TABLE_CARS")
         p0.execSQL("DROP TABLE IF EXISTS $TABLE_ENTRIES")
+        p0.execSQL("DROP TABLE IF EXISTS $TABLE_STATIONS")
         onCreate(p0)
     }
 
@@ -235,11 +242,37 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
         return result
     }
 
+    fun getAllStations(): StationList {
+        val result = StationList()
+        val db = this.readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM $TABLE_STATIONS", null)
+        try {
+            if (cursor.moveToFirst())
+            {
+                var simple_station = Station()
+                simple_station.lat = cursor.getDouble(cursor.getColumnIndex("latitude"))
+                simple_station.lon = cursor.getDouble(cursor.getColumnIndex("longitude"))
+                result.add(simple_station)
+                while (cursor.moveToNext())
+                {
+                    simple_station.lat = cursor.getDouble(cursor.getColumnIndex("latitude"))
+                    simple_station.lon = cursor.getDouble(cursor.getColumnIndex("longitude"))
+                    result.add(simple_station)
+                }
+            }
+        } finally {
+            cursor.close()
+        }
+        return result
+    }
+
+
     companion object {
         const val DATABASE_NAME = "carsdb"
-        const val DATABASE_VERSION = 8
+        const val DATABASE_VERSION = 9
         const val TABLE_CARS = "cars"
         const val TABLE_ENTRIES = "entries"
+        const val TABLE_STATIONS = "stations"
         const val NAME_PARAM = "name"
         const val CARID_PARAM = "carId"
         const val ENTRY_TYPE_PARAM = "entry_type"

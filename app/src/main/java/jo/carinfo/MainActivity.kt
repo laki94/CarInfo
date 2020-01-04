@@ -13,18 +13,21 @@ import android.widget.Toast
 
 const val SETTINGS_CLICK = 1
 const val FUEL_ENTRY = 2
+const val STATIONS_CLICK = 3
 
 class MainActivity : AppCompatActivity() {
 
     private val mCore = Core(this)
 
     private var mCars: CarsList? = null
+    private var mStations: StationList? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         mCars = mCore.getAllCars()
+        mStations = mCore.getAllStations()
     }
 
     fun onSettingsClick(view : View)
@@ -32,6 +35,12 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this, SettingsActivity::class.java)
         intent.putExtra("cars", mCars)
         startActivityForResult(intent, SETTINGS_CLICK)
+    }
+
+    fun onStationsClick(view: View) {
+        val intent = Intent(this, StationsActivity::class.java)
+        intent.putExtra("stations", mStations)
+        startActivityForResult(intent, STATIONS_CLICK)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
