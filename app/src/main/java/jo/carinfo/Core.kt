@@ -5,10 +5,10 @@ import android.util.Log
 
 class Core(context: Context) {
 
-    private var mAllCars = CarsList()
+    private lateinit var mAllCars: CarsList
     private var mCarsInitialized = false
 
-    private var mAllStations = StationList()
+    private lateinit var mAllStations: StationList
     private var mStationsInitialized = false
 
     private val cfgManager = ConfigManager(context)

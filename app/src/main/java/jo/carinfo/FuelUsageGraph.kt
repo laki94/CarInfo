@@ -17,7 +17,7 @@ import kotlin.collections.ArrayList
 class FuelUsageGraph : AppCompatActivity() {
 
     private val mCars = CarsListGraph()
-    private var mAdapter: CarGraphAdapter? = null
+    private lateinit var mAdapter: CarGraphAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,8 +87,8 @@ class FuelUsageGraph : AppCompatActivity() {
         mAdapter = CarGraphAdapter(this, mCars)
 
         mAdapter.let {
-            it?.onItemClick = { it, isChecked ->
-                mAdapter?.changeItemVisibility(it, isChecked)
+            it.onItemClick = { it, isChecked ->
+                mAdapter.changeItemVisibility(it, isChecked)
                 clearGraphPoints()
                 showGraphPoints()
             }

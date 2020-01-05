@@ -18,8 +18,8 @@ import java.util.*
 
 class CarEntries : AppCompatActivity() {
 
-    private var mainCar: Car? = null
-    private var entriesAdapter: EntriesAdapter? = null
+    private lateinit var mainCar: Car
+    private lateinit var entriesAdapter: EntriesAdapter
 
     private val mAllEntries = ArrayList<Entry>()
     private val p = Paint()
@@ -33,21 +33,17 @@ class CarEntries : AppCompatActivity() {
             if (extras.containsKey("car"))
                 mainCar = extras.getSerializable("car") as Car
 
-        if (mainCar != null)
-        {
-            val title = findViewById<TextView>(R.id.tvCarEntryTitle)
-            title.text = format("%s %s", getString(R.string.entriesFor), mainCar?.mName)
-
-            mAllEntries.addAll(mainCar?.mFuelEntries!!.asIterable())
-            mAllEntries.sortBy { it.mDate }
-        }
+        val title = findViewById<TextView>(R.id.tvCarEntryTitle)
+        title.text = format("%s %s", getString(R.string.entriesFor), mainCar.mName)
+        mainCar.mFuelEntries.sortByDate()
+        mAllEntries.addAll(mainCar.mFuelEntries.asIterable())
 
         val listView = findViewById<RecyclerView>(R.id.rvEntries)
 
         entriesAdapter = EntriesAdapter(this, mAllEntries)
 
         entriesAdapter.let {
-            it?.onItemClick = {
+            it.onItemClick = {
                 editEntry(it)
             }
         }
@@ -70,22 +66,22 @@ class CarEntries : AppCompatActivity() {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val pos = viewHolder!!.adapterPosition
+                val pos = viewHolder.adapterPosition
 
                 if (direction == ItemTouchHelper.LEFT) {
                     val delEntry = mAllEntries[pos]
-                    entriesAdapter?.removeItem(pos)
+                    entriesAdapter.removeItem(pos)
                     if (delEntry is FuelEntry)
-                        mainCar?.mFuelEntries?.remove(delEntry)
+                        mainCar.mFuelEntries.remove(delEntry)
                     val snackbar = Snackbar.make(
                         findViewById(R.id.entries_layout),
                         R.string.entryRemoved,
                         Snackbar.LENGTH_INDEFINITE
                     )
                     snackbar.setAction("UNDO") {
-                        entriesAdapter?.restoreItem(delEntry, pos)
+                        entriesAdapter.restoreItem(delEntry, pos)
                         if (delEntry is FuelEntry)
-                            mainCar?.mFuelEntries?.add(delEntry)
+                            mainCar.mFuelEntries.add(delEntry)
                     }
                     snackbar.addCallback(object : Snackbar.Callback() {
                         override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
@@ -101,7 +97,7 @@ class CarEntries : AppCompatActivity() {
                 } else if (direction == ItemTouchHelper.RIGHT) {
                     val edEntry = mAllEntries[pos]
                     editEntry(edEntry)
-                    entriesAdapter?.refreshItem(pos)
+                    entriesAdapter.refreshItem(pos)
                 }
             }
 
@@ -229,7 +225,6 @@ class CarEntries : AppCompatActivity() {
         val btn = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
 
         val odo = dialogLayout.findViewById<TextView>(R.id.etOdometer)
-//        val mil = dialogLayout.findViewById<TextView>(R.id.etMileage)
         val fuelAm = dialogLayout.findViewById<TextView>(R.id.etFuelAmount)
         val perLit = dialogLayout.findViewById<TextView>(R.id.etPerLiter)
 
@@ -237,8 +232,6 @@ class CarEntries : AppCompatActivity() {
         {
             if (aEntry?.mOdometer != 0)
                 odo.text = aEntry?.mOdometer.toString()
-//            if (aEntry?.mMileage != 0)
-//                mil.text = aEntry?.mMileage.toString()
             fuelAm.text = aEntry?.mFuelAmount.toString()
             perLit.text = aEntry?.mPerLiter.toString()
         }
@@ -249,11 +242,8 @@ class CarEntries : AppCompatActivity() {
             if (parsed) {
                 val date = Calendar.getInstance().time
                 var odoVal = 0
-//                var milVal = 0
                 if (odo.text.toString().toIntOrNull() != null)
                     odoVal = odo.text.toString().toInt()
-//                if (mil.text.toString().toIntOrNull() != null)
-//                    milVal = mil.text.toString().toInt()
                 var fuelAmVal = String.format(Locale.ROOT, "%.2f", fuelAm.text.toString().toDouble()).toDouble()
                 var perLitVal = String.format(Locale.ROOT, "%.2f", perLit.text.toString().toDouble()).toDouble()
 
@@ -262,17 +252,17 @@ class CarEntries : AppCompatActivity() {
                 if (editing) {
                     entry.mId = aEntry!!.mId
                     if (cfgManager.editFuelEntry(entry)) {
-                        mainCar?.editEntry(entry)
-                        entriesAdapter?.editItem(entry)
+                        mainCar.editEntry(entry)
+                        entriesAdapter.editItem(entry)
                         dialog.dismiss()
                     } else {
                         Toast.makeText(this, R.string.unknownError, Toast.LENGTH_SHORT).show()
                     }
                 }
                 else {
-                    if (cfgManager.addFuelEntry(mainCar!!.mName, entry)) {
-                        mainCar?.addEntry(entry)
-                        entriesAdapter?.addNewItem(entry)
+                    if (cfgManager.addFuelEntry(mainCar.mName, entry)) {
+                        mainCar.addEntry(entry)
+                        entriesAdapter.addNewItem(entry)
                         dialog.dismiss()
                     } else
                         Toast.makeText(this, R.string.unknownError, Toast.LENGTH_SHORT).show()

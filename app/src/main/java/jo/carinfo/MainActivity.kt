@@ -16,8 +16,8 @@ class MainActivity : AppCompatActivity() {
 
     private val mCore = Core(this)
 
-    private var mCars: CarsList? = null
-    private var mStations: StationList? = null
+    private lateinit var mCars: CarsList
+    private lateinit var mStations: StationList
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +42,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
     {
+        super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == SETTINGS_CLICK)
         {
             if (resultCode == Activity.RESULT_OK)
@@ -51,11 +52,11 @@ class MainActivity : AppCompatActivity() {
                 if (extras != null)
                     if (extras.containsKey("cars"))
                     {
-                        mCars?.clear()
+                        mCars.clear()
                         for (car in extras.getSerializable("cars") as ArrayList<Car>)
                         {
                             Log.d("Main", String.format("adding car %s to list", car.mName))
-                            mCars?.add(car)
+                            mCars.add(car)
                         }
                     }
             }
@@ -83,9 +84,9 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     if ((name.isNotEmpty()) && (entry != null))
-                        if (mCars?.getCarWithName(name) != null) {
-                            mCars?.getCarWithName(name).let { it?.addEntry(entry) }
-                            mCars?.let {
+                        if (mCars.getCarWithName(name) != null) {
+                            mCars.getCarWithName(name).let { it?.addEntry(entry) }
+                            mCars.let {
                                 if (mCore.saveCars(it))
                                     Toast.makeText(this, R.string.carsSavedAfterEntry, Toast.LENGTH_SHORT).show()
                                 else

@@ -21,13 +21,13 @@ const val FUEL_ENTRY_CLICK = 0
 class SettingsActivity : AppCompatActivity() {
 
     private val originalCarsList = CarsList()
-    private var adapter: CarAdapter? = null
+    private lateinit var adapter: CarAdapter
     private val p = Paint()
 
     private fun addAndRefreshList(aCar: Car) {
         val cfgManager = ConfigManager(this)
         if (cfgManager.addCar(aCar)) {
-            adapter?.addNewItem(aCar)
+            adapter.addNewItem(aCar)
         } else
             Toast.makeText(this, R.string.couldNotSaveCars, Toast.LENGTH_SHORT).show()
     }
@@ -35,7 +35,7 @@ class SettingsActivity : AppCompatActivity() {
     private fun editCarOnList(aOldCar: Car, aNewCar: Car) {
         val cfgManager = ConfigManager(this)
         if (cfgManager.editCar(aOldCar, aNewCar)) {
-            adapter?.editItem(aOldCar, aNewCar)
+            adapter.editItem(aOldCar, aNewCar)
         } else
             Toast.makeText(this, R.string.couldNotSaveCars, Toast.LENGTH_SHORT).show()
     }
@@ -138,7 +138,7 @@ class SettingsActivity : AppCompatActivity() {
         adapter = CarAdapter(this, originalCarsList)
 
         adapter.let {
-            it?.onItemClick = { it ->
+            it.onItemClick = { it ->
                 val intent = Intent(this, CarEntries::class.java)
                 intent.putExtra("car", it)
                 startActivityForResult(intent, FUEL_ENTRY_CLICK)
@@ -167,14 +167,14 @@ class SettingsActivity : AppCompatActivity() {
 
                 if (direction == ItemTouchHelper.LEFT) {
                     val delCar = originalCarsList[pos]
-                    adapter?.removeItem(pos)
+                    adapter.removeItem(pos)
                     val snackbar = Snackbar.make(
                         findViewById(R.id.cars_layout),
                         R.string.carRemoved,
                         Snackbar.LENGTH_INDEFINITE
                     )
                     snackbar.setAction("UNDO") {
-                        adapter?.restoreItem(delCar, pos)
+                        adapter.restoreItem(delCar, pos)
                     }
                     snackbar.addCallback(object : Snackbar.Callback() {
                         override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
@@ -188,7 +188,7 @@ class SettingsActivity : AppCompatActivity() {
                 } else if (direction == ItemTouchHelper.RIGHT) {
                     val edCar = originalCarsList[pos]
                     onEditCarClick(edCar)
-                    adapter?.refreshItem(pos)
+                    adapter.refreshItem(pos)
                 }
             }
 
@@ -250,6 +250,7 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == FUEL_ENTRY_CLICK) {
             if (resultCode == Activity.RESULT_OK) {
                 Log.d("CarsActivity", "got ok result for fuel entry click")
@@ -260,7 +261,6 @@ class SettingsActivity : AppCompatActivity() {
                         val car = extras.getSerializable("car") as Car
                         originalCarsList[originalCarsList.indexOf(car.mName)] = car
                     }
-
             }
         }
     }
