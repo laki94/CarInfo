@@ -9,8 +9,10 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme.NoActionBar">
+        <service android:name=".LocationUpd" android:process=":my_process"/>
         <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyBPfZq8Zh4XBk_zduLwnJZddekpMQ9kHk0"/>
-        <activity android:name=".StationsActivity"></activity>
+        <activity android:name=".StationsActivity"
+                android:process=":my_process"></activity>
         <activity
                 android:name=".FuelUsageGraph"
                 android:screenOrientation="landscape"></activity>
@@ -19,7 +21,8 @@
         <activity android:name=".simple_name"></activity>
         <activity android:name=".FuelEntryActivity"></activity>
         <activity android:name=".SettingsActivity"></activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+                android:process=":my_process">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

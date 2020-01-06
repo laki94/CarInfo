@@ -1,12 +1,20 @@
 package jo.carinfo
 
 import android.app.Activity
+import android.app.NotificationManager
+import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
+import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Bundle
+import android.os.IBinder
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
 
 const val SETTINGS_CLICK = 1
 const val FUEL_ENTRY = 2
@@ -14,8 +22,12 @@ const val STATIONS_CLICK = 3
 
 class MainActivity : AppCompatActivity() {
 
+    private val CHANNEL_ID = 22222222
+    private val TAG = "MAIN"
+
     private lateinit var mCars: CarsList
     private lateinit var mStations: StationList
+    private var mNotificationVisible: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,6 +36,33 @@ class MainActivity : AppCompatActivity() {
         val cfgManager = ConfigManager(this)
         mCars = cfgManager.getAllCars()
         mStations = cfgManager.getAllStations()
+
+        val intent = Intent(application, LocationUpd::class.java)
+
+        val sc = object : ServiceConnection {
+            override fun onServiceConnected(p0: ComponentName?, p1: IBinder?) {
+                Log.i("MAIN", "service connected")
+                val name = p0?.className
+                if (name!!.endsWith("LocationUpd")) {
+                    LocationUpd.instance = (p1 as LocationUpd.LocationServiceBinder).service
+                    LocationUpd.instance.mContext = this@MainActivity
+
+                    LocationUpd.instance.addCallback(object : Workable<Location> {
+                        override fun work(t: Location) {
+                            Log.i(TAG, "have location on main activity")
+                        }
+                    })
+
+                }
+            }
+
+            override fun onServiceDisconnected(p0: ComponentName?) {
+                Log.i("MAIN", "service disconnected")
+            }
+        }
+
+        application.startService(intent)
+        application.bindService(intent, sc, Context.BIND_AUTO_CREATE)
     }
 
     fun onSettingsClick(view : View)

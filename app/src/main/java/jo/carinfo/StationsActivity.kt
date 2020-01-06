@@ -27,19 +27,15 @@ import com.google.android.libraries.places.compat.ui.PlaceAutocomplete
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import yuku.ambilwarna.AmbilWarnaDialog
 
-class StationsActivity : FragmentActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener {
+class StationsActivity : FragmentActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener, Workable<Location> {
 
     private lateinit var mMap: GoogleMap
-    private lateinit var mFusedLocationProvider: FusedLocationProviderClient
     private lateinit var mLastLocation: Location
-    private lateinit var mLocationCallback: LocationCallback
-    private lateinit var mLocationRequest: LocationRequest
-    private var mLocationUpdateState = false
     private val mStations = StationList()
     private lateinit var mLastClickedPlace: LatLng
     private var mTmpStation = Station()
     private var mLastClickedStation: Station? = null
-//    private var mLastClickedStation: Station? = null
+    private var mAnimateToLocation = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,18 +50,14 @@ class StationsActivity : FragmentActivity(), OnMapReadyCallback, GoogleMap.OnMar
 
         val mapFragment = supportFragmentManager.findFragmentById(R.id.fMap) as SupportMapFragment
         mapFragment.getMapAsync(this)
-        mFusedLocationProvider = LocationServices.getFusedLocationProviderClient(this)
+    }
 
-        mLocationCallback = object : LocationCallback() {
-            override fun onLocationResult(p0: LocationResult) {
-                super.onLocationResult(p0)
-                mLastLocation = p0.lastLocation
-                val bAddMarkerOnMyPos = findViewById<Button>(R.id.bAddMarkerOnMyLocation)
-                bAddMarkerOnMyPos.visibility = View.VISIBLE
-//                placeMarkerOnMap(LatLng(mLastLocation.latitude, mLastLocation.longitude))
-            }
+    override fun work(aLocation: Location) {
+        mLastLocation = aLocation
+        if (mAnimateToLocation) {
+            mAnimateToLocation = false
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(mLastLocation.latitude, mLastLocation.longitude), 12f))
         }
-        createLocationRequest()
     }
 
     override fun onBackPressed() {
@@ -178,45 +170,6 @@ class StationsActivity : FragmentActivity(), OnMapReadyCallback, GoogleMap.OnMar
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQ_CHECK_SETTING) {
-            if (resultCode == Activity.RESULT_OK) {
-                mLocationUpdateState = true
-                startLocationUpdates()
-            }
-        } else if (requestCode == PLACE_PICKER_REQ) {
-            if (resultCode == RESULT_OK) {
-                val place = PlaceAutocomplete.getPlace(this, data)
-                var addressText = place.name.toString()
-                addressText += "\n" + place.address.toString()
-//                placeMarkerOnMap(place.latLng)
-            }
-        }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        mFusedLocationProvider.removeLocationUpdates(mLocationCallback)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (mLocationUpdateState)
-            startLocationUpdates()
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        if (permissions.indexOf(android.Manifest.permission.ACCESS_FINE_LOCATION) != -1)
-            if ((requestCode == LOCATION_PERMISSION_REQ_CODE) && (grantResults[permissions.indexOf(android.Manifest.permission.ACCESS_FINE_LOCATION)] == PackageManager.PERMISSION_GRANTED))
-                setUpMap()
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-    }
-
     private fun clearSelection() {
         mLastClickedStation = null
         for (station in mStations)
@@ -265,44 +218,6 @@ class StationsActivity : FragmentActivity(), OnMapReadyCallback, GoogleMap.OnMar
         mLastClickedPlace = p0
     }
 
-    private fun createLocationRequest() {
-        mLocationRequest = LocationRequest()
-        mLocationRequest.interval = 10000
-        mLocationRequest.fastestInterval = 5000
-        mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-
-        val builder = LocationSettingsRequest.Builder().addLocationRequest(mLocationRequest)
-
-        val client = LocationServices.getSettingsClient(this)
-
-        val task = client.checkLocationSettings(builder.build())
-
-        task.addOnSuccessListener {
-            mLocationUpdateState = true
-            startLocationUpdates()
-        }
-
-        task.addOnFailureListener {e ->
-            if (e is ResolvableApiException) {
-                try {
-                    e.startResolutionForResult(this@StationsActivity, REQ_CHECK_SETTING)
-                } catch (ex: IntentSender.SendIntentException) { }
-            }
-        }
-    }
-
-    private fun startLocationUpdates() {
-        if (ActivityCompat.checkSelfPermission(this,
-                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
-                LOCATION_PERMISSION_REQ_CODE)
-            return
-        }
-        else
-            mFusedLocationProvider.requestLocationUpdates(mLocationRequest, mLocationCallback, null)
-    }
-
     private fun setUpMarkers() {
         for (station in mStations) {
             station.connectToMap(mMap)
@@ -310,46 +225,20 @@ class StationsActivity : FragmentActivity(), OnMapReadyCallback, GoogleMap.OnMar
     }
 
     private fun setUpMap() {
-        if (ActivityCompat.checkSelfPermission(this,
-                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQ_CODE)
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
+                LocationUpd.LOCATION_PERMISSION_REQ_CODE
+            )
             return
         } else {
             mMap.isMyLocationEnabled = true
-            mFusedLocationProvider.lastLocation.addOnSuccessListener(this) { location ->
-                if (location != null) {
-                    mLastLocation = location
-                    val currentLatLng = LatLng(location.latitude, location.longitude)
-//                    placeMarkerOnMap(currentLatLng)
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 12f))
-                }
-            }
+            LocationUpd.instance.addCallback(this)
         }
-    }
-
-    private fun loadPlacePicker() { // NIE POKAZYWAC MIEJSC TYLKO NA PRZYCISKU DODAC ZAPIS PUNKTU PO KLIKNIECIU I ZAKRES
-
-        val builder = PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
-            .setFilter(AutocompleteFilter.Builder().setTypeFilter(AutocompleteFilter.TYPE_FILTER_ESTABLISHMENT)
-                .setCountry("PL")
-                .build())
-            .setInitialQuery("orlen")
-            .build(this)
-//        val filter = AutocompleteFilter.Builder().
-//        builder.setFilter() //PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).build(this)
-        try {
-            startActivityForResult(builder, PLACE_PICKER_REQ)
-        } catch (e: GooglePlayServicesRepairableException) {
-            e.printStackTrace()
-        } catch (e: GooglePlayServicesNotAvailableException) {
-            e.printStackTrace()
-        }
-    }
-
-    companion object {
-        private const val LOCATION_PERMISSION_REQ_CODE = 1
-        private const val REQ_CHECK_SETTING = 2
-        private const val PLACE_PICKER_REQ = 3
     }
 }
