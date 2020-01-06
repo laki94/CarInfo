@@ -39,10 +39,11 @@
     <string name="putPointName">Put a point name</string>
     <string name="pointName">Point name</string>
     <string name="radius_m">Radius [m]</string>
-    <string name="addPoint">Add point</string>
+    <string name="addPoint">Save point</string>
     <string name="editPoint">Edit point</string>
     <string name="editingStation">Editing point</string>
     <string name="removeStation">Remove point</string>
+    <string name="addMarkerOnMyLocation">Add marker on my location</string>
     <!-- Error messages-->
     <string name="couldNotGetCars">Error while getting vehicles</string>
     <string name="couldNotSaveCars">Error while saving vehicles</string>
@@ -58,4 +59,6 @@
     <string name="unknownError">Unknown error occurred</string>
     <string name="couldNotRemoveEntry">Error while removing entry</string>
     <string name="savingPointError">Error while saving point</string>
+    <string name="pointNameCannotBeEmpty">Point name cannot be empty</string>
+    <string name="radiusCannotBeEmpty">Radius cannot be empty</string>
 </resources>

@@ -60,6 +60,8 @@ class StationsActivity : FragmentActivity(), OnMapReadyCallback, GoogleMap.OnMar
             override fun onLocationResult(p0: LocationResult) {
                 super.onLocationResult(p0)
                 mLastLocation = p0.lastLocation
+                val bAddMarkerOnMyPos = findViewById<Button>(R.id.bAddMarkerOnMyLocation)
+                bAddMarkerOnMyPos.visibility = View.VISIBLE
 //                placeMarkerOnMap(LatLng(mLastLocation.latitude, mLastLocation.longitude))
             }
         }
@@ -85,6 +87,11 @@ class StationsActivity : FragmentActivity(), OnMapReadyCallback, GoogleMap.OnMar
                 bRemovePoint.visibility = View.INVISIBLE
             }
         }
+    }
+
+    fun onAddMarkerOnMyLocationClick(view: View) {
+        if (this::mLastLocation.isInitialized)
+            onMapClick(LatLng(mLastLocation.latitude, mLastLocation.longitude))
     }
 
     fun onSaveStationClick(view: View) {
@@ -127,41 +134,47 @@ class StationsActivity : FragmentActivity(), OnMapReadyCallback, GoogleMap.OnMar
         val dialog = builder.create()
         dialog.show()
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
-            val cfgManager = ConfigManager(this)
-            if (editing) {
-                mLastClickedStation!!.mName = etStationName.text.toString()
-                mLastClickedStation!!.mRadius = Integer.parseInt(etRadius.text.toString())
-                if (cfgManager.editStation(mLastClickedStation!!)) {
-                    mLastClickedStation!!.disconnectFromMap()
-                    mLastClickedStation!!.connectToMap(mMap)
-                    dialog.dismiss()
-                } else
-                    Toast.makeText(
-                        this,
-                        resources.getString(R.string.savingPointError),
-                        Toast.LENGTH_SHORT
-                    ).show()
-            } else {
-                mTmpStation.mName = etStationName.text.toString()
-                mTmpStation.mRadius = Integer.parseInt(etRadius.text.toString())
-                if (cfgManager.saveStation(mTmpStation)) {
-                    mStations.add(mTmpStation)
-                    mTmpStation.disconnectFromMap()
-                    mTmpStation.connectToMap(mMap)
-                    mTmpStation = Station()
-                    dialog.dismiss()
-                } else
-                    Toast.makeText(
-                        this,
-                        resources.getString(R.string.savingPointError),
-                        Toast.LENGTH_SHORT
-                    ).show()
-            }
+            if (etStationName.text.isEmpty())
+                Toast.makeText(this, resources.getString(R.string.pointNameCannotBeEmpty), Toast.LENGTH_SHORT).show()
+            else if (etRadius.text.isEmpty())
+                Toast.makeText(this, resources.getString(R.string.radiusCannotBeEmpty), Toast.LENGTH_SHORT).show()
+            else {
+                val cfgManager = ConfigManager(this)
+                if (editing) {
+                    mLastClickedStation!!.mName = etStationName.text.toString()
+                    mLastClickedStation!!.mRadius = Integer.parseInt(etRadius.text.toString())
+                    if (cfgManager.editStation(mLastClickedStation!!)) {
+                        mLastClickedStation!!.disconnectFromMap()
+                        mLastClickedStation!!.connectToMap(mMap)
+                        dialog.dismiss()
+                    } else
+                        Toast.makeText(
+                            this,
+                            resources.getString(R.string.savingPointError),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                } else {
+                    mTmpStation.mName = etStationName.text.toString()
+                    mTmpStation.mRadius = Integer.parseInt(etRadius.text.toString())
+                    if (cfgManager.saveStation(mTmpStation)) {
+                        mStations.add(mTmpStation)
+                        mTmpStation.disconnectFromMap()
+                        mTmpStation.connectToMap(mMap)
+                        mTmpStation = Station()
+                        dialog.dismiss()
+                    } else
+                        Toast.makeText(
+                            this,
+                            resources.getString(R.string.savingPointError),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                }
 
-            val bSavePoint = findViewById<Button>(R.id.bAddEditStation)
-            val bRemovePoint = findViewById<Button>(R.id.bRemoveStation)
-            bSavePoint.visibility = View.INVISIBLE
-            bRemovePoint.visibility = View.INVISIBLE
+                val bSavePoint = findViewById<Button>(R.id.bAddEditStation)
+                val bRemovePoint = findViewById<Button>(R.id.bRemoveStation)
+                bSavePoint.visibility = View.INVISIBLE
+                bRemovePoint.visibility = View.INVISIBLE
+            }
         }
     }
 
@@ -189,7 +202,7 @@ class StationsActivity : FragmentActivity(), OnMapReadyCallback, GoogleMap.OnMar
 
     override fun onResume() {
         super.onResume()
-        if (!mLocationUpdateState)
+        if (mLocationUpdateState)
             startLocationUpdates()
     }
 
@@ -198,7 +211,7 @@ class StationsActivity : FragmentActivity(), OnMapReadyCallback, GoogleMap.OnMar
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
-        if (permissions.indexOf(android.Manifest.permission.ACCESS_FINE_LOCATION) != -1) 
+        if (permissions.indexOf(android.Manifest.permission.ACCESS_FINE_LOCATION) != -1)
             if ((requestCode == LOCATION_PERMISSION_REQ_CODE) && (grantResults[permissions.indexOf(android.Manifest.permission.ACCESS_FINE_LOCATION)] == PackageManager.PERMISSION_GRANTED))
                 setUpMap()
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
@@ -216,6 +229,7 @@ class StationsActivity : FragmentActivity(), OnMapReadyCallback, GoogleMap.OnMar
         val stationId = p0.tag as Int
         clearSelection()
         if (stationId != -1) {
+            mTmpStation.disconnectFromMap()
             bSavePoint.visibility = View.VISIBLE
             bSavePoint.text = resources.getString(R.string.editPoint)
             bRemovePoint.visibility = View.VISIBLE
