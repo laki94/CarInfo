@@ -24,6 +24,34 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var adapter: CarAdapter
     private val p = Paint()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_settings)
+
+        val listView = findViewById<RecyclerView>(R.id.rvCars)
+        val extras = intent.extras
+        if (extras != null)
+            if (extras.containsKey("cars")) {
+                for (car in extras.getSerializable("cars") as ArrayList<Car>)
+                    originalCarsList.add(car)
+            }
+
+        adapter = CarAdapter(this, originalCarsList)
+
+        adapter.let {
+            it.onItemClick = { it ->
+                val intent = Intent(this, CarEntries::class.java)
+                intent.putExtra("car", it)
+                startActivityForResult(intent, FUEL_ENTRY_CLICK)
+            }
+        }
+
+        listView.layoutManager = LinearLayoutManager(this)
+        listView.adapter = adapter
+
+        enableSwipe()
+    }
+
     private fun addAndRefreshList(aCar: Car) {
         val cfgManager = ConfigManager(this)
         if (cfgManager.addCar(aCar)) {
@@ -121,34 +149,6 @@ class SettingsActivity : AppCompatActivity() {
         }
         setResult(Activity.RESULT_OK, intent)
         finish()
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
-
-        val listView = findViewById<RecyclerView>(R.id.rvCars)
-        val extras = intent.extras
-        if (extras != null)
-            if (extras.containsKey("cars")) {
-                for (car in extras.getSerializable("cars") as ArrayList<Car>)
-                    originalCarsList.add(car)
-            }
-
-        adapter = CarAdapter(this, originalCarsList)
-
-        adapter.let {
-            it.onItemClick = { it ->
-                val intent = Intent(this, CarEntries::class.java)
-                intent.putExtra("car", it)
-                startActivityForResult(intent, FUEL_ENTRY_CLICK)
-            }
-        }
-
-        listView.layoutManager = LinearLayoutManager(this)
-        listView.adapter = adapter
-
-        enableSwipe()
     }
 
     private fun enableSwipe() {

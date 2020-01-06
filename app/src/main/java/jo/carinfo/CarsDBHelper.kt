@@ -4,12 +4,13 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import java.io.Serializable
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DATABASE_VERSION) {
+class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DATABASE_VERSION), Serializable {
 
     private val dateTimeFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
@@ -34,8 +35,10 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
         p0.execSQL(
             "CREATE TABLE IF NOT EXISTS $TABLE_STATIONS (" +
                 "'station_id' INTEGER PRIMARY KEY," +
-                "'latitude' REAL NOT NULL," +
-                "'longitude' REAL NOT NULL)")
+                "'station_lat' REAL NOT NULL," +
+                "'station_lon' REAL NOT NULL," +
+                "'station_name' VARCHAR(45) NOT NULL," +
+                "'station_radius' INTEGER NOT NULL)")
 
         p0.execSQL("INSERT INTO $TABLE_CARS (name, chart_color) VALUES ('test', 4278190080);")
         p0.execSQL("INSERT INTO $TABLE_CARS (name, chart_color) VALUES ('test2', 4278190335);")
@@ -251,13 +254,20 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
             if (cursor.moveToFirst())
             {
                 var simple_station = Station()
-                simple_station.lat = cursor.getDouble(cursor.getColumnIndex("latitude"))
-                simple_station.lon = cursor.getDouble(cursor.getColumnIndex("longitude"))
+                simple_station.mId = cursor.getInt(cursor.getColumnIndex("station_id"))
+                simple_station.mName = cursor.getString(cursor.getColumnIndex("station_name"))
+                simple_station.mLat = cursor.getDouble(cursor.getColumnIndex("station_lat"))
+                simple_station.mLon = cursor.getDouble(cursor.getColumnIndex("station_lon"))
+                simple_station.mRadius = cursor.getInt(cursor.getColumnIndex("station_radius"))
                 result.add(simple_station)
                 while (cursor.moveToNext())
                 {
-                    simple_station.lat = cursor.getDouble(cursor.getColumnIndex("latitude"))
-                    simple_station.lon = cursor.getDouble(cursor.getColumnIndex("longitude"))
+                    simple_station = Station()
+                    simple_station.mId = cursor.getInt(cursor.getColumnIndex("station_id"))
+                    simple_station.mName = cursor.getString(cursor.getColumnIndex("station_name"))
+                    simple_station.mLat = cursor.getDouble(cursor.getColumnIndex("station_lat"))
+                    simple_station.mLon = cursor.getDouble(cursor.getColumnIndex("station_lon"))
+                    simple_station.mRadius = cursor.getInt(cursor.getColumnIndex("station_radius"))
                     result.add(simple_station)
                 }
             }
@@ -267,10 +277,53 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
         return result
     }
 
+    fun saveStation(aStation: Station): Boolean {
+        val values = ContentValues()
+        val db = this.writableDatabase
+        try {
+            values.put("station_name", aStation.mName)
+            values.put("station_lat", aStation.mLat)
+            values.put("station_lon", aStation.mLon)
+            values.put("station_radius", aStation.mRadius)
+            val _success = db.insert(TABLE_STATIONS, null, values)
+            aStation.mId = Integer.parseInt("$_success")
+            return Integer.parseInt("$_success") != -1
+        } finally {
+            db.close()
+        }
+    }
+
+    fun removeStation(aStation: Station): Boolean {
+        if (aStation.mId != -1) {
+            val db = this.writableDatabase
+            try {
+                val _success = db.delete(TABLE_STATIONS, "station_id=?",  arrayOf(aStation.mId.toString()))
+                return Integer.parseInt("$_success") != -1
+            } finally {
+                db.close()
+            }
+        } else
+            return false
+    }
+
+    fun editStation(aStation: Station): Boolean {
+        val values = ContentValues()
+        val db = this.writableDatabase
+        try {
+            values.put("station_name", aStation.mName)
+            values.put("station_lat", aStation.mLat)
+            values.put("station_lon", aStation.mLon)
+            values.put("station_radius", aStation.mRadius)
+            val _success = db.update(TABLE_STATIONS, values, "station_id=?", arrayOf(aStation.mId.toString()))
+            return Integer.parseInt("$_success") != -1
+        } finally {
+            db.close()
+        }
+    }
 
     companion object {
         const val DATABASE_NAME = "carsdb"
-        const val DATABASE_VERSION = 1
+        const val DATABASE_VERSION = 3
         const val TABLE_CARS = "cars"
         const val TABLE_ENTRIES = "entries"
         const val TABLE_STATIONS = "stations"

@@ -14,8 +14,6 @@ const val STATIONS_CLICK = 3
 
 class MainActivity : AppCompatActivity() {
 
-    private val mCore = Core(this)
-
     private lateinit var mCars: CarsList
     private lateinit var mStations: StationList
 
@@ -23,8 +21,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        mCars = mCore.getAllCars()
-        mStations = mCore.getAllStations()
+        val cfgManager = ConfigManager(this)
+        mCars = cfgManager.getAllCars()
+        mStations = cfgManager.getAllStations()
     }
 
     fun onSettingsClick(view : View)
@@ -87,14 +86,20 @@ class MainActivity : AppCompatActivity() {
                         if (mCars.getCarWithName(name) != null) {
                             mCars.getCarWithName(name).let { it?.addEntry(entry) }
                             mCars.let {
-                                if (mCore.saveCars(it))
+                                val cfgManager = ConfigManager(this)
+                                if (cfgManager.saveCars(it))
                                     Toast.makeText(this, R.string.carsSavedAfterEntry, Toast.LENGTH_SHORT).show()
                                 else
                                     Toast.makeText(this, R.string.carsNotSavedAfterEntry, Toast.LENGTH_SHORT).show()
                             }
                         }
                 }
-
+            }
+        }
+        else if (requestCode == STATIONS_CLICK) {
+            if (resultCode == Activity.RESULT_OK) {
+                val cfgManager = ConfigManager(this)
+                mStations = cfgManager.getAllStations()
             }
         }
     }

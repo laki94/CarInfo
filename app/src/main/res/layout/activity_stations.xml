@@ -11,13 +11,25 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab"
+    <Button
+            android:id="@+id/bAddEditStation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_marginRight="8dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginBottom="112dp"
-            android:src="@android:drawable/ic_menu_search"/>
+            android:onClick="onSaveStationClick"
+            android:text=""
+            android:visibility="invisible"
+            android:layout_gravity="bottom|end"/>
 
+    <Button
+            android:id="@+id/bRemoveStation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="162dp"
+            android:onClick="onRemoveStationClick"
+            android:text="@string/removeStation"
+            android:visibility="invisible"
+            android:layout_gravity="bottom|end"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

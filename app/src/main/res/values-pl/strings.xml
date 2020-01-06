@@ -35,6 +35,14 @@
     <string name="entryRemoved">Wpis usunięty</string>
     <string name="pickChartColor">Wybierz kolor na wykresie</string>
     <string name="stations">Stacje</string>
+    <string name="addingStation">Dodawanie stacji</string>
+    <string name="putPointName">Wprowadź nazwę punktu</string>
+    <string name="pointName">Nazwa punktu</string>
+    <string name="radius_m">Radius [m]</string>
+    <string name="addPoint">Dodaj punkt</string>
+    <string name="editPoint">Edytuj punkt</string>
+    <string name="editingStation">Edycja punktu</string>
+    <string name="removeStation">Usuń punkt</string>
     <!-- Error messages -->
     <string name="couldNotGetCars">Błąd podczas pobierania pojazdów</string>
     <string name="couldNotSaveCars">Błąd podczas zapisywania pojazdów</string>
@@ -49,4 +57,5 @@
     <string name="invalidCarName">Podano błędną nazwę</string>
     <string name="unknownError">Wystąpił nieznany błąd</string>
     <string name="couldNotRemoveEntry">Błąd podczas usuwania wpisu</string>
+    <string name="savingPointError">Błąd podczas zapisywania punktu</string>
 </resources>

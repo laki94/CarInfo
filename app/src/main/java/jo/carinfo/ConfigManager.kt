@@ -42,4 +42,16 @@ class ConfigManager(ctx: Context) {
     fun getAllStations(): StationList {
         return dbHandle.getAllStations()
     }
+
+    fun saveStation(aStation: Station): Boolean {
+        return dbHandle.saveStation(aStation)
+    }
+
+    fun editStation(aStation: Station): Boolean {
+        return dbHandle.editStation(aStation)
+    }
+
+    fun removeStation(aStation: Station): Boolean {
+        return dbHandle.removeStation(aStation)
+    }
 }
