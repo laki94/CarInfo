@@ -15,12 +15,13 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
+import com.google.android.gms.maps.model.LatLng
 
 const val SETTINGS_CLICK = 1
 const val FUEL_ENTRY = 2
 const val STATIONS_CLICK = 3
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ServiceConnection {
 
     private val CHANNEL_ID = 22222222
     private val TAG = "MAIN"
@@ -39,30 +40,31 @@ class MainActivity : AppCompatActivity() {
 
         val intent = Intent(application, LocationUpd::class.java)
 
-        val sc = object : ServiceConnection {
-            override fun onServiceConnected(p0: ComponentName?, p1: IBinder?) {
-                Log.i("MAIN", "service connected")
-                val name = p0?.className
-                if (name!!.endsWith("LocationUpd")) {
-                    LocationUpd.instance = (p1 as LocationUpd.LocationServiceBinder).service
-                    LocationUpd.instance.mContext = this@MainActivity
-
-                    LocationUpd.instance.addCallback(object : Workable<Location> {
-                        override fun work(t: Location) {
-                            Log.i(TAG, "have location on main activity")
-                        }
-                    })
-
-                }
-            }
-
-            override fun onServiceDisconnected(p0: ComponentName?) {
-                Log.i("MAIN", "service disconnected")
-            }
-        }
-
         application.startService(intent)
-        application.bindService(intent, sc, Context.BIND_AUTO_CREATE)
+        application.bindService(intent, this, Context.BIND_AUTO_CREATE)
+    }
+
+    override fun onServiceConnected(p0: ComponentName?, p1: IBinder?) {
+        Log.i(TAG, "service connected")
+        val name = p0?.className
+        if (name!!.endsWith("LocationUpd")) {
+            LocationUpd.instance = (p1 as LocationUpd.LocationServiceBinder).service
+            LocationUpd.instance.mContext = this@MainActivity
+
+            LocationUpd.instance.addCallback(object : Workable<Location> {
+                override fun work(t: Location) {
+                    Log.i(TAG, "have location on main activity")
+                    val (isNearStation, stationName) = mStations.getNearestStation(t)
+                    if (isNearStation)
+                        Log.i(TAG, "is near station $stationName")
+                }
+            })
+        }
+    }
+
+    override fun onServiceDisconnected(p0: ComponentName?) {
+        Log.i(TAG, "service disconnected")
+        LocationUpd.instance.stopTracking()
     }
 
     fun onSettingsClick(view : View)

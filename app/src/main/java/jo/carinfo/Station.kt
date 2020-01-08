@@ -1,6 +1,7 @@
 package jo.carinfo
 
 import android.graphics.Color
+import android.location.Location
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.*
 import java.io.Serializable
@@ -17,6 +18,13 @@ class Station: Serializable {
 
     fun latLng(): LatLng {
         return LatLng(mLat, mLon)
+    }
+
+    fun location(): Location {
+        val loc = Location("")
+        loc.latitude = mLat
+        loc.longitude = mLon
+        return loc
     }
 
     fun setSelected() {

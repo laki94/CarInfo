@@ -113,7 +113,7 @@ class LocationUpd : Service() {
         setUp()
     }
 
-    private fun stopTracking() {
+    fun stopTracking() {
         onDestroy()
     }
 
