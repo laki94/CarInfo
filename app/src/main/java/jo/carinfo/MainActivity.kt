@@ -59,6 +59,7 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
                         Log.i(TAG, "is near station $stationName")
                 }
             })
+            mStationCheck.start()
         }
     }
 
