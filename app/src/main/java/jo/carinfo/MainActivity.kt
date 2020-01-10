@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
     private lateinit var mCars: CarsList
     private lateinit var mStations: StationList
     private var mNotificationVisible: Boolean = false
+    private lateinit var mStationCheck: StationCheck
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +43,7 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
 
         application.startService(intent)
         application.bindService(intent, this, Context.BIND_AUTO_CREATE)
+        mStationCheck = StationCheck(this, application.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
     }
 
     override fun onServiceConnected(p0: ComponentName?, p1: IBinder?) {
@@ -50,15 +52,6 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
         if (name!!.endsWith("LocationUpd")) {
             LocationUpd.instance = (p1 as LocationUpd.LocationServiceBinder).service
             LocationUpd.instance.mContext = this@MainActivity
-
-            LocationUpd.instance.addCallback(object : Workable<Location> {
-                override fun work(t: Location) {
-                    Log.i(TAG, "have location on main activity")
-                    val (isNearStation, stationName) = mStations.getNearestStation(t)
-                    if (isNearStation)
-                        Log.i(TAG, "is near station $stationName")
-                }
-            })
             mStationCheck.start()
         }
     }

@@ -13,6 +13,7 @@ class Station: Serializable {
     var mLat = 0.0
     var mLon = 0.0
     var mRadius = 0
+    var mInRange = false
     lateinit var mMarker: Marker
     lateinit var mCircle: Circle
 

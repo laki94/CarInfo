@@ -44,6 +44,8 @@
     <string name="editingStation">Edycja punktu</string>
     <string name="removeStation">Usuń punkt</string>
     <string name="addMarkerOnMyLocation">Dodaj marker na mojej pozycji</string>
+    <string name="YouAreNearStation">Jesteś blisko stacji</string>
+    <string name="DontForgetToAddEntry">Nie zapomnij dodać wpisu</string>
     <!-- Error messages -->
     <string name="couldNotGetCars">Błąd podczas pobierania pojazdów</string>
     <string name="couldNotSaveCars">Błąd podczas zapisywania pojazdów</string>

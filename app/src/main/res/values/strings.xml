@@ -44,6 +44,8 @@
     <string name="editingStation">Editing point</string>
     <string name="removeStation">Remove point</string>
     <string name="addMarkerOnMyLocation">Add marker on my location</string>
+    <string name="YouAreNearStation">You are near station</string>
+    <string name="DontForgetToAddEntry">Do not forget to add an entry</string>
     <!-- Error messages-->
     <string name="couldNotGetCars">Error while getting vehicles</string>
     <string name="couldNotSaveCars">Error while saving vehicles</string>

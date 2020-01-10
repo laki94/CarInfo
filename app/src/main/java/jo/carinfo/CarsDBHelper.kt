@@ -38,7 +38,8 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
                 "'station_lat' REAL NOT NULL," +
                 "'station_lon' REAL NOT NULL," +
                 "'station_name' VARCHAR(45) NOT NULL," +
-                "'station_radius' INTEGER NOT NULL)")
+                "'station_radius' INTEGER NOT NULL," +
+                "'is_near' VARCHAR(5) NOT NULL)")
 
         p0.execSQL("INSERT INTO $TABLE_CARS (name, chart_color) VALUES ('test', 4278190080);")
         p0.execSQL("INSERT INTO $TABLE_CARS (name, chart_color) VALUES ('test2', 4278190335);")
@@ -259,6 +260,7 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
                 simple_station.mLat = cursor.getDouble(cursor.getColumnIndex("station_lat"))
                 simple_station.mLon = cursor.getDouble(cursor.getColumnIndex("station_lon"))
                 simple_station.mRadius = cursor.getInt(cursor.getColumnIndex("station_radius"))
+                simple_station.mInRange = cursor.getString(cursor.getColumnIndex("is_near"))!!.toBoolean()
                 result.add(simple_station)
                 while (cursor.moveToNext())
                 {
@@ -268,6 +270,7 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
                     simple_station.mLat = cursor.getDouble(cursor.getColumnIndex("station_lat"))
                     simple_station.mLon = cursor.getDouble(cursor.getColumnIndex("station_lon"))
                     simple_station.mRadius = cursor.getInt(cursor.getColumnIndex("station_radius"))
+                    simple_station.mInRange = cursor.getString(cursor.getColumnIndex("is_near"))!!.toBoolean()
                     result.add(simple_station)
                 }
             }
@@ -285,6 +288,7 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
             values.put("station_lat", aStation.mLat)
             values.put("station_lon", aStation.mLon)
             values.put("station_radius", aStation.mRadius)
+            values.put("is_near", aStation.mInRange.toString())
             val _success = db.insert(TABLE_STATIONS, null, values)
             aStation.mId = Integer.parseInt("$_success")
             return Integer.parseInt("$_success") != -1
@@ -314,6 +318,7 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
             values.put("station_lat", aStation.mLat)
             values.put("station_lon", aStation.mLon)
             values.put("station_radius", aStation.mRadius)
+            values.put("is_near", aStation.mInRange.toString())
             val _success = db.update(TABLE_STATIONS, values, "station_id=?", arrayOf(aStation.mId.toString()))
             return Integer.parseInt("$_success") != -1
         } finally {
@@ -323,7 +328,7 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
 
     companion object {
         const val DATABASE_NAME = "carsdb"
-        const val DATABASE_VERSION = 3
+        const val DATABASE_VERSION = 1
         const val TABLE_CARS = "cars"
         const val TABLE_ENTRIES = "entries"
         const val TABLE_STATIONS = "stations"
