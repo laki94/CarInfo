@@ -88,7 +88,7 @@ class FuelUsageGraph : AppCompatActivity() {
                     }
                 })
                 for (single_entry in car.mFuelEntries)
-                    series.appendData(DataPoint(single_entry.mDate, single_entry.getAvgFuelConsumption()), true, 1000)
+                    series.appendData(DataPoint(single_entry.mDate.toDate(), single_entry.getAvgFuelConsumption()), true, 1000)
 
                 mFuelGraph.addSeries(series)
             }
@@ -111,7 +111,7 @@ class FuelUsageGraph : AppCompatActivity() {
                     }
                 })
                 for (single_entry in car.mFuelEntries)
-                    series.appendData(DataPoint(single_entry.mDate, single_entry.mPerLiter * single_entry.mFuelAmount), false, 1000)
+                    series.appendData(DataPoint(single_entry.mDate.toDate(), single_entry.mPerLiter * single_entry.mFuelAmount), false, 1000)
 
                 mFuelGraph.addSeries(series)
             }
@@ -134,7 +134,7 @@ class FuelUsageGraph : AppCompatActivity() {
                     }
                 })
                 for (single_entry in car.mFuelEntries)
-                    series.appendData(DataPoint(single_entry.mDate, single_entry.mPerLiter), false, 1000)
+                    series.appendData(DataPoint(single_entry.mDate.toDate(), single_entry.mPerLiter), false, 1000)
 
                 mFuelGraph.addSeries(series)
             }

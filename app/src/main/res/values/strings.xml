@@ -51,6 +51,8 @@
     <string name="chartType">Chart type</string>
     <string name="CostPerLiterChart">Cost per liter [zł]</string>
     <string name="TotalCostChart">Total cost [zł]</string>
+    <string name="DaysToInspection">Days to inspection</string>
+    <string name="carInspection">Car inspection</string>
     <string-array name="ChartTypes">
         <item>Fuel usage</item>
         <item>Cost per liter</item>

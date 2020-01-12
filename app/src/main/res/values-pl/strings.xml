@@ -38,7 +38,7 @@
     <string name="addingStation">Dodawanie stacji</string>
     <string name="putPointName">Wprowadź nazwę punktu</string>
     <string name="pointName">Nazwa punktu</string>
-    <string name="radius_m">Radius [m]</string>
+    <string name="radius_m">Promień [m]</string>
     <string name="addPoint">Zapisz punkt</string>
     <string name="editPoint">Edytuj punkt</string>
     <string name="editingStation">Edycja punktu</string>
@@ -51,6 +51,8 @@
     <string name="chartType">Typ wykresu</string>
     <string name="CostPerLiterChart">Koszt za litr [zł]</string>
     <string name="TotalCostChart">Koszt całkowity [zł]</string>
+    <string name="DaysToInspection">Dni do przeglądu</string>
+    <string name="carInspection">Przegląd</string>
     <string-array name="ChartTypes">
         <item>Zużycie paliwa</item>
         <item>Koszt za litr</item>

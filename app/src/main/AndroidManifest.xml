@@ -18,7 +18,8 @@
                 android:process=":my_process"
                 android:screenOrientation="landscape"></activity>
         <activity android:name=".OilEntryActivity"></activity>
-        <activity android:name=".CarEntries"></activity>
+        <activity android:name=".CarEntries"
+                android:process=":my_process"></activity>
         <activity android:name=".simple_name"></activity>
         <activity android:name=".FuelEntryActivity"></activity>
         <activity android:name=".SettingsActivity"></activity>

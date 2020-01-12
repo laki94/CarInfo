@@ -35,8 +35,8 @@ class ConfigManager(ctx: Context) {
         return dbHandle.editFuelEntry(aEntry)
     }
 
-    fun removeEntry(aEntryId: Int): Boolean {
-        return dbHandle.removeEntry(aEntryId)
+    fun removeFuelEntry(aEntry: Entry): Boolean {
+        return dbHandle.removeEntry(aEntry)
     }
 
     fun getAllStations(): StationList {
@@ -53,5 +53,17 @@ class ConfigManager(ctx: Context) {
 
     fun removeStation(aStation: Station): Boolean {
         return dbHandle.removeStation(aStation)
+    }
+
+    fun addInspectionEntry(aOwnerId: Int, aEntry: CarInspectionEntry): Boolean {
+        return dbHandle.addInspectionEntry(aOwnerId, aEntry)
+    }
+
+    fun editInspectionEntry(aEntry: CarInspectionEntry): Boolean {
+        return dbHandle.editInspectionEntry(aEntry)
+    }
+
+    fun removeInspectionEntry(aEntry: CarInspectionEntry): Boolean {
+        return dbHandle.removeEntry(aEntry)
     }
 }

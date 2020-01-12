@@ -4,15 +4,14 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
+import org.joda.time.format.DateTimeFormatter
 import java.io.Serializable
-import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DATABASE_VERSION), Serializable {
-
-    private val dateTimeFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    private val dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd")
 
     override fun onCreate(p0: SQLiteDatabase) {
         p0.execSQL(
@@ -22,15 +21,22 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
                     "'chart_color' INTEGER NULL)")
 
         p0.execSQL(
-                "CREATE TABLE IF NOT EXISTS $TABLE_ENTRIES (" +
+                "CREATE TABLE IF NOT EXISTS $TABLE_FUEL_ENTRIES (" +
                 "'entry_id' INTEGER PRIMARY KEY," +
-                "'entry_type' INTEGER NOT NULL," +
                 "'entry_date' VARCHAR(19) NOT NULL," +
                 "'entry_odo' INTEGER NULL," +
                 "'entry_fuel_amount' REAL NULL," +
                 "'entry_fuel_price' REAL NULL," +
                 "'carId' INTEGER NOT NULL," +
                 "FOREIGN KEY(carId) REFERENCES cars(id))")
+
+        p0.execSQL(
+            "CREATE TABLE IF NOT EXISTS $TABLE_INSPECTION_ENTRIES (" +
+                    "'entry_id' INTEGER PRIMARY KEY," +
+                    "'entry_date' VARCHAR(19) NOT NULL," +
+                    "'entry_date_to_inspection' VARCHAR(19) NOT NULL," +
+                    "'carId' INTEGER NOT NULL," +
+                    "FOREIGN KEY(carId) REFERENCES cars(id))")
 
         p0.execSQL(
             "CREATE TABLE IF NOT EXISTS $TABLE_STATIONS (" +
@@ -44,24 +50,25 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
         p0.execSQL("INSERT INTO $TABLE_CARS (name, chart_color) VALUES ('test', 4278190080);")
         p0.execSQL("INSERT INTO $TABLE_CARS (name, chart_color) VALUES ('test2', 4278190335);")
 
-        p0.execSQL("INSERT INTO $TABLE_ENTRIES (entry_type, entry_date, entry_odo, entry_fuel_amount, entry_fuel_price, carId) VALUES " +
-                "(2, '2019-12-11', 610, 52.4, 4.55, 1);")
-        p0.execSQL("INSERT INTO $TABLE_ENTRIES (entry_type, entry_date, entry_odo, entry_fuel_amount, entry_fuel_price, carId) VALUES " +
-                "(2, '2020-01-01', 655, 55.4, 4.75, 1);")
-        p0.execSQL("INSERT INTO $TABLE_ENTRIES (entry_type, entry_date, entry_odo, entry_fuel_amount, entry_fuel_price, carId) VALUES " +
-                "(2, '2020-02-13', 620, 50.0, 4.65, 1);")
+        p0.execSQL("INSERT INTO $TABLE_FUEL_ENTRIES (entry_date, entry_odo, entry_fuel_amount, entry_fuel_price, carId) VALUES " +
+                "('2019-12-11', 610, 52.4, 4.55, 1);")
+        p0.execSQL("INSERT INTO $TABLE_FUEL_ENTRIES (entry_date, entry_odo, entry_fuel_amount, entry_fuel_price, carId) VALUES " +
+                "('2020-01-01', 655, 55.4, 4.75, 1);")
+        p0.execSQL("INSERT INTO $TABLE_FUEL_ENTRIES (entry_date, entry_odo, entry_fuel_amount, entry_fuel_price, carId) VALUES " +
+                "('2020-02-13', 620, 50.0, 4.65, 1);")
 
-        p0.execSQL("INSERT INTO $TABLE_ENTRIES (entry_type, entry_date, entry_odo, entry_fuel_amount, entry_fuel_price, carId) VALUES " +
-                "(2, '2019-11-22', 499, 33.4, 4.55, 2);")
-        p0.execSQL("INSERT INTO $TABLE_ENTRIES (entry_type, entry_date, entry_odo, entry_fuel_amount, entry_fuel_price, carId) VALUES " +
-                "(2, '2020-01-01', 541, 37.4, 4.75, 2);")
-        p0.execSQL("INSERT INTO $TABLE_ENTRIES (entry_type, entry_date, entry_odo, entry_fuel_amount, entry_fuel_price, carId) VALUES " +
-                "(2, '2020-02-13', 504, 36.0, 4.65, 2);")
+        p0.execSQL("INSERT INTO $TABLE_FUEL_ENTRIES (entry_date, entry_odo, entry_fuel_amount, entry_fuel_price, carId) VALUES " +
+                "('2019-11-22', 499, 33.4, 4.55, 2);")
+        p0.execSQL("INSERT INTO $TABLE_FUEL_ENTRIES (entry_date, entry_odo, entry_fuel_amount, entry_fuel_price, carId) VALUES " +
+                "('2020-01-01', 541, 37.4, 4.75, 2);")
+        p0.execSQL("INSERT INTO $TABLE_FUEL_ENTRIES (entry_date, entry_odo, entry_fuel_amount, entry_fuel_price, carId) VALUES " +
+                "('2020-02-13', 504, 36.0, 4.65, 2);")
     }
 
     override fun onUpgrade(p0: SQLiteDatabase, oldVer: Int, newVer: Int) {
         p0.execSQL("DROP TABLE IF EXISTS $TABLE_CARS")
-        p0.execSQL("DROP TABLE IF EXISTS $TABLE_ENTRIES")
+        p0.execSQL("DROP TABLE IF EXISTS $TABLE_FUEL_ENTRIES")
+        p0.execSQL("DROP TABLE IF EXISTS $TABLE_INSPECTION_ENTRIES")
         p0.execSQL("DROP TABLE IF EXISTS $TABLE_STATIONS")
         onCreate(p0)
     }
@@ -114,7 +121,9 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
     fun removeCar(aCarName: String): Boolean {
         val db = this.writableDatabase
         try {
-            var _success = db.delete(TABLE_ENTRIES, "carId=?", arrayOf(getCarId(aCarName).toString()))
+            var _success = db.delete(TABLE_FUEL_ENTRIES, "carId=?", arrayOf(getCarId(aCarName).toString()))
+            if (Integer.parseInt("$_success") != -1)
+                _success = db.delete(TABLE_INSPECTION_ENTRIES, "carId=?", arrayOf(getCarId(aCarName).toString()))
             if (Integer.parseInt("$_success") != -1)
                 _success = db.delete(TABLE_CARS, "name=?",  arrayOf(aCarName))
             return Integer.parseInt("$_success") != -1
@@ -174,12 +183,29 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
             val db = this.writableDatabase
             try {
                 values.put("carId", aOwnerId)
-                values.put("entry_type", FUEL_ENTRY)
-                values.put("entry_date", dateTimeFormat.format(aEntry.mDate))
+                values.put("entry_date", aEntry.mDate.toString(dateTimeFormatter))
                 values.put("entry_odo", aEntry.mOdometer)
                 values.put("entry_fuel_amount", aEntry.mFuelAmount)
                 values.put("entry_fuel_price", aEntry.mPerLiter)
-                val _success = db.insert(TABLE_ENTRIES, null, values)
+                val _success = db.insert(TABLE_FUEL_ENTRIES, null, values)
+                aEntry.mId = Integer.parseInt("$_success")
+                return Integer.parseInt("$_success") != -1
+            } finally {
+                db.close()
+            }
+        }
+        return false
+    }
+
+    fun addInspectionEntry(aOwnerId: Int, aEntry: CarInspectionEntry): Boolean {
+        if (aOwnerId != -1) {
+            val values = ContentValues()
+            val db = this.writableDatabase
+            try {
+                values.put("carId", aOwnerId)
+                values.put("entry_date", aEntry.mDate.toString(dateTimeFormatter))
+                values.put("entry_date_to_inspection", aEntry.mDateToInspection.toString(dateTimeFormatter))
+                val _success = db.insert(TABLE_INSPECTION_ENTRIES, null, values)
                 aEntry.mId = Integer.parseInt("$_success")
                 return Integer.parseInt("$_success") != -1
             } finally {
@@ -196,17 +222,33 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
             values.put("entry_odo", aEntry.mOdometer)
             values.put("entry_fuel_amount", aEntry.mFuelAmount)
             values.put("entry_fuel_price", aEntry.mPerLiter)
-            val _success = db.update(TABLE_ENTRIES, values, "entry_id=?", arrayOf(aEntry.mId.toString()))
+            val _success = db.update(TABLE_FUEL_ENTRIES, values, "entry_id=?", arrayOf(aEntry.mId.toString()))
             return Integer.parseInt("$_success") != -1
         } finally {
             db.close()
         }
     }
 
-    fun removeEntry(aEntryId: Int): Boolean {
+    fun editInspectionEntry(aEntry: CarInspectionEntry): Boolean {
+        val values = ContentValues()
         val db = this.writableDatabase
         try {
-            val _success = db.delete(TABLE_ENTRIES, "entry_id=?",  arrayOf(aEntryId.toString()))
+            values.put("entry_date_to_inspection", aEntry.mDateToInspection.toString(dateTimeFormatter))
+            val _success = db.update(TABLE_INSPECTION_ENTRIES, values, "entry_id=?", arrayOf(aEntry.mId.toString()))
+            return Integer.parseInt("$_success") != -1
+        } finally {
+            db.close()
+        }
+    }
+
+    fun removeEntry(aEntry: Entry): Boolean {
+        val db = this.writableDatabase
+        var _success = -1
+        try {
+            if (aEntry is FuelEntry)
+                _success = db.delete(TABLE_FUEL_ENTRIES, "entry_id=?",  arrayOf(aEntry.mId.toString()))
+            else if (aEntry is CarInspectionEntry)
+                _success = db.delete(TABLE_INSPECTION_ENTRIES, "entry_id=?",  arrayOf(aEntry.mId.toString()))
             return Integer.parseInt("$_success") != -1
         } finally {
             db.close()
@@ -217,14 +259,14 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
         val result = FuelEntriesList()
         if (aCarId != -1) {
             val db = this.readableDatabase
-            val cursor = db.rawQuery("SELECT * FROM $TABLE_ENTRIES WHERE $CARID_PARAM=? AND $ENTRY_TYPE_PARAM=?", arrayOf(aCarId.toString(), FUEL_ENTRY.toString()))
+            val cursor = db.rawQuery("SELECT * FROM $TABLE_FUEL_ENTRIES WHERE $CARID_PARAM=?", arrayOf(aCarId.toString()))
             try {
                 if (cursor.moveToFirst())
                 {
                     var entry = FuelEntry()
                     entry.mId = cursor.getInt(cursor.getColumnIndex("entry_id"))
                     entry.mOdometer = cursor.getInt(cursor.getColumnIndex("entry_odo"))
-                    entry.mDate = dateTimeFormat.parse(cursor.getString(cursor.getColumnIndex("entry_date")))
+                    entry.mDate = DateTime.parse(cursor.getString(cursor.getColumnIndex("entry_date")),dateTimeFormatter)
                     entry.mFuelAmount = cursor.getDouble(cursor.getColumnIndex("entry_fuel_amount"))
                     entry.mPerLiter = cursor.getDouble(cursor.getColumnIndex("entry_fuel_price"))
                     result.add(entry)
@@ -233,7 +275,7 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
                         entry = FuelEntry()
                         entry.mId = cursor.getInt(cursor.getColumnIndex("entry_id"))
                         entry.mOdometer = cursor.getInt(cursor.getColumnIndex("entry_odo"))
-                        entry.mDate = dateTimeFormat.parse(cursor.getString(cursor.getColumnIndex("entry_date")))
+                        entry.mDate = DateTime.parse(cursor.getString(cursor.getColumnIndex("entry_date")),dateTimeFormatter)
                         entry.mFuelAmount = cursor.getDouble(cursor.getColumnIndex("entry_fuel_amount"))
                         entry.mPerLiter = cursor.getDouble(cursor.getColumnIndex("entry_fuel_price"))
                         result.add(entry)
@@ -328,12 +370,12 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
 
     companion object {
         const val DATABASE_NAME = "carsdb"
-        const val DATABASE_VERSION = 1
+        const val DATABASE_VERSION = 4
         const val TABLE_CARS = "cars"
-        const val TABLE_ENTRIES = "entries"
+        const val TABLE_FUEL_ENTRIES = "fuel_entries"
+        const val TABLE_INSPECTION_ENTRIES = "inspection_entries"
         const val TABLE_STATIONS = "stations"
         const val NAME_PARAM = "name"
         const val CARID_PARAM = "carId"
-        const val ENTRY_TYPE_PARAM = "entry_type"
     }
 }

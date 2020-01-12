@@ -7,12 +7,14 @@ import android.graphics.*
 import android.os.Bundle
 import androidx.recyclerview.widget.RecyclerView
 import android.view.View
+import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
+import org.joda.time.DateTime
 import java.lang.String.format
 import java.util.*
 
@@ -166,12 +168,31 @@ class CarEntries : AppCompatActivity() {
     }
 
     fun onEntryAddClick(view: View) {
-        createNewEntry(EntryType.Fuel)
+        val builder = AlertDialog.Builder(this)
+        val inflater = layoutInflater
+        builder.setTitle(R.string.entryType)
+        val dialogLayout = inflater.inflate(R.layout.dlg_select_entry_type, null)
+        val rg = dialogLayout.findViewById<RadioGroup>(R.id.rgEntryTypes)
+        builder.setView(dialogLayout)
+        builder.setPositiveButton(R.string.Next) { _, _ -> createNewEntry(getEntryType(rg.checkedRadioButtonId)) }
+        builder.show()
+    }
+
+    private fun getEntryType(aButtonId: Int): EntryType {
+        when (aButtonId) {
+            R.id.rbFuel -> return EntryType.Fuel
+            R.id.rbCarInspection -> return EntryType.Inspection
+            else -> return EntryType.Unknown
+        }
+    }
+
+    private fun createInspectionEntry(aEntry: CarInspectionEntry?) {
+        // TODO Add inspection entry
     }
 
     private fun removeEntryOnList(aEntry: Entry){
         val cfgManager = ConfigManager(this)
-        if (!cfgManager.removeEntry(aEntry.mId))
+        if (!cfgManager.removeFuelEntry(aEntry))
             Toast.makeText(this, R.string.couldNotRemoveEntry, Toast.LENGTH_SHORT).show()
     }
 
@@ -186,8 +207,9 @@ class CarEntries : AppCompatActivity() {
     {
         when (aEntryType)
         {
-            EntryType.Fuel -> { createFuelEntry(null) }
-            else -> { }
+            EntryType.Fuel -> createFuelEntry(null)
+            EntryType.Inspection -> createInspectionEntry(null)
+            else -> throw NotImplementedError("cannot create entry for unknown entry $aEntryType")
         }
     }
 
@@ -240,7 +262,6 @@ class CarEntries : AppCompatActivity() {
 
             val (parsed, err) = parseUserInput(dialogLayout)
             if (parsed) {
-                val date = Calendar.getInstance().time
                 var odoVal = 0
                 if (odo.text.toString().toIntOrNull() != null)
                     odoVal = odo.text.toString().toInt()
@@ -248,7 +269,7 @@ class CarEntries : AppCompatActivity() {
                 var perLitVal = String.format(Locale.ROOT, "%.2f", perLit.text.toString().toDouble()).toDouble()
 
                 val cfgManager = ConfigManager(this)
-                val entry = FuelEntry(date, odoVal, fuelAmVal, perLitVal)
+                val entry = FuelEntry(DateTime.now(), odoVal, fuelAmVal, perLitVal)
                 if (editing) {
                     entry.mId = aEntry!!.mId
                     if (cfgManager.editFuelEntry(entry)) {

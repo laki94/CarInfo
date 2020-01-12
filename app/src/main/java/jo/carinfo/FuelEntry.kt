@@ -1,10 +1,11 @@
 package jo.carinfo
 
 import android.content.Context
+import org.joda.time.DateTime
 import java.util.*
 import kotlin.math.round
 
-class FuelEntry(date: Date = Date(0), odo: Int = 0, fuelAm: Double = 0.0, perLiter: Double = 0.0): Entry(date) {
+class FuelEntry(aDate: DateTime = DateTime(0), odo: Int = 0, fuelAm: Double = 0.0, perLiter: Double = 0.0): Entry(aDate) {
 
     var mOdometer = odo
     var mFuelAmount = fuelAm
@@ -23,6 +24,6 @@ class FuelEntry(date: Date = Date(0), odo: Int = 0, fuelAm: Double = 0.0, perLit
     }
 
     fun getAvgFuelConsumption(): Double {
-        return "%.2f".format(mOdometer / mFuelAmount).toDouble()
+        return "%.2f".format(Locale.ENGLISH, mOdometer / mFuelAmount).toDouble()
     }
 }
