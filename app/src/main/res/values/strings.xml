@@ -46,6 +46,16 @@
     <string name="addMarkerOnMyLocation">Add marker on my location</string>
     <string name="YouAreNearStation">You are near station</string>
     <string name="DontForgetToAddEntry">Do not forget to add an entry</string>
+    <string name="Date">Date</string>
+    <string name="FuelConsumptionChart">Fuel consumption [l/100km]</string>
+    <string name="chartType">Chart type</string>
+    <string name="CostPerLiterChart">Cost per liter [zł]</string>
+    <string name="TotalCostChart">Total cost [zł]</string>
+    <string-array name="ChartTypes">
+        <item>Fuel usage</item>
+        <item>Cost per liter</item>
+        <item>Total cost</item>
+    </string-array>
     <!-- Error messages-->
     <string name="couldNotGetCars">Error while getting vehicles</string>
     <string name="couldNotSaveCars">Error while saving vehicles</string>

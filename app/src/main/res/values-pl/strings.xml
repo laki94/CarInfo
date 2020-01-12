@@ -46,6 +46,16 @@
     <string name="addMarkerOnMyLocation">Dodaj marker na mojej pozycji</string>
     <string name="YouAreNearStation">Jesteś blisko stacji</string>
     <string name="DontForgetToAddEntry">Nie zapomnij dodać wpisu</string>
+    <string name="Date">Data</string>
+    <string name="FuelConsumptionChart">Zużycie paliwa [l/100km]</string>
+    <string name="chartType">Typ wykresu</string>
+    <string name="CostPerLiterChart">Koszt za litr [zł]</string>
+    <string name="TotalCostChart">Koszt całkowity [zł]</string>
+    <string-array name="ChartTypes">
+        <item>Zużycie paliwa</item>
+        <item>Koszt za litr</item>
+        <item>Koszt całkowity</item>
+    </string-array>
     <!-- Error messages -->
     <string name="couldNotGetCars">Błąd podczas pobierania pojazdów</string>
     <string name="couldNotSaveCars">Błąd podczas zapisywania pojazdów</string>

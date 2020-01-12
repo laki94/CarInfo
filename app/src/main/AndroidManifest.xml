@@ -15,6 +15,7 @@
                 android:process=":my_process"></activity>
         <activity
                 android:name=".FuelUsageGraph"
+                android:process=":my_process"
                 android:screenOrientation="landscape"></activity>
         <activity android:name=".OilEntryActivity"></activity>
         <activity android:name=".CarEntries"></activity>

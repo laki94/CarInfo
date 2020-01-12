@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <item android:title="@string/cars" android:id="@+id/miCars"/>
-    <item
-            android:id="@+id/miSelectDate"
-            android:title="@string/selectDate"
-    />
-</menu>
