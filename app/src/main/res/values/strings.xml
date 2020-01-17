@@ -1,4 +1,11 @@
 <resources>
+    <!--  Arrays  -->
+    <string-array name="ChartTypes">
+        <item>Fuel usage</item>
+        <item>Cost per liter</item>
+        <item>Total cost</item>
+    </string-array>
+    <!--  Strings  -->
     <string name="app_name">CarInfo</string>
     <string name="entries">Entries</string>
     <string name="fuelUsage">Fuel usage</string>
@@ -53,11 +60,10 @@
     <string name="TotalCostChart">Total cost [zł]</string>
     <string name="DaysToInspection">Days to inspection</string>
     <string name="carInspection">Car inspection</string>
-    <string-array name="ChartTypes">
-        <item>Fuel usage</item>
-        <item>Cost per liter</item>
-        <item>Total cost</item>
-    </string-array>
+    <string name="lastInspectionDate">Last inspection date</string>
+    <string name="remindInOneYear">Remind in one year</string>
+    <string name="remindInTwoYears">Remind in two years</string>
+    <string name="remindInThreeYears">Remind in three years</string>
     <!-- Error messages-->
     <string name="couldNotGetCars">Error while getting vehicles</string>
     <string name="couldNotSaveCars">Error while saving vehicles</string>

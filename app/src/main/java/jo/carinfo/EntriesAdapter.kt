@@ -40,6 +40,9 @@ class EntriesAdapter(private val context: Context, private val items : ArrayList
                     (tmpentry as FuelEntry).mFuelAmount = aEntry.mFuelAmount
                     tmpentry.mPerLiter = aEntry.mPerLiter
                     tmpentry.mOdometer = aEntry.mOdometer
+                } else if (aEntry is CarInspectionEntry) {
+                    (tmpentry as CarInspectionEntry).mLastInspectionDate = aEntry.mLastInspectionDate
+                    tmpentry.mRemindAfter = aEntry.mRemindAfter
                 }
                 break
             }

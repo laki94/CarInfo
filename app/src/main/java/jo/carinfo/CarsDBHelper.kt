@@ -6,9 +6,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
-import org.joda.time.format.DateTimeFormatter
 import java.io.Serializable
-import java.util.*
 
 class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DATABASE_VERSION), Serializable {
     private val dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd")
@@ -34,7 +32,8 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
             "CREATE TABLE IF NOT EXISTS $TABLE_INSPECTION_ENTRIES (" +
                     "'entry_id' INTEGER PRIMARY KEY," +
                     "'entry_date' VARCHAR(19) NOT NULL," +
-                    "'entry_date_to_inspection' VARCHAR(19) NOT NULL," +
+                    "'entry_inspection_date' VARCHAR(19) NOT NULL," +
+                    "'entry_remind_after' INTEGER NOT NULL," +
                     "'carId' INTEGER NOT NULL," +
                     "FOREIGN KEY(carId) REFERENCES cars(id))")
 
@@ -152,6 +151,35 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
         }
     }
 
+    fun getCarInspectionEntry(aCarId: Int): CarInspectionEntry {
+        val entry = CarInspectionEntry()
+        if (aCarId != -1) {
+            val db = this.readableDatabase
+            val cursor = db.rawQuery(
+                "SELECT * FROM $TABLE_INSPECTION_ENTRIES WHERE $CARID_PARAM=?",
+                arrayOf(aCarId.toString())
+            )
+            try {
+                if (cursor.moveToFirst()) {
+                    entry.mId = cursor.getInt(cursor.getColumnIndex("entry_id"))
+                    entry.mDate = DateTime.parse(
+                        cursor.getString(cursor.getColumnIndex("entry_date")),
+                        dateTimeFormatter
+                    )
+                    entry.mLastInspectionDate = DateTime.parse(
+                        cursor.getString(cursor.getColumnIndex("entry_inspection_date")),
+                        dateTimeFormatter
+                    )
+                    entry.mRemindAfter =
+                        InspectionRemindAfter.valueOf(cursor.getString(cursor.getColumnIndex("entry_remind_after")))
+                }
+            } finally {
+                cursor.close()
+            }
+        }
+        return entry
+    }
+
     fun getAllCars(): CarsList {
         val db = this.readableDatabase
         val cursor = db.rawQuery("SELECT * FROM $TABLE_CARS", null)
@@ -162,12 +190,14 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
                 var newCar = Car(cursor.getString(cursor.getColumnIndex("name")))
                 newCar.mChartColor = cursor.getInt(cursor.getColumnIndex("chart_color"))
                 newCar.mFuelEntries.addAll(getAllFuelEntries(cursor.getInt(cursor.getColumnIndex("id"))))
+                newCar.mInspection = getCarInspectionEntry(cursor.getInt(cursor.getColumnIndex("id")))
                 result.add(newCar)
                 while (cursor.moveToNext())
                 {
                     newCar = Car(cursor.getString(cursor.getColumnIndex("name")))
                     newCar.mChartColor = cursor.getInt(cursor.getColumnIndex("chart_color"))
                     newCar.mFuelEntries.addAll(getAllFuelEntries(cursor.getInt(cursor.getColumnIndex("id"))))
+                    newCar.mInspection = getCarInspectionEntry(cursor.getInt(cursor.getColumnIndex("id")))
                     result.add(newCar)
                 }
             }
@@ -197,14 +227,17 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
         return false
     }
 
-    fun addInspectionEntry(aOwnerId: Int, aEntry: CarInspectionEntry): Boolean {
-        if (aOwnerId != -1) {
+    fun addInspectionEntry(aCarName: String, aEntry: CarInspectionEntry): Boolean {
+        val carId = getCarId(aCarName)
+        if (carId != -1) {
             val values = ContentValues()
             val db = this.writableDatabase
             try {
-                values.put("carId", aOwnerId)
+                db.delete(TABLE_INSPECTION_ENTRIES, "carId=?", arrayOf(carId.toString()))
+                values.put("carId", carId)
                 values.put("entry_date", aEntry.mDate.toString(dateTimeFormatter))
-                values.put("entry_date_to_inspection", aEntry.mDateToInspection.toString(dateTimeFormatter))
+                values.put("entry_inspection_date", aEntry.mLastInspectionDate.toString(dateTimeFormatter))
+                values.put("entry_remind_after", aEntry.mRemindAfter.name)
                 val _success = db.insert(TABLE_INSPECTION_ENTRIES, null, values)
                 aEntry.mId = Integer.parseInt("$_success")
                 return Integer.parseInt("$_success") != -1
@@ -233,7 +266,8 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
         val values = ContentValues()
         val db = this.writableDatabase
         try {
-            values.put("entry_date_to_inspection", aEntry.mDateToInspection.toString(dateTimeFormatter))
+            values.put("entry_inspection_date", aEntry.mLastInspectionDate.toString(dateTimeFormatter))
+            values.put("entry_remind_after", aEntry.mRemindAfter.name)
             val _success = db.update(TABLE_INSPECTION_ENTRIES, values, "entry_id=?", arrayOf(aEntry.mId.toString()))
             return Integer.parseInt("$_success") != -1
         } finally {
@@ -370,7 +404,7 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
 
     companion object {
         const val DATABASE_NAME = "carsdb"
-        const val DATABASE_VERSION = 4
+        const val DATABASE_VERSION = 6
         const val TABLE_CARS = "cars"
         const val TABLE_FUEL_ENTRIES = "fuel_entries"
         const val TABLE_INSPECTION_ENTRIES = "inspection_entries"

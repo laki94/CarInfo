@@ -1,4 +1,11 @@
 <resources>
+    <!--  Arrays  -->
+    <string-array name="ChartTypes">
+        <item>Zużycie paliwa</item>
+        <item>Koszt za litr</item>
+        <item>Koszt całkowity</item>
+    </string-array>
+    <!--  Strings  -->
     <string name="app_name">CarInfo</string>
     <string name="entries">Wpisy</string>
     <string name="fuelUsage">Zużycie paliwa</string>
@@ -53,11 +60,10 @@
     <string name="TotalCostChart">Koszt całkowity [zł]</string>
     <string name="DaysToInspection">Dni do przeglądu</string>
     <string name="carInspection">Przegląd</string>
-    <string-array name="ChartTypes">
-        <item>Zużycie paliwa</item>
-        <item>Koszt za litr</item>
-        <item>Koszt całkowity</item>
-    </string-array>
+    <string name="lastInspectionDate">Data ostatniego przeglądu</string>
+    <string name="remindInOneYear">Przypomnij za rok</string>
+    <string name="remindInTwoYears">Przypomnij za dwa lata</string>
+    <string name="remindInThreeYears">Przypomnij za trzy lata</string>
     <!-- Error messages -->
     <string name="couldNotGetCars">Błąd podczas pobierania pojazdów</string>
     <string name="couldNotSaveCars">Błąd podczas zapisywania pojazdów</string>

@@ -7,6 +7,7 @@ import android.graphics.*
 import android.os.Bundle
 import androidx.recyclerview.widget.RecyclerView
 import android.view.View
+import android.widget.CalendarView
 import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
@@ -15,6 +16,8 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
+import org.joda.time.Months
 import java.lang.String.format
 import java.util.*
 
@@ -39,6 +42,7 @@ class CarEntries : AppCompatActivity() {
         title.text = format("%s %s", getString(R.string.entriesFor), mainCar.mName)
         mainCar.mFuelEntries.sortByDate()
         mAllEntries.addAll(mainCar.mFuelEntries.asIterable())
+        mAllEntries.add(mainCar.mInspection)
 
         val listView = findViewById<RecyclerView>(R.id.rvEntries)
 
@@ -187,7 +191,69 @@ class CarEntries : AppCompatActivity() {
     }
 
     private fun createInspectionEntry(aEntry: CarInspectionEntry?) {
-        // TODO Add inspection entry
+        val editing = aEntry != null
+        val builder = AlertDialog.Builder(this)
+        val inflater = layoutInflater
+        val dialogLayout = inflater.inflate(R.layout.activity_car_inspection, null)
+
+        builder.setView(dialogLayout)
+        builder.setPositiveButton(R.string.save) {_, _ ->}
+
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
+
+        val btn = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+
+        val cvLastInspection = dialogLayout.findViewById<CalendarView>(R.id.cvLastInspection)
+        val rgReminders = dialogLayout.findViewById<RadioGroup>(R.id.rgReminders)
+
+        if (editing)
+        {
+            cvLastInspection.date = aEntry!!.mLastInspectionDate.toDate().time
+            when (aEntry.mRemindAfter) {
+                InspectionRemindAfter.YEAR -> rgReminders.check(R.id.rbRemindInOneYear)
+                InspectionRemindAfter.TWO_YEARS -> rgReminders.check(R.id.rbRemindInTwoYears)
+                InspectionRemindAfter.THREE_YEARS -> rgReminders.check(R.id.rbRemindInThreeYears)
+                else -> throw NotImplementedError("could not select remind after radio button for unknown reminder ${aEntry.mRemindAfter}")
+            }
+        } else {
+            cvLastInspection.date = DateTime.now(DateTimeZone.UTC).millis
+            rgReminders.check(R.id.rbRemindInOneYear)
+        }
+
+        var inspectionDate = DateTime.now(DateTimeZone.UTC)
+        cvLastInspection.setOnDateChangeListener { view, year, month, dayOfMonth ->
+            inspectionDate = DateTime(year, month+1, dayOfMonth, 0, 0)
+        }
+
+        btn.setOnClickListener {
+            var remindAfter = InspectionRemindAfter.UNKNOWN
+            when (rgReminders.checkedRadioButtonId) {
+                R.id.rbRemindInOneYear -> remindAfter = InspectionRemindAfter.YEAR
+                R.id.rbRemindInTwoYears -> remindAfter = InspectionRemindAfter.TWO_YEARS
+                R.id.rbRemindInThreeYears -> remindAfter = InspectionRemindAfter.THREE_YEARS
+            }
+            val cfgManager = ConfigManager(this)
+            val entry = CarInspectionEntry(DateTime.now(), inspectionDate, remindAfter)
+            if (editing) {
+                entry.mId = aEntry!!.mId
+                if (cfgManager.editInspectionEntry(entry)) {
+                    mainCar.editEntry(entry)
+                    entriesAdapter.editItem(entry)
+                    dialog.dismiss()
+                } else {
+                    Toast.makeText(this, R.string.unknownError, Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                if (cfgManager.addInspectionEntry(mainCar.mName, entry)) {
+                    mainCar.addEntry(entry)
+                    entriesAdapter.addNewItem(entry)
+                    dialog.dismiss()
+                } else {
+                    Toast.makeText(this, R.string.unknownError, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 
     private fun removeEntryOnList(aEntry: Entry){
@@ -199,6 +265,8 @@ class CarEntries : AppCompatActivity() {
     private fun editEntry(aEntry: Entry) {
         if (aEntry is FuelEntry)
             createFuelEntry(aEntry)
+        else if (aEntry is CarInspectionEntry)
+            createInspectionEntry(aEntry)
         else
             throw NotImplementedError("Not implemented entry type to edit")
     }
@@ -265,8 +333,8 @@ class CarEntries : AppCompatActivity() {
                 var odoVal = 0
                 if (odo.text.toString().toIntOrNull() != null)
                     odoVal = odo.text.toString().toInt()
-                var fuelAmVal = String.format(Locale.ROOT, "%.2f", fuelAm.text.toString().toDouble()).toDouble()
-                var perLitVal = String.format(Locale.ROOT, "%.2f", perLit.text.toString().toDouble()).toDouble()
+                val fuelAmVal = String.format(Locale.ROOT, "%.2f", fuelAm.text.toString().toDouble()).toDouble()
+                val perLitVal = String.format(Locale.ROOT, "%.2f", perLit.text.toString().toDouble()).toDouble()
 
                 val cfgManager = ConfigManager(this)
                 val entry = FuelEntry(DateTime.now(), odoVal, fuelAmVal, perLitVal)

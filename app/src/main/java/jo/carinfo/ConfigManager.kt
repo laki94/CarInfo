@@ -55,8 +55,8 @@ class ConfigManager(ctx: Context) {
         return dbHandle.removeStation(aStation)
     }
 
-    fun addInspectionEntry(aOwnerId: Int, aEntry: CarInspectionEntry): Boolean {
-        return dbHandle.addInspectionEntry(aOwnerId, aEntry)
+    fun addInspectionEntry(aCarName: String, aEntry: CarInspectionEntry): Boolean {
+        return dbHandle.addInspectionEntry(aCarName, aEntry)
     }
 
     fun editInspectionEntry(aEntry: CarInspectionEntry): Boolean {

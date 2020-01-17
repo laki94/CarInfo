@@ -3,7 +3,6 @@ package jo.carinfo
 import android.graphics.Color
 import android.util.Log
 import java.io.Serializable
-import java.util.*
 
 class Car(aName: String = ""): Serializable
 {
@@ -38,7 +37,8 @@ class Car(aName: String = ""): Serializable
                 }
             }
         } else if (aEntry is CarInspectionEntry) {
-            mInspection.mDateToInspection = aEntry.mDateToInspection
+            mInspection.mLastInspectionDate = aEntry.mLastInspectionDate
+            mInspection.mRemindAfter = aEntry.mRemindAfter
         }
     }
 }
