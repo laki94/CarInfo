@@ -41,9 +41,10 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
 
         val intent = Intent(application, LocationUpd::class.java)
 
+        Notifications.instance = Notifications(this, application.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
         application.startService(intent)
         application.bindService(intent, this, Context.BIND_AUTO_CREATE)
-        mStationCheck = StationCheck(this, application.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
+        mStationCheck = StationCheck(this)
     }
 
     override fun onServiceConnected(p0: ComponentName?, p1: IBinder?) {

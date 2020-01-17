@@ -53,6 +53,7 @@ class StationsActivity : FragmentActivity(), OnMapReadyCallback, GoogleMap.OnMar
     }
 
     override fun work(aLocation: Location) {
+        mMap.isMyLocationEnabled = true
         mLastLocation = aLocation
         if (mAnimateToLocation) {
             mAnimateToLocation = false
@@ -237,7 +238,6 @@ class StationsActivity : FragmentActivity(), OnMapReadyCallback, GoogleMap.OnMar
             )
             return
         } else {
-            mMap.isMyLocationEnabled = true
             LocationUpd.instance.addCallback(this)
         }
     }
