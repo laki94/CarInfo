@@ -35,7 +35,7 @@ class EntriesAdapter(private val context: Context, private val items : ArrayList
     fun editItem(aEntry: Entry) {
 
         for (tmpentry in items) {
-            if (tmpentry.mId == aEntry.mId) {
+            if ((tmpentry.mId == aEntry.mId) && (aEntry.javaClass == tmpentry.javaClass)) {
                 if (aEntry is FuelEntry) {
                     (tmpentry as FuelEntry).mFuelAmount = aEntry.mFuelAmount
                     tmpentry.mPerLiter = aEntry.mPerLiter
@@ -54,7 +54,7 @@ class EntriesAdapter(private val context: Context, private val items : ArrayList
 
         for (i in 0 until items.count())
         {
-            if (items[i].mId == aEntry.mId)
+            if ((items[i].mId == aEntry.mId) && (aEntry.javaClass == items[i].javaClass))
                 return i
         }
         return -1

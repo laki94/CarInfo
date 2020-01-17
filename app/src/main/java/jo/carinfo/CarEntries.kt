@@ -42,7 +42,8 @@ class CarEntries : AppCompatActivity() {
         title.text = format("%s %s", getString(R.string.entriesFor), mainCar.mName)
         mainCar.mFuelEntries.sortByDate()
         mAllEntries.addAll(mainCar.mFuelEntries.asIterable())
-        mAllEntries.add(mainCar.mInspection)
+        if (mainCar.mInspection != null)
+            mAllEntries.add(mainCar.mInspection!!)
 
         val listView = findViewById<RecyclerView>(R.id.rvEntries)
 
@@ -79,6 +80,8 @@ class CarEntries : AppCompatActivity() {
                     entriesAdapter.removeItem(pos)
                     if (delEntry is FuelEntry)
                         mainCar.mFuelEntries.remove(delEntry)
+                    else if (delEntry is CarInspectionEntry)
+                        mainCar.mInspection = null
                     val snackbar = Snackbar.make(
                         findViewById(R.id.entries_layout),
                         R.string.entryRemoved,
@@ -88,12 +91,13 @@ class CarEntries : AppCompatActivity() {
                         entriesAdapter.restoreItem(delEntry, pos)
                         if (delEntry is FuelEntry)
                             mainCar.mFuelEntries.add(delEntry)
+                        else if (delEntry is CarInspectionEntry)
+                            mainCar.mInspection = delEntry
                     }
                     snackbar.addCallback(object : Snackbar.Callback() {
                         override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
                             if (event != DISMISS_EVENT_ACTION) {
                                 removeEntryOnList(delEntry)
-
                             }
                             super.onDismissed(transientBottomBar, event)
                         }
@@ -237,7 +241,7 @@ class CarEntries : AppCompatActivity() {
             val entry = CarInspectionEntry(DateTime.now(), inspectionDate, remindAfter)
             if (editing) {
                 entry.mId = aEntry!!.mId
-                if (cfgManager.editInspectionEntry(entry)) {
+                if (cfgManager.editEntry(entry)) {
                     mainCar.editEntry(entry)
                     entriesAdapter.editItem(entry)
                     dialog.dismiss()
@@ -245,7 +249,7 @@ class CarEntries : AppCompatActivity() {
                     Toast.makeText(this, R.string.unknownError, Toast.LENGTH_SHORT).show()
                 }
             } else {
-                if (cfgManager.addInspectionEntry(mainCar.mName, entry)) {
+                if (cfgManager.addEntry(mainCar.mName, entry)) {
                     mainCar.addEntry(entry)
                     entriesAdapter.addNewItem(entry)
                     dialog.dismiss()
@@ -258,7 +262,7 @@ class CarEntries : AppCompatActivity() {
 
     private fun removeEntryOnList(aEntry: Entry){
         val cfgManager = ConfigManager(this)
-        if (!cfgManager.removeFuelEntry(aEntry))
+        if (!cfgManager.removeEntry(aEntry))
             Toast.makeText(this, R.string.couldNotRemoveEntry, Toast.LENGTH_SHORT).show()
     }
 
@@ -340,7 +344,7 @@ class CarEntries : AppCompatActivity() {
                 val entry = FuelEntry(DateTime.now(), odoVal, fuelAmVal, perLitVal)
                 if (editing) {
                     entry.mId = aEntry!!.mId
-                    if (cfgManager.editFuelEntry(entry)) {
+                    if (cfgManager.editEntry(entry)) {
                         mainCar.editEntry(entry)
                         entriesAdapter.editItem(entry)
                         dialog.dismiss()
@@ -349,7 +353,7 @@ class CarEntries : AppCompatActivity() {
                     }
                 }
                 else {
-                    if (cfgManager.addFuelEntry(mainCar.mName, entry)) {
+                    if (cfgManager.addEntry(mainCar.mName, entry)) {
                         mainCar.addEntry(entry)
                         entriesAdapter.addNewItem(entry)
                         dialog.dismiss()

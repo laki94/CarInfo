@@ -34,17 +34,23 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         val cfgManager = ConfigManager(this)
         mCars = cfgManager.getAllCars()
         mStations = cfgManager.getAllStations()
 
         val intent = Intent(application, LocationUpd::class.java)
-
         Notifications.instance = Notifications(this, application.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
         application.startService(intent)
         application.bindService(intent, this, Context.BIND_AUTO_CREATE)
         mStationCheck = StationCheck(this)
+        checkCarInspectionDates()
+    }
+
+    private fun checkCarInspectionDates() {
+        for (car in mCars) {
+            if (car.isInspectionComing())
+                Notifications.instance.showInspectionIsComingNotification(car)
+        }
     }
 
     override fun onServiceConnected(p0: ComponentName?, p1: IBinder?) {

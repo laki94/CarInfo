@@ -11,8 +11,14 @@ class Car(aName: String = ""): Serializable
     var mName : String = aName
     val mFuelEntries = FuelEntriesList()
     var mChartColor = Color.argb(255, 0, 0, 0)
-    lateinit var mInspection: CarInspectionEntry
-    
+    var mInspection: CarInspectionEntry? = null
+
+    fun isInspectionComing(): Boolean {
+        if (mInspection != null) {
+            return (mInspection!!.daysLeftToInspection() <= 7) && (mInspection!!.daysLeftToInspection() >= 0)
+        } else return false
+    }
+
     fun addEntry(aEntry: Entry)
     {
         if (aEntry is FuelEntry)
@@ -37,8 +43,8 @@ class Car(aName: String = ""): Serializable
                 }
             }
         } else if (aEntry is CarInspectionEntry) {
-            mInspection.mLastInspectionDate = aEntry.mLastInspectionDate
-            mInspection.mRemindAfter = aEntry.mRemindAfter
+            mInspection?.mLastInspectionDate = aEntry.mLastInspectionDate
+            mInspection?.mRemindAfter = aEntry.mRemindAfter
         }
     }
 }

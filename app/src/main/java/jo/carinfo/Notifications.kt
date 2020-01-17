@@ -43,6 +43,19 @@ class Notifications(aContext: Context, aNotificationManager: NotificationManager
         mNotificationManager.notify(mNotificationId++, builder.build())
     }
 
+    fun showInspectionIsComingNotification(aCar: Car) {
+        createNotificationChannel(CHANNEL_NEAR_STATION)
+
+        val builder = NotificationCompat.Builder(mContext, CHANNEL_NEAR_STATION)
+            .setSmallIcon(R.drawable.common_google_signin_btn_icon_light)
+            .setContentTitle(aCar.mName)
+            .setContentText(mContext.resources.getString(R.string.DaysToInspection) + ": " + aCar.mInspection!!.daysLeftToInspection())
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setAutoCancel(true)
+            .setOnlyAlertOnce(true)
+
+        mNotificationManager.notify(mNotificationId++, builder.build())
+    }
 
     companion object {
         lateinit var instance: Notifications

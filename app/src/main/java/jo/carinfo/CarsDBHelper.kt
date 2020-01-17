@@ -151,8 +151,7 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
         }
     }
 
-    fun getCarInspectionEntry(aCarId: Int): CarInspectionEntry {
-        val entry = CarInspectionEntry()
+    fun getCarInspectionEntry(aCarId: Int): CarInspectionEntry? {
         if (aCarId != -1) {
             val db = this.readableDatabase
             val cursor = db.rawQuery(
@@ -161,6 +160,7 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
             )
             try {
                 if (cursor.moveToFirst()) {
+                    val entry = CarInspectionEntry()
                     entry.mId = cursor.getInt(cursor.getColumnIndex("entry_id"))
                     entry.mDate = DateTime.parse(
                         cursor.getString(cursor.getColumnIndex("entry_date")),
@@ -172,12 +172,13 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
                     )
                     entry.mRemindAfter =
                         InspectionRemindAfter.valueOf(cursor.getString(cursor.getColumnIndex("entry_remind_after")))
+                    return entry
                 }
             } finally {
                 cursor.close()
             }
         }
-        return entry
+        return null
     }
 
     fun getAllCars(): CarsList {
@@ -404,7 +405,7 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
 
     companion object {
         const val DATABASE_NAME = "carsdb"
-        const val DATABASE_VERSION = 6
+        const val DATABASE_VERSION = 10
         const val TABLE_CARS = "cars"
         const val TABLE_FUEL_ENTRIES = "fuel_entries"
         const val TABLE_INSPECTION_ENTRIES = "inspection_entries"
