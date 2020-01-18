@@ -24,14 +24,14 @@ interface Workable<T> {
 }
 
 class LocationUpd : Service() {
-    private val binder =
-        LocationServiceBinder()
+    private val binder = LocationServiceBinder()
 
     private lateinit var mFusedLocationProvider: FusedLocationProviderClient
     private lateinit var mLocationCallback: LocationCallback
     private lateinit var mLocationRequest: LocationRequest
     private lateinit var mLocationSettingsRequest: LocationSettingsRequest
     lateinit var mContext: Context
+    private val mPermissionsManager = PermissionsManager()
 
     private val mCallbacksOnPosition = ArrayList<Workable<Location>>()
     private val UPDATE_INTERVAL_MSEC: Long = 10000
@@ -47,13 +47,8 @@ class LocationUpd : Service() {
     }
 
     private fun setUp() {
-        if (ActivityCompat.checkSelfPermission(mContext,
-                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(mContext as Activity,
-                arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
-                LOCATION_PERMISSION_REQ_CODE)
-            return
-        }
+        if (!mPermissionsManager.haveLocationPermission(mContext))
+            mPermissionsManager.askForLocationPermission(mContext)
         else
             mFusedLocationProvider.requestLocationUpdates(mLocationRequest, mLocationCallback, null)
     }
@@ -122,8 +117,6 @@ class LocationUpd : Service() {
     }
 
     companion object {
-        const val LOCATION_PERMISSION_REQ_CODE = 1
-
         lateinit var instance: LocationUpd
     }
 }

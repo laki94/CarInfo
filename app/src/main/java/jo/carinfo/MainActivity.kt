@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
     private lateinit var mStations: StationList
     private var mNotificationVisible: Boolean = false
     private lateinit var mStationCheck: StationCheck
+    private val mPermissionsManager = PermissionsManager()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,8 +60,26 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
         if (name!!.endsWith("LocationUpd")) {
             LocationUpd.instance = (p1 as LocationUpd.LocationServiceBinder).service
             LocationUpd.instance.mContext = this@MainActivity
-            mStationCheck.start()
+
+            if (mPermissionsManager.haveLocationPermission(this))
+                mStationCheck.start()
+            else
+                mPermissionsManager.askForLocationPermission(this)
         }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        when (requestCode) {
+            PermissionsManager.LOCATION_PERMISSION_REQ_CODE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                    mStationCheck.start()
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     override fun onServiceDisconnected(p0: ComponentName?) {

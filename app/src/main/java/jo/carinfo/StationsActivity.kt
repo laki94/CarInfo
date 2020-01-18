@@ -36,6 +36,7 @@ class StationsActivity : FragmentActivity(), OnMapReadyCallback, GoogleMap.OnMar
     private var mTmpStation = Station()
     private var mLastClickedStation: Station? = null
     private var mAnimateToLocation = true
+    private val mPermissionsManager = PermissionsManager()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +49,33 @@ class StationsActivity : FragmentActivity(), OnMapReadyCallback, GoogleMap.OnMar
                     mStations.add(station)
                 }
 
+        if (mPermissionsManager.haveInternetPermission(this))
+            startMap()
+        else
+            mPermissionsManager.askForInternetPermission(this)
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        when (requestCode) {
+            PermissionsManager.INTERNET_PERMISSION_REQ_CODE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    startMap()
+                } else
+                    finish()
+            }
+            PermissionsManager.LOCATION_PERMISSION_REQ_CODE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                    setUpMap()
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    private fun startMap() {
         val mapFragment = supportFragmentManager.findFragmentById(R.id.fMap) as SupportMapFragment
         mapFragment.getMapAsync(this)
     }
@@ -226,19 +254,9 @@ class StationsActivity : FragmentActivity(), OnMapReadyCallback, GoogleMap.OnMar
     }
 
     private fun setUpMap() {
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                android.Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
-                LocationUpd.LOCATION_PERMISSION_REQ_CODE
-            )
-            return
-        } else {
+        if (!mPermissionsManager.haveLocationPermission(this)) {
+            mPermissionsManager.askForLocationPermission(this)
+        } else
             LocationUpd.instance.addCallback(this)
-        }
     }
 }
