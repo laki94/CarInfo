@@ -17,16 +17,21 @@
             android:layout_marginStart="8dp" android:textSize="18sp"
             app:layout_constraintHorizontal_bias="0.0" android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@+id/bSettings"/>
+
     <Button
-            android:text="@string/cars"
-            android:onClick="onSettingsClick"
+            android:id="@+id/bSettings"
+            style="@style/Widget.AppCompat.Button"
             android:layout_width="0dp"
             android:layout_height="100dp"
-            android:id="@+id/bSettings"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:onClick="onSettingsClick"
+            android:text="@string/cars"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="8dp" android:textSize="18sp" android:layout_marginTop="8dp"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     <Button
             android:id="@+id/bStations"

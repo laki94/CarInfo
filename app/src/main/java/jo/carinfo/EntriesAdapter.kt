@@ -17,7 +17,7 @@ class EntriesAdapter(private val context: Context, private val items : ArrayList
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val myHolder = holder as EntriesViewHolder
 
-        myHolder.cardView.setBackgroundColor(ContextCompat.getColor(context, android.R.color.holo_blue_dark))
+        myHolder.cardView.setBackgroundColor(ContextCompat.getColor(context, android.R.color.holo_orange_light))
         myHolder.tvCarName.text = items[position].getObjectString(context)
     }
 

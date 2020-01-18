@@ -45,6 +45,8 @@ class CarEntries : AppCompatActivity() {
         if (mainCar.mInspection != null)
             mAllEntries.add(mainCar.mInspection!!)
 
+        setSummaryButtonVisibility();
+
         val listView = findViewById<RecyclerView>(R.id.rvEntries)
 
         entriesAdapter = EntriesAdapter(this, mAllEntries)
@@ -59,6 +61,14 @@ class CarEntries : AppCompatActivity() {
         listView.adapter = entriesAdapter
 
         enableSwipe()
+    }
+
+    private fun setSummaryButtonVisibility() {
+        val bSummary = findViewById<Button>(R.id.bSummary)
+        if (mainCar.mFuelEntries.count() == 0)
+            bSummary.visibility = View.GONE
+        else
+            bSummary.visibility = View.VISIBLE
     }
 
     private fun enableSwipe() {
@@ -78,8 +88,10 @@ class CarEntries : AppCompatActivity() {
                 if (direction == ItemTouchHelper.LEFT) {
                     val delEntry = mAllEntries[pos]
                     entriesAdapter.removeItem(pos)
-                    if (delEntry is FuelEntry)
+                    if (delEntry is FuelEntry) {
                         mainCar.mFuelEntries.remove(delEntry)
+                        setSummaryButtonVisibility()
+                    }
                     else if (delEntry is CarInspectionEntry)
                         mainCar.mInspection = null
                     val snackbar = Snackbar.make(
@@ -89,8 +101,10 @@ class CarEntries : AppCompatActivity() {
                     )
                     snackbar.setAction("UNDO") {
                         entriesAdapter.restoreItem(delEntry, pos)
-                        if (delEntry is FuelEntry)
+                        if (delEntry is FuelEntry) {
                             mainCar.mFuelEntries.add(delEntry)
+                            setSummaryButtonVisibility()
+                        }
                         else if (delEntry is CarInspectionEntry)
                             mainCar.mInspection = delEntry
                     }
@@ -407,6 +421,7 @@ class CarEntries : AppCompatActivity() {
                         mainCar.addEntry(entry)
                         entriesAdapter.addNewItem(entry)
                         dialog.dismiss()
+                        setSummaryButtonVisibility()
                     } else
                         Toast.makeText(this, R.string.unknownError, Toast.LENGTH_SHORT).show()
                 }
