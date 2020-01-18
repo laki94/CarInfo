@@ -2,7 +2,6 @@ package jo.carinfo
 
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -90,7 +89,7 @@ class FuelUsageGraph : AppCompatActivity(), OnDataPointTapListener {
                 series.color = car.mChartColor
                 series.setOnDataPointTapListener(this)
                 for (single_entry in car.mFuelEntries)
-                    series.appendData(DataPoint(single_entry.mDate.toDate(), single_entry.getAvgFuelConsumption()), true, 1000)
+                    series.appendData(DataPoint(single_entry.mDate.toDate(), single_entry.getFuelConsumption()), true, 1000)
 
                 mFuelGraph.addSeries(series)
             }

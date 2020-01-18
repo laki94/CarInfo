@@ -9,7 +9,7 @@
             android:id="@+id/etStationName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="32dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:inputType="text"
@@ -36,7 +36,7 @@
             android:id="@+id/etRadius"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="32dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:inputType="number"
@@ -52,6 +52,7 @@
             android:layout_marginStart="8dp"
             android:text="@string/pointName"
             android:textSize="18sp"
+            android:labelFor="@+id/etStationName"
             app:layout_constraintBottom_toBottomOf="@+id/etStationName"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/etStationName" />
@@ -63,6 +64,7 @@
             android:layout_marginStart="8dp"
             android:text="@string/radius_m"
             android:textSize="18sp"
+            android:labelFor="@+id/etRadius"
             app:layout_constraintBottom_toBottomOf="@+id/etRadius"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/etRadius" />

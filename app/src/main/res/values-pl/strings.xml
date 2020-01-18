@@ -64,6 +64,16 @@
     <string name="remindInOneYear">Przypomnij za rok</string>
     <string name="remindInTwoYears">Przypomnij za dwa lata</string>
     <string name="remindInThreeYears">Przypomnij za trzy lata</string>
+    <string name="carName">Nazwa pojazdu</string>
+    <string name="summary">Podsumowanie</string>
+    <string name="from">Od</string>
+    <string name="to">Do</string>
+    <string name="averageOdometer">Średnia wartość drogomierza</string>
+    <string name="averagePricePerLiter">Średnia cena za litr</string>
+    <string name="avgTotalPrice">Średnia cena</string>
+    <string name="avgFuelAmount">Średnia ilość paliwa</string>
+    <string name="bestConsumption">Najlepsze spalanie</string>
+    <string name="worstConsumption">Najgorsze spalanie</string>
     <!-- Error messages -->
     <string name="couldNotGetCars">Błąd podczas pobierania pojazdów</string>
     <string name="couldNotSaveCars">Błąd podczas zapisywania pojazdów</string>

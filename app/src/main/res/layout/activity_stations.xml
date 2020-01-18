@@ -15,33 +15,36 @@
             android:id="@+id/bAddEditStation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="162dp"
             android:onClick="onSaveStationClick"
             android:text=""
-            android:visibility="invisible"
-            android:layout_gravity="bottom|end"/>
+            android:textSize="14sp"
+            android:visibility="invisible" />
 
     <Button
             android:id="@+id/bRemoveStation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="212dp"
             android:onClick="onRemoveStationClick"
             android:text="@string/removeStation"
-            android:visibility="invisible"
-            android:layout_gravity="bottom|end"/>
+            android:textSize="14sp"
+            android:visibility="invisible" />
 
     <Button
             android:id="@+id/bAddMarkerOnMyLocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="112dp"
-            android:visibility="invisible"
             android:onClick="onAddMarkerOnMyLocationClick"
             android:text="@string/addMarkerOnMyLocation"
-            android:layout_gravity="bottom|end"/>
+            android:textSize="14sp"
+            android:visibility="invisible" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

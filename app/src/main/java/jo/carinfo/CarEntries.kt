@@ -7,11 +7,9 @@ import android.graphics.*
 import android.os.Bundle
 import androidx.recyclerview.widget.RecyclerView
 import android.view.View
-import android.widget.CalendarView
-import android.widget.RadioGroup
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AlertDialogLayout
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
@@ -25,6 +23,8 @@ class CarEntries : AppCompatActivity() {
 
     private lateinit var mainCar: Car
     private lateinit var entriesAdapter: EntriesAdapter
+    private lateinit var mSummaryDateFrom: DateTime
+    private lateinit var mSummaryDateTo: DateTime
 
     private val mAllEntries = ArrayList<Entry>()
     private val p = Paint()
@@ -301,6 +301,56 @@ class CarEntries : AppCompatActivity() {
             lastError = getString(R.string.perLiterInputError)
 
         return Pair(lastError.isEmpty(), lastError)
+    }
+
+    fun onSummaryClick(view: View) {
+        val builder = AlertDialog.Builder(this)
+        val inflater = layoutInflater
+        val dialogLayout = inflater.inflate(R.layout.activity_entries_summary, null)
+        builder.setView(dialogLayout)
+
+        var minDate = DateTime.now()
+        var maxDate = DateTime.now()
+
+        for (entry in mainCar.mFuelEntries) {
+            if (entry.mDate < minDate)
+                minDate = entry.mDate
+            if (entry.mDate > maxDate)
+                maxDate = entry.mDate
+        }
+
+        mSummaryDateFrom = minDate
+        mSummaryDateTo = maxDate
+
+        fillSummaryDialog(dialogLayout)
+
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
+    }
+
+    private fun fillSummaryDialog(aDialogLayout: View) {
+        val tvSummary = aDialogLayout.findViewById<TextView>(R.id.tvSummaryFromTo)
+        val tvAvgOdo = aDialogLayout.findViewById<TextView>(R.id.tvAvgOdo)
+        val tvAvgPricePerLiter = aDialogLayout.findViewById<TextView>(R.id.tvAvgPricePerLiter)
+        val tvAvgTotalPrice = aDialogLayout.findViewById<TextView>(R.id.tvAvgTotalPrice)
+        val tvAvgFuelAmount = aDialogLayout.findViewById<TextView>(R.id.tvAvgFuelAmount)
+        val tvBestConsumption = aDialogLayout.findViewById<TextView>(R.id.tvBestConsumption)
+        val tvWorstConsumption = aDialogLayout.findViewById<TextView>(R.id.tvWorstConsumption)
+
+        tvSummary.text = String.format("%s - %s", mSummaryDateFrom.toString(CarsDBHelper.dateTimeFormatter),
+            mSummaryDateTo.toString(CarsDBHelper.dateTimeFormatter))
+        tvAvgOdo.text = String.format("%s = %d km", resources.getString(R.string.averageOdometer),
+            mainCar.mFuelEntries.getAvgOdometer(mSummaryDateFrom, mSummaryDateTo))
+        tvAvgPricePerLiter.text = String.format("%s = %.2f zł", resources.getString(R.string.averagePricePerLiter),
+            mainCar.mFuelEntries.getAvgPricePerLiter(mSummaryDateFrom, mSummaryDateTo))
+        tvAvgTotalPrice.text = String.format("%s = %.2f zł", resources.getString(R.string.avgTotalPrice),
+            mainCar.mFuelEntries.getAvgTotalPrice(mSummaryDateFrom, mSummaryDateTo))
+        tvAvgFuelAmount.text = String.format("%s = %.2f l", resources.getString(R.string.avgFuelAmount),
+            mainCar.mFuelEntries.getAvgFuelAmount(mSummaryDateFrom, mSummaryDateTo))
+        tvBestConsumption.text = String.format("%s = %.2f l/100km", resources.getString(R.string.bestConsumption),
+            mainCar.mFuelEntries.getBestConsumption(mSummaryDateFrom, mSummaryDateTo))
+        tvWorstConsumption.text = String.format("%s = %.2f l/100km", resources.getString(R.string.worstConsumption),
+            mainCar.mFuelEntries.getWorstConsumption(mSummaryDateFrom, mSummaryDateTo))
     }
 
     private fun createFuelEntry(aEntry: FuelEntry?)

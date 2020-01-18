@@ -64,6 +64,16 @@
     <string name="remindInOneYear">Remind in one year</string>
     <string name="remindInTwoYears">Remind in two years</string>
     <string name="remindInThreeYears">Remind in three years</string>
+    <string name="carName">Car name</string>
+    <string name="summary">Summary</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="averageOdometer">Average odometer</string>
+    <string name="averagePricePerLiter">Average price per liter</string>
+    <string name="avgTotalPrice">Average total price</string>
+    <string name="avgFuelAmount">Average fuel amount</string>
+    <string name="bestConsumption">Best consumption</string>
+    <string name="worstConsumption">Worst consumption</string>
     <!-- Error messages-->
     <string name="couldNotGetCars">Error while getting vehicles</string>
     <string name="couldNotSaveCars">Error while saving vehicles</string>

@@ -23,7 +23,7 @@ class FuelEntry(aDate: DateTime = DateTime(0), odo: Int = 0, fuelAm: Double = 0.
         return String.format("%d,%.2f,%.2f", mOdometer, mFuelAmount, mPerLiter)
     }
 
-    fun getAvgFuelConsumption(): Double {
+    fun getFuelConsumption(): Double {
         return "%.2f".format(Locale.ENGLISH, mOdometer / mFuelAmount).toDouble()
     }
 

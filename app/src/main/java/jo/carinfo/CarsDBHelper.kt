@@ -9,7 +9,6 @@ import org.joda.time.format.DateTimeFormat
 import java.io.Serializable
 
 class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DATABASE_VERSION), Serializable {
-    private val dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd")
 
     override fun onCreate(p0: SQLiteDatabase) {
         p0.execSQL(
@@ -412,5 +411,6 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
         const val TABLE_STATIONS = "stations"
         const val NAME_PARAM = "name"
         const val CARID_PARAM = "carId"
+        val dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd")
     }
 }
