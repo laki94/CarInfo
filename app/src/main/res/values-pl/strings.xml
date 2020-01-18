@@ -69,6 +69,7 @@
     <string name="couldNotSaveCars">Błąd podczas zapisywania pojazdów</string>
     <string name="couldNotRemoveCars">Błąd podczas usuwania pojazdów</string>
     <string name="mileageInputError">Podany przebieg jest błędny</string>
+    <string name="odometerInputError">Podana wartość drogomierza jest błędna</string>
     <string name="fuelAmountInputError">Podana ilość paliwa jest błędna</string>
     <string name="perLiterInputError">Podana wartość za litr jest błędna</string>
     <string name="carsNotSavedAfterEntry">Dodanie wpisu nie powiodło się</string>

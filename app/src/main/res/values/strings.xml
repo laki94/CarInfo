@@ -70,6 +70,7 @@
     <string name="couldNotRemoveCars">Error while removing vehicles</string>
     <string name="mileageInputError">Mileage is invalid</string>
     <string name="fuelAmountInputError">Fuel amount is invalid</string>
+    <string name="odometerInputError">Odometer is invalid</string>
     <string name="perLiterInputError">Per liter value is invalid</string>
     <string name="carsNotSavedAfterEntry">Could not add entry</string>
     <string name="remindAfterInputError">Remind after value is invalid</string>

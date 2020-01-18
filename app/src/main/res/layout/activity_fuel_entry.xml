@@ -11,39 +11,84 @@
             android:id="@+id/etOdometer"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:ems="10"
-            android:hint="@string/odometer"
             android:importantForAutofill="no"
             android:inputType="number"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            android:maxLength="8"
+            app:layout_constraintBottom_toBottomOf="@+id/tvOdometer"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tvOdometer"
+            app:layout_constraintTop_toTopOf="@+id/tvOdometer"
             tools:targetApi="o" />
 
     <EditText
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:hint="@string/fuelAmount"
-            android:ems="10"
             android:id="@+id/etFuelAmount"
-            android:importantForAutofill="no"
-            tools:targetApi="o"
-            android:layout_marginStart="8dp"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="32dp" app:layout_constraintTop_toBottomOf="@+id/etOdometer"
-            android:inputType="numberDecimal"/>
-    <EditText
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:ems="10"
-            android:id="@+id/etPerLiter"
             android:importantForAutofill="no"
-            tools:targetApi="o"
-            app:layout_constraintTop_toTopOf="@+id/etFuelAmount"
-            app:layout_constraintBottom_toBottomOf="@+id/etFuelAmount" app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="8dp" app:layout_constraintStart_toEndOf="@+id/etFuelAmount"
-            android:layout_marginStart="16dp" android:inputType="numberDecimal" android:hint="@string/perLiter"
-    />
+            android:inputType="numberDecimal"
+            android:maxLength="6"
+            app:layout_constraintBottom_toBottomOf="@+id/tvFuelAmount"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tvFuelAmount"
+            app:layout_constraintTop_toTopOf="@+id/tvFuelAmount"
+            tools:targetApi="o" />
+
+    <EditText
+            android:id="@+id/etPerLiter"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:ems="10"
+            android:importantForAutofill="no"
+            android:inputType="numberDecimal"
+            android:maxLength="6"
+            app:layout_constraintBottom_toBottomOf="@+id/tvPerLiter"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tvPerLiter"
+            app:layout_constraintTop_toTopOf="@+id/tvPerLiter"
+            tools:targetApi="o" />
+
+    <TextView
+            android:id="@+id/tvOdometer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:labelFor="@id/etOdometer"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:text="@string/odometer"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+            android:id="@+id/tvFuelAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:labelFor="@id/etFuelAmount"
+            android:text="@string/fuelAmount"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvOdometer" />
+
+    <TextView
+            android:id="@+id/tvPerLiter"
+            android:labelFor="@id/etPerLiter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:text="@string/perLiter"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvFuelAmount" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

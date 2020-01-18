@@ -294,7 +294,7 @@ class CarEntries : AppCompatActivity() {
         val perLit = aDialogLayout.findViewById<TextView>(R.id.etPerLiter)
 
         if (odo.text.toString().toIntOrNull() == null)
-            lastError = getString(R.string.mileageInputError)
+            lastError = getString(R.string.odometerInputError)
         else if (fuelAm.text.toString().toDoubleOrNull() == null)
             lastError = getString(R.string.fuelAmountInputError)
         else if (perLit.text.toString().toDoubleOrNull() == null)
