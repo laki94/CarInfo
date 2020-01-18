@@ -1,10 +1,12 @@
 package jo.carinfo
 
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat.getSystemService
 
 class Notifications(aContext: Context, aNotificationManager: NotificationManager) {
 
@@ -42,6 +44,15 @@ class Notifications(aContext: Context, aNotificationManager: NotificationManager
 
         mNotificationManager.notify(mNotificationId++, builder.build())
     }
+
+    val locationNotification: Notification
+        get() {
+            createNotificationChannel(CHANNEL_NEAR_STATION)
+            val builder =
+                Notification.Builder(mContext, CHANNEL_NEAR_STATION)
+                    .setAutoCancel(true)
+            return builder.build()
+        }
 
     fun showInspectionIsComingNotification(aCar: Car) {
         createNotificationChannel(CHANNEL_NEAR_STATION)

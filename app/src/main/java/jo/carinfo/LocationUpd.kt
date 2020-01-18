@@ -99,13 +99,12 @@ class LocationUpd : Service() {
 
     override fun onCreate() {
         Log.i("LOCUPD", "onCreate")
-        startForeground(12312312, notification)
+        startForeground(12312312, Notifications.instance.locationNotification)
     }
 
     override fun onDestroy() {
         super.onDestroy()
         mFusedLocationProvider.removeLocationUpdates(mLocationCallback)
-
     }
 
     private fun startTracking() {
@@ -116,24 +115,6 @@ class LocationUpd : Service() {
     fun stopTracking() {
         onDestroy()
     }
-
-    private val notification: Notification
-        get() {
-            val channel = NotificationChannel(
-                "channel_01",
-                "My Channel",
-                NotificationManager.IMPORTANCE_DEFAULT
-            )
-            val notificationManager =
-                getSystemService(
-                    NotificationManager::class.java
-                )
-            notificationManager?.createNotificationChannel(channel)
-            val builder =
-                Notification.Builder(applicationContext, "channel_01")
-                    .setAutoCancel(true)
-            return builder.build()
-        }
 
     inner class LocationServiceBinder : Binder() {
         val service: LocationUpd
