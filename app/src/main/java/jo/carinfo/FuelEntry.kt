@@ -26,4 +26,8 @@ class FuelEntry(aDate: DateTime = DateTime(0), odo: Int = 0, fuelAm: Double = 0.
     fun getAvgFuelConsumption(): Double {
         return "%.2f".format(Locale.ENGLISH, mOdometer / mFuelAmount).toDouble()
     }
+
+    fun getTotalCost(): Double {
+        return "%.2f".format(Locale.ENGLISH, mPerLiter * mFuelAmount).toDouble()
+    }
 }

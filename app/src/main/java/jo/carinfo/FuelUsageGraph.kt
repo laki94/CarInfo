@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -20,7 +21,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class FuelUsageGraph : AppCompatActivity() {
+class FuelUsageGraph : AppCompatActivity(), OnDataPointTapListener {
 
     private val TAG = "GRAPH"
     private val mCars = CarsListGraph()
@@ -63,6 +64,10 @@ class FuelUsageGraph : AppCompatActivity() {
         showCars()
     }
 
+    override fun onTap(series: Series<*>, dataPoint: DataPointInterface) {
+        Toast.makeText(this, "${series.title}: " + mFuelGraph.gridLabelRenderer.verticalAxisTitle + " = ${dataPoint.y}", Toast.LENGTH_LONG).show()
+    }
+
     private fun initGraph() {
         mFuelGraph.gridLabelRenderer.numHorizontalLabels = 4
         mFuelGraph.gridLabelRenderer.labelFormatter = DateAsXAxisLabelFormatter(this, SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()))
@@ -81,12 +86,9 @@ class FuelUsageGraph : AppCompatActivity() {
                 car.mFuelEntries.sortByDate()
                 series = LineGraphSeries()
                 series.isDrawDataPoints = true
+                series.title = car.mName
                 series.color = car.mChartColor
-                series.setOnDataPointTapListener(object : OnDataPointTapListener {
-                    override fun onTap(series: Series<*>?, dataPoint: DataPointInterface?) {
-                        Log.d("series", String.format("%f, %.2f", dataPoint?.x, dataPoint?.y))
-                    }
-                })
+                series.setOnDataPointTapListener(this)
                 for (single_entry in car.mFuelEntries)
                     series.appendData(DataPoint(single_entry.mDate.toDate(), single_entry.getAvgFuelConsumption()), true, 1000)
 
@@ -104,14 +106,11 @@ class FuelUsageGraph : AppCompatActivity() {
                 car.mFuelEntries.sortByDate()
                 series = LineGraphSeries()
                 series.isDrawDataPoints = true
+                series.title = car.mName
                 series.color = car.mChartColor
-                series.setOnDataPointTapListener(object: OnDataPointTapListener {
-                    override fun onTap(series: Series<*>?, dataPoint: DataPointInterface?) {
-                        Log.d("series", String.format("%f, %.2f", dataPoint?.x, dataPoint?.y))
-                    }
-                })
+                series.setOnDataPointTapListener(this)
                 for (single_entry in car.mFuelEntries)
-                    series.appendData(DataPoint(single_entry.mDate.toDate(), single_entry.mPerLiter * single_entry.mFuelAmount), false, 1000)
+                    series.appendData(DataPoint(single_entry.mDate.toDate(), single_entry.getTotalCost()), false, 1000)
 
                 mFuelGraph.addSeries(series)
             }
@@ -127,12 +126,9 @@ class FuelUsageGraph : AppCompatActivity() {
                 car.mFuelEntries.sortByDate()
                 series = LineGraphSeries()
                 series.isDrawDataPoints = true
+                series.title = car.mName
                 series.color = car.mChartColor
-                series.setOnDataPointTapListener(object: OnDataPointTapListener {
-                    override fun onTap(series: Series<*>?, dataPoint: DataPointInterface?) {
-                        Log.d("series", String.format("%f, %.2f", dataPoint?.x, dataPoint?.y))
-                    }
-                })
+                series.setOnDataPointTapListener(this)
                 for (single_entry in car.mFuelEntries)
                     series.appendData(DataPoint(single_entry.mDate.toDate(), single_entry.mPerLiter), false, 1000)
 
