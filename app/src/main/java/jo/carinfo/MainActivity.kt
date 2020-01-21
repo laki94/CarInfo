@@ -76,7 +76,13 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
         when (requestCode) {
             PermissionsManager.LOCATION_PERMISSION_REQ_CODE -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                    LocationUpd.instance.requestLocationUpdates()
                     mStationCheck.start()
+            }
+
+            PermissionsManager.FOREGROUND_SERVICE_PERMISSION_REQ_CODE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                    LocationUpd.instance.startForeground()
             }
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)

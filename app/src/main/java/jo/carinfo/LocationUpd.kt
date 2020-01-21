@@ -47,10 +47,15 @@ class LocationUpd : Service() {
     }
 
     private fun setUp() {
-        if (!mPermissionsManager.haveLocationPermission(mContext))
-            mPermissionsManager.askForLocationPermission(mContext)
+        if (mPermissionsManager.haveForegroundServicePermission(mContext))
+            startForeground()
         else
-            mFusedLocationProvider.requestLocationUpdates(mLocationRequest, mLocationCallback, null)
+            mPermissionsManager.askForForegroundServicePermission(mContext)
+
+        if (mPermissionsManager.haveLocationPermission(mContext))
+            requestLocationUpdates()
+        else
+            mPermissionsManager.askForLocationPermission(mContext)
     }
 
     private fun createFusedLocationClient() {
@@ -94,6 +99,13 @@ class LocationUpd : Service() {
 
     override fun onCreate() {
         Log.i("LOCUPD", "onCreate")
+    }
+
+    fun requestLocationUpdates() {
+        mFusedLocationProvider.requestLocationUpdates(mLocationRequest, mLocationCallback, null)
+    }
+
+    fun startForeground() {
         startForeground(12312312, Notifications.instance.locationNotification)
     }
 
