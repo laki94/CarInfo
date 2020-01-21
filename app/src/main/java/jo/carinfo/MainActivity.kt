@@ -23,14 +23,11 @@ const val STATIONS_CLICK = 3
 
 class MainActivity : AppCompatActivity(), ServiceConnection {
 
-    private val CHANNEL_ID = 22222222
     private val TAG = "MAIN"
 
     private lateinit var mCars: CarsList
     private lateinit var mStations: StationList
-    private var mNotificationVisible: Boolean = false
     private lateinit var mStationCheck: StationCheck
-    private val mPermissionsManager = PermissionsManager()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,11 +58,7 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
         if (name!!.endsWith("LocationUpd")) {
             LocationUpd.instance = (p1 as LocationUpd.LocationServiceBinder).service
             LocationUpd.instance.mContext = this@MainActivity
-
-            if (mPermissionsManager.haveLocationPermission(this))
-                mStationCheck.start()
-            else
-                mPermissionsManager.askForLocationPermission(this)
+            mStationCheck.start()
         }
     }
 
@@ -77,8 +70,8 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
         when (requestCode) {
             PermissionsManager.LOCATION_PERMISSION_REQ_CODE -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                    LocationUpd.instance.requestLocationUpdates()
                     mStationCheck.start()
+                    LocationUpd.instance.requestLocationUpdates()
             }
 
             PermissionsManager.FOREGROUND_SERVICE_PERMISSION_REQ_CODE -> {

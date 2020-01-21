@@ -8,9 +8,13 @@ class StationCheck(aCtx: Context): Workable<Location> {
     private val TAG = "STATIONCHECK"
 
     private val mContext = aCtx
+    private val mPermissionsManager = PermissionsManager()
 
     fun start() {
-        LocationUpd.instance.addCallback(this)
+        if (mPermissionsManager.haveLocationPermission(mContext))
+            LocationUpd.instance.addCallback(this)
+        else
+            mPermissionsManager.askForLocationPermission(mContext)
     }
 
     override fun work(t: Location) {
