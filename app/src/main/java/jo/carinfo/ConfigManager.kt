@@ -1,10 +1,15 @@
 package jo.carinfo
 
 import android.content.Context
+import android.database.sqlite.SQLiteClosable
 
-class ConfigManager(ctx: Context) {
+class ConfigManager(ctx: Context): SQLiteClosable() {
 
     private val dbHandle = CarsDBHelper(ctx)
+
+    override fun onAllReferencesReleased() {
+        dbHandle.close()
+    }
 
     fun saveCars(aCars: CarsList): Boolean {
         return dbHandle.saveCars(aCars)

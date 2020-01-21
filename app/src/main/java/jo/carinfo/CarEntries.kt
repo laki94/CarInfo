@@ -251,33 +251,35 @@ class CarEntries : AppCompatActivity() {
                 R.id.rbRemindInTwoYears -> remindAfter = InspectionRemindAfter.TWO_YEARS
                 R.id.rbRemindInThreeYears -> remindAfter = InspectionRemindAfter.THREE_YEARS
             }
-            val cfgManager = ConfigManager(this)
-            val entry = CarInspectionEntry(DateTime.now(), inspectionDate, remindAfter)
-            if (editing) {
-                entry.mId = aEntry!!.mId
-                if (cfgManager.editEntry(entry)) {
-                    mainCar.editEntry(entry)
-                    entriesAdapter.editItem(entry)
-                    dialog.dismiss()
+            ConfigManager(this).use {
+                val entry = CarInspectionEntry(DateTime.now(), inspectionDate, remindAfter)
+                if (editing) {
+                    entry.mId = aEntry!!.mId
+                    if (it.editEntry(entry)) {
+                        mainCar.editEntry(entry)
+                        entriesAdapter.editItem(entry)
+                        dialog.dismiss()
+                    } else {
+                        Toast.makeText(this, R.string.unknownError, Toast.LENGTH_SHORT).show()
+                    }
                 } else {
-                    Toast.makeText(this, R.string.unknownError, Toast.LENGTH_SHORT).show()
-                }
-            } else {
-                if (cfgManager.addEntry(mainCar.mName, entry)) {
-                    mainCar.addEntry(entry)
-                    entriesAdapter.addNewItem(entry)
-                    dialog.dismiss()
-                } else {
-                    Toast.makeText(this, R.string.unknownError, Toast.LENGTH_SHORT).show()
+                    if (it.addEntry(mainCar.mName, entry)) {
+                        mainCar.addEntry(entry)
+                        entriesAdapter.addNewItem(entry)
+                        dialog.dismiss()
+                    } else {
+                        Toast.makeText(this, R.string.unknownError, Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
     }
 
     private fun removeEntryOnList(aEntry: Entry){
-        val cfgManager = ConfigManager(this)
-        if (!cfgManager.removeEntry(aEntry))
-            Toast.makeText(this, R.string.couldNotRemoveEntry, Toast.LENGTH_SHORT).show()
+        ConfigManager(this).use {
+            if (!it.removeEntry(aEntry))
+                Toast.makeText(this, R.string.couldNotRemoveEntry, Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun editEntry(aEntry: Entry) {
@@ -404,26 +406,27 @@ class CarEntries : AppCompatActivity() {
                 val fuelAmVal = String.format(Locale.ROOT, "%.2f", fuelAm.text.toString().toDouble()).toDouble()
                 val perLitVal = String.format(Locale.ROOT, "%.2f", perLit.text.toString().toDouble()).toDouble()
 
-                val cfgManager = ConfigManager(this)
-                val entry = FuelEntry(DateTime.now(), odoVal, fuelAmVal, perLitVal)
-                if (editing) {
-                    entry.mId = aEntry!!.mId
-                    if (cfgManager.editEntry(entry)) {
-                        mainCar.editEntry(entry)
-                        entriesAdapter.editItem(entry)
-                        dialog.dismiss()
-                    } else {
-                        Toast.makeText(this, R.string.unknownError, Toast.LENGTH_SHORT).show()
+                ConfigManager(this).use {
+                    val entry = FuelEntry(DateTime.now(), odoVal, fuelAmVal, perLitVal)
+                    if (editing) {
+                        entry.mId = aEntry!!.mId
+                        if (it.editEntry(entry)) {
+                            mainCar.editEntry(entry)
+                            entriesAdapter.editItem(entry)
+                            dialog.dismiss()
+                        } else {
+                            Toast.makeText(this, R.string.unknownError, Toast.LENGTH_SHORT).show()
+                        }
                     }
-                }
-                else {
-                    if (cfgManager.addEntry(mainCar.mName, entry)) {
-                        mainCar.addEntry(entry)
-                        entriesAdapter.addNewItem(entry)
-                        dialog.dismiss()
-                        setSummaryButtonVisibility()
-                    } else
-                        Toast.makeText(this, R.string.unknownError, Toast.LENGTH_SHORT).show()
+                    else {
+                        if (it.addEntry(mainCar.mName, entry)) {
+                            mainCar.addEntry(entry)
+                            entriesAdapter.addNewItem(entry)
+                            dialog.dismiss()
+                            setSummaryButtonVisibility()
+                        } else
+                            Toast.makeText(this, R.string.unknownError, Toast.LENGTH_SHORT).show()
+                    }
                 }
             } else if (err.isNotEmpty())
                 Toast.makeText(this, err, Toast.LENGTH_SHORT).show()

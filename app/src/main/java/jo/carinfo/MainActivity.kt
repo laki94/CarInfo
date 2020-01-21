@@ -35,9 +35,10 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val cfgManager = ConfigManager(this)
-        mCars = cfgManager.getAllCars()
-        mStations = cfgManager.getAllStations()
+        ConfigManager(this).use {
+            mCars = it.getAllCars()
+            mStations = it.getAllStations()
+        }
 
         val intent = Intent(application, LocationUpd::class.java)
         Notifications.instance = Notifications(this, application.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
@@ -127,24 +128,19 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
                     }
             }
         }
-        else if (requestCode == FUEL_ENTRY)
-        {
-            if (resultCode == Activity.RESULT_OK)
-            {
+        else if (requestCode == FUEL_ENTRY) {
+            if (resultCode == Activity.RESULT_OK) {
                 Log.d("Main", "got ok result for fuel entry")
                 val extras = data?.extras
-                if (extras != null)
-                {
+                if (extras != null) {
                     var name = ""
                     var entry: FuelEntry? = null
 
-                    if (extras.containsKey("name"))
-                    {
+                    if (extras.containsKey("name")) {
                         name = extras.getSerializable("name") as String
                         Log.d("Main", String.format("got entry for %s", name))
                     }
-                    if (extras.containsKey("entry"))
-                    {
+                    if (extras.containsKey("entry")) {
                         entry = extras.getSerializable("entry") as FuelEntry
                         Log.d("Main", String.format("got entry info %s", entry.getObjectString(this)))
                     }
@@ -153,11 +149,12 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
                         if (mCars.getCarWithName(name) != null) {
                             mCars.getCarWithName(name).let { it?.addEntry(entry) }
                             mCars.let {
-                                val cfgManager = ConfigManager(this)
-                                if (cfgManager.saveCars(it))
-                                    Toast.makeText(this, R.string.carsSavedAfterEntry, Toast.LENGTH_SHORT).show()
-                                else
-                                    Toast.makeText(this, R.string.carsNotSavedAfterEntry, Toast.LENGTH_SHORT).show()
+                                ConfigManager(this).use { cfgMgr ->
+                                    if (cfgMgr.saveCars(it))
+                                        Toast.makeText(this, R.string.carsSavedAfterEntry, Toast.LENGTH_SHORT).show()
+                                    else
+                                        Toast.makeText(this, R.string.carsNotSavedAfterEntry, Toast.LENGTH_SHORT).show()
+                                }
                             }
                         }
                 }
@@ -165,8 +162,9 @@ class MainActivity : AppCompatActivity(), ServiceConnection {
         }
         else if (requestCode == STATIONS_CLICK) {
             if (resultCode == Activity.RESULT_OK) {
-                val cfgManager = ConfigManager(this)
-                mStations = cfgManager.getAllStations()
+                ConfigManager(this).use {
+                    mStations = it.getAllStations()
+                }
             }
         }
     }

@@ -96,16 +96,17 @@ class StationsActivity : FragmentActivity(), OnMapReadyCallback, GoogleMap.OnMar
 
     fun onRemoveStationClick(view: View) {
         if (mLastClickedStation != null) {
-            val cfgManager = ConfigManager(this)
-            if (cfgManager.removeStation(mLastClickedStation!!)) {
-                mLastClickedStation!!.disconnectFromMap()
-                mStations.remove(mLastClickedStation!!)
+            ConfigManager(this).use {
+                if (it.removeStation(mLastClickedStation!!)) {
+                    mLastClickedStation!!.disconnectFromMap()
+                    mStations.remove(mLastClickedStation!!)
 
-                val bSavePoint = findViewById<Button>(R.id.bAddEditStation)
-                val bRemovePoint = findViewById<Button>(R.id.bRemoveStation)
+                    val bSavePoint = findViewById<Button>(R.id.bAddEditStation)
+                    val bRemovePoint = findViewById<Button>(R.id.bRemoveStation)
 
-                bSavePoint.visibility = View.INVISIBLE
-                bRemovePoint.visibility = View.INVISIBLE
+                    bSavePoint.visibility = View.INVISIBLE
+                    bRemovePoint.visibility = View.INVISIBLE
+                }
             }
         }
     }
@@ -160,35 +161,36 @@ class StationsActivity : FragmentActivity(), OnMapReadyCallback, GoogleMap.OnMar
             else if (etRadius.text.isEmpty())
                 Toast.makeText(this, resources.getString(R.string.radiusCannotBeEmpty), Toast.LENGTH_SHORT).show()
             else {
-                val cfgManager = ConfigManager(this)
-                if (editing) {
-                    mLastClickedStation!!.mName = etStationName.text.toString()
-                    mLastClickedStation!!.mRadius = Integer.parseInt(etRadius.text.toString())
-                    if (cfgManager.editStation(mLastClickedStation!!)) {
-                        mLastClickedStation!!.disconnectFromMap()
-                        mLastClickedStation!!.connectToMap(mMap)
-                        dialog.dismiss()
-                    } else
-                        Toast.makeText(
-                            this,
-                            resources.getString(R.string.savingPointError),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                } else {
-                    mTmpStation.mName = etStationName.text.toString()
-                    mTmpStation.mRadius = Integer.parseInt(etRadius.text.toString())
-                    if (cfgManager.saveStation(mTmpStation)) {
-                        mStations.add(mTmpStation)
-                        mTmpStation.disconnectFromMap()
-                        mTmpStation.connectToMap(mMap)
-                        mTmpStation = Station()
-                        dialog.dismiss()
-                    } else
-                        Toast.makeText(
-                            this,
-                            resources.getString(R.string.savingPointError),
-                            Toast.LENGTH_SHORT
-                        ).show()
+                ConfigManager(this).use {
+                    if (editing) {
+                        mLastClickedStation!!.mName = etStationName.text.toString()
+                        mLastClickedStation!!.mRadius = Integer.parseInt(etRadius.text.toString())
+                        if (it.editStation(mLastClickedStation!!)) {
+                            mLastClickedStation!!.disconnectFromMap()
+                            mLastClickedStation!!.connectToMap(mMap)
+                            dialog.dismiss()
+                        } else
+                            Toast.makeText(
+                                this,
+                                resources.getString(R.string.savingPointError),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                    } else {
+                        mTmpStation.mName = etStationName.text.toString()
+                        mTmpStation.mRadius = Integer.parseInt(etRadius.text.toString())
+                        if (it.saveStation(mTmpStation)) {
+                            mStations.add(mTmpStation)
+                            mTmpStation.disconnectFromMap()
+                            mTmpStation.connectToMap(mMap)
+                            mTmpStation = Station()
+                            dialog.dismiss()
+                        } else
+                            Toast.makeText(
+                                this,
+                                resources.getString(R.string.savingPointError),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                    }
                 }
 
                 val bSavePoint = findViewById<Button>(R.id.bAddEditStation)

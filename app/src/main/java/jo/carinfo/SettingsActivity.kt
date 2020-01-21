@@ -53,25 +53,28 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun addAndRefreshList(aCar: Car) {
-        val cfgManager = ConfigManager(this)
-        if (cfgManager.addCar(aCar)) {
-            adapter.addNewItem(aCar)
-        } else
-            Toast.makeText(this, R.string.couldNotSaveCars, Toast.LENGTH_SHORT).show()
+        ConfigManager(this).use {
+            if (it.addCar(aCar)) {
+                adapter.addNewItem(aCar)
+            } else
+                Toast.makeText(this, R.string.couldNotSaveCars, Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun editCarOnList(aOldCar: Car, aNewCar: Car) {
-        val cfgManager = ConfigManager(this)
-        if (cfgManager.editCar(aOldCar, aNewCar)) {
-            adapter.editItem(aOldCar, aNewCar)
-        } else
-            Toast.makeText(this, R.string.couldNotSaveCars, Toast.LENGTH_SHORT).show()
+        ConfigManager(this).use {
+            if (it.editCar(aOldCar, aNewCar)) {
+                adapter.editItem(aOldCar, aNewCar)
+            } else
+                Toast.makeText(this, R.string.couldNotSaveCars, Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun removeCarOnList(aCarName: String) {
-        val cfgManager = ConfigManager(this)
-        if (!cfgManager.removeCar(aCarName))
-            Toast.makeText(this, R.string.couldNotRemoveCars, Toast.LENGTH_SHORT).show()
+        ConfigManager(this).use {
+            if (!it.removeCar(aCarName))
+                Toast.makeText(this, R.string.couldNotRemoveCars, Toast.LENGTH_SHORT).show()
+        }
     }
 
     fun onEditCarClick(aCar: Car) {

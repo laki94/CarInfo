@@ -12,10 +12,12 @@ class Notifications(aContext: Context, aNotificationManager: NotificationManager
 
     private val TAG = "NOTIFICATION"
     private val CHANNEL_NEAR_STATION = "notify_channel_near_station"
-//    private val CHANNEL_INSPECTION = "notify_channel_inspection"
+    private val STATION_ID = 1
+    private var mNotificationId = 2
+
+
     private val mNotificationManager = aNotificationManager
     private val mContext = aContext
-    private var mNotificationId: Int = 1
 
     private fun createNotificationChannel(aChannelId: String) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -42,7 +44,7 @@ class Notifications(aContext: Context, aNotificationManager: NotificationManager
             .setAutoCancel(true)
             .setOnlyAlertOnce(true)
 
-        mNotificationManager.notify(mNotificationId++, builder.build())
+        mNotificationManager.notify(STATION_ID, builder.build())
     }
 
     val locationNotification: Notification
