@@ -34,8 +34,8 @@ class CarGraphAdapter(private val context: Context, private val items : CarsList
     }
 
     inner class MyViewHolder (view: View) : RecyclerView.ViewHolder(view) {
-        val tvCarName : TextView = view.tvSimpleCarNameGraph
-        val cbCarGraph : CheckBox = view.cbCarGraph
+        val tvCarName: TextView = view.tvSimpleCarNameGraph
+        val cbCarGraph: CheckBox = view.cbCarGraph
 
         init {
             tvCarName.setOnClickListener {

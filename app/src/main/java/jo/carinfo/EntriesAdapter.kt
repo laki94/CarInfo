@@ -83,8 +83,8 @@ class EntriesAdapter(private val context: Context, private val items : ArrayList
     }
 
     inner class EntriesViewHolder (view: View) : RecyclerView.ViewHolder(view) {
-        val tvCarName : TextView = view.tvSimpleCarName
-        val cardView : CardView = view.card_view
+        val tvCarName: TextView = view.tvSimpleCarName
+        val cardView: CardView = view.card_view
 
         init {
             tvCarName.setOnClickListener{
