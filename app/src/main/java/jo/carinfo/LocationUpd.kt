@@ -3,17 +3,11 @@ package jo.carinfo
 import android.app.*
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.location.Location
-import android.location.LocationListener
-import android.location.LocationManager
 import android.os.Binder
-import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
-import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.*
-import java.io.Serializable
 
 
 interface Workable<T> {

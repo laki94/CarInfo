@@ -3,7 +3,6 @@ package jo.carinfo
 import android.content.Context
 import org.joda.time.DateTime
 import java.util.*
-import kotlin.math.round
 
 class FuelEntry(aDate: DateTime = DateTime(0), odo: Int = 0, fuelAm: Double = 0.0, perLiter: Double = 0.0): Entry(aDate) {
 

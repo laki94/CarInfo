@@ -2,30 +2,15 @@ package jo.carinfo
 
 import android.app.Activity
 import android.app.AlertDialog
-import android.content.Intent
-import android.content.IntentSender
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.location.Location
-import android.opengl.Visibility
 import android.os.Bundle
-import android.text.Editable
 import android.view.Gravity
 import android.view.View
 import android.widget.*
-import androidx.constraintlayout.widget.Placeholder
-import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentActivity
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException
-import com.google.android.gms.common.GooglePlayServicesRepairableException
-import com.google.android.gms.common.api.ResolvableApiException
-import com.google.android.gms.location.*
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.*
-import com.google.android.libraries.places.compat.*
-import com.google.android.libraries.places.compat.ui.PlaceAutocomplete
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import yuku.ambilwarna.AmbilWarnaDialog
 
 class StationsActivity : FragmentActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener, Workable<Location> {
 

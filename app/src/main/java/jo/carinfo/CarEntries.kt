@@ -45,7 +45,7 @@ class CarEntries : AppCompatActivity() {
         if (mainCar.mInspection != null)
             mAllEntries.add(mainCar.mInspection!!)
 
-        setSummaryButtonVisibility();
+        setSummaryButtonVisibility()
 
         val listView = findViewById<RecyclerView>(R.id.rvEntries)
 

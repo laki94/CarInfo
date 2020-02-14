@@ -3,7 +3,6 @@ package jo.carinfo
 import android.content.Context
 import org.joda.time.DateTime
 import org.joda.time.Days
-import org.joda.time.Years
 
 class CarInspectionEntry(aDate: DateTime = DateTime(0), aLastInspectionDate: DateTime = DateTime(0), aRemindAfter: InspectionRemindAfter = InspectionRemindAfter.UNKNOWN): Entry(aDate) {
     var mLastInspectionDate = aLastInspectionDate
@@ -18,7 +17,7 @@ class CarInspectionEntry(aDate: DateTime = DateTime(0), aLastInspectionDate: Dat
     }
 
     fun daysLeftToInspection(): Int {
-        return Days.daysBetween(DateTime.now(), getNextInspectionDate()).days // TODO
+        return Days.daysBetween(DateTime.now(), getNextInspectionDate()).days
     }
 
     private fun getNextInspectionDate(): DateTime {
