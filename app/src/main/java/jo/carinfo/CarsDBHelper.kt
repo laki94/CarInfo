@@ -45,22 +45,44 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
                 "'station_radius' INTEGER NOT NULL," +
                 "'is_near' VARCHAR(5) NOT NULL)")
 
-        p0.execSQL("INSERT INTO $TABLE_CARS (name, chart_color) VALUES ('test', 4278190080);")
-        p0.execSQL("INSERT INTO $TABLE_CARS (name, chart_color) VALUES ('test2', 4278190335);")
+        p0.execSQL("INSERT INTO $TABLE_CARS (name, chart_color) VALUES ('maluch', 4278190080);")
+        p0.execSQL("INSERT INTO $TABLE_CARS (name, chart_color) VALUES ('fabia', 4278190335);")
 
         p0.execSQL("INSERT INTO $TABLE_FUEL_ENTRIES (entry_date, entry_odo, entry_fuel_amount, entry_fuel_price, carId) VALUES " +
-                "('2019-12-11', 610, 52.4, 4.55, 1);")
+                "('2019-10-11', 610, 52.4, 4.55, 1);")
         p0.execSQL("INSERT INTO $TABLE_FUEL_ENTRIES (entry_date, entry_odo, entry_fuel_amount, entry_fuel_price, carId) VALUES " +
-                "('2020-01-01', 655, 55.4, 4.75, 1);")
+                "('2019-11-01', 655, 55.4, 4.75, 1);")
         p0.execSQL("INSERT INTO $TABLE_FUEL_ENTRIES (entry_date, entry_odo, entry_fuel_amount, entry_fuel_price, carId) VALUES " +
-                "('2020-02-13', 620, 50.0, 4.65, 1);")
+                "('2019-12-10', 650, 55.0, 4.74, 1);")
+        p0.execSQL("INSERT INTO $TABLE_FUEL_ENTRIES (entry_date, entry_odo, entry_fuel_amount, entry_fuel_price, carId) VALUES " +
+                "('2020-01-05', 645, 53.0, 4.75, 1);")
+        p0.execSQL("INSERT INTO $TABLE_FUEL_ENTRIES (entry_date, entry_odo, entry_fuel_amount, entry_fuel_price, carId) VALUES " +
+                "('2020-02-07', 660, 55.0, 4.70, 1);")
+        p0.execSQL("INSERT INTO $TABLE_INSPECTION_ENTRIES (entry_date, entry_inspection_date, " +
+                "entry_remind_after, carId) VALUES ('2020-02-10', '2020-02-10'" +
+                ", 'YEAR', 1);")
+
 
         p0.execSQL("INSERT INTO $TABLE_FUEL_ENTRIES (entry_date, entry_odo, entry_fuel_amount, entry_fuel_price, carId) VALUES " +
-                "('2019-11-22', 499, 33.4, 4.55, 2);")
+                "('2019-10-22', 499, 33.4, 4.55, 2);")
         p0.execSQL("INSERT INTO $TABLE_FUEL_ENTRIES (entry_date, entry_odo, entry_fuel_amount, entry_fuel_price, carId) VALUES " +
-                "('2020-01-01', 541, 37.4, 4.75, 2);")
+                "('2019-11-01', 541, 37.4, 4.75, 2);")
         p0.execSQL("INSERT INTO $TABLE_FUEL_ENTRIES (entry_date, entry_odo, entry_fuel_amount, entry_fuel_price, carId) VALUES " +
-                "('2020-02-13', 504, 36.0, 4.65, 2);")
+                "('2019-12-13', 504, 36.0, 4.65, 2);")
+        p0.execSQL("INSERT INTO $TABLE_FUEL_ENTRIES (entry_date, entry_odo, entry_fuel_amount, entry_fuel_price, carId) VALUES " +
+                "('2020-01-08', 510, 35.0, 4.69, 2);")
+        p0.execSQL("INSERT INTO $TABLE_FUEL_ENTRIES (entry_date, entry_odo, entry_fuel_amount, entry_fuel_price, carId) VALUES " +
+                "('2020-02-04', 524, 37.0, 4.65, 2);")
+        p0.execSQL("INSERT INTO $TABLE_INSPECTION_ENTRIES (entry_date, entry_inspection_date, " +
+                "entry_remind_after, carId) VALUES ('2020-01-30', '2020-01-29'" +
+                ", 'TWO_YEARS', 2);")
+
+        p0.execSQL("INSERT INTO $TABLE_STATIONS (station_lat, station_lon, station_name, " +
+                "station_radius, is_near) VALUES (50.089013, 18.416244, 'Orlen', 100, 'false');")
+        p0.execSQL("INSERT INTO $TABLE_STATIONS (station_lat, station_lon, station_name, " +
+                "station_radius, is_near) VALUES (50.070286, 18.446619, 'Statoil', 500, 'false');")
+        p0.execSQL("INSERT INTO $TABLE_STATIONS (station_lat, station_lon, station_name, " +
+                "station_radius, is_near) VALUES (50.291055, 18.675894, 'Politechnika', 100, 'false');")
     }
 
     override fun onUpgrade(p0: SQLiteDatabase, oldVer: Int, newVer: Int) {
@@ -404,7 +426,7 @@ class CarsDBHelper(ctx: Context): SQLiteOpenHelper(ctx, DATABASE_NAME, null, DAT
 
     companion object {
         const val DATABASE_NAME = "carsdb"
-        const val DATABASE_VERSION = 10
+        const val DATABASE_VERSION = 1
         const val TABLE_CARS = "cars"
         const val TABLE_FUEL_ENTRIES = "fuel_entries"
         const val TABLE_INSPECTION_ENTRIES = "inspection_entries"
