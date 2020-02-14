@@ -74,6 +74,11 @@
     <string name="avgFuelAmount">Average fuel amount</string>
     <string name="bestConsumption">Best consumption</string>
     <string name="worstConsumption">Worst consumption</string>
+    <string name="allVehicles">All vehicles</string>
+    <string name="showFuelUsageOnGraph">Show fuel usage on graph</string>
+    <string name="specialPlaces">Special places</string>
+    <string name="notifyRadius_m">Notify about entry radius [m]</string>
+    <string name="addingPlace">Adding place</string>
     <!-- Error messages-->
     <string name="couldNotGetCars">Error while getting vehicles</string>
     <string name="couldNotSaveCars">Error while saving vehicles</string>

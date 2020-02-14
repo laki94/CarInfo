@@ -74,6 +74,11 @@
     <string name="avgFuelAmount">Średnia ilość paliwa</string>
     <string name="bestConsumption">Najlepsze spalanie</string>
     <string name="worstConsumption">Najgorsze spalanie</string>
+    <string name="allVehicles">Wszystkie pojazdy</string>
+    <string name="showFuelUsageOnGraph">Pokaż zużycie paliwa na wykresie</string>
+    <string name="specialPlaces">Specjalne miejsca</string>
+    <string name="notifyRadius_m">Promień powiadamiania [m]</string>
+    <string name="addingPlace">Dodawanie miejsca</string>
     <!-- Error messages -->
     <string name="couldNotGetCars">Błąd podczas pobierania pojazdów</string>
     <string name="couldNotSaveCars">Błąd podczas zapisywania pojazdów</string>

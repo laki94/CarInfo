@@ -62,9 +62,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="@string/radius_m"
-            android:textSize="18sp"
             android:labelFor="@+id/etRadius"
+            android:text="@string/notifyRadius_m"
+            android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@+id/etRadius"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/etRadius" />

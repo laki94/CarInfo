@@ -96,11 +96,6 @@ class StationsActivity : FragmentActivity(), OnMapReadyCallback, GoogleMap.OnMar
         }
     }
 
-    fun onAddMarkerOnMyLocationClick(view: View) {
-        if (this::mLastLocation.isInitialized)
-            onMapClick(LatLng(mLastLocation.latitude, mLastLocation.longitude))
-    }
-
     fun onSaveStationClick(view: View) {
         val editing = mLastClickedStation != null
         val builder = AlertDialog.Builder(this)
@@ -129,7 +124,7 @@ class StationsActivity : FragmentActivity(), OnMapReadyCallback, GoogleMap.OnMar
             }
         }
         else {
-            title.text = resources.getString(R.string.addingStation)
+            title.text = resources.getString(R.string.addingPlace)
             val latDir = if (mLastClickedPlace.latitude > 0) "N" else "S"
             val lonDir = if (mLastClickedPlace.longitude > 0) "E" else "W"
             tvLatLng.text = String.format("%.6f%s %.6f%s", Math.abs(mLastClickedPlace.latitude), latDir, Math.abs(mLastClickedPlace.longitude), lonDir)
