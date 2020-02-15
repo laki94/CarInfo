@@ -32,7 +32,6 @@
                 android:layout_height="0dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
-                android:onClick="onRecyclerClick"
                 android:scrollbars="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -60,7 +59,6 @@
 
                 <Button
                         android:text="@string/removeCars"
-                        android:onClick="onCarRemoveClick"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" android:id="@+id/button"
                         app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"

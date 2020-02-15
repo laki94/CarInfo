@@ -18,6 +18,12 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            android.applicationVariants.all { variant ->
+                variant.outputs.all {
+                    def appName = "CarInfo"
+                    outputFileName = appName+"_v${variant.versionName}.apk"
+                }
+            }
         }
     }
 }

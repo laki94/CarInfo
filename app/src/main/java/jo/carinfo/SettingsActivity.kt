@@ -39,9 +39,9 @@ class SettingsActivity : AppCompatActivity() {
         adapter = CarAdapter(this, originalCarsList)
 
         adapter.let {
-            it.onItemClick = { it ->
+            it.onItemClick = { simpleCar ->
                 val intent = Intent(this, CarEntries::class.java)
-                intent.putExtra("car", it)
+                intent.putExtra("car", simpleCar)
                 startActivityForResult(intent, FUEL_ENTRY_CLICK)
             }
         }
